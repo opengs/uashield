@@ -15,6 +15,7 @@
     "@types/superagent": "^4.1.15",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "electron-packager": "^15.4.0",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",
     "quasar": "^2.0.0",

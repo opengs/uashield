@@ -1,0 +1,9 @@
+FROM node:12
+RUN npm install -g @quasar/cli yarn --force
+RUN mkdir /uashield
+COPY application/package.json /uashield
+WORKDIR /uashield
+RUN npm install
+COPY application /uashield
+RUN quasar build --mode electron
+ENTRYPOINT ["/bin/bash", "-c", "while true; do echo 'WAITING' && sleep 2; done"]
