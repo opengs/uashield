@@ -13,13 +13,19 @@ jobs:
           node-version: '14'
       - name: wine install
         run: |
-          sudo apt update && sudo apt install -y wine
+          sudo dpkg --add-architecture i386
+          sudo wget -nc https://dl.winehq.org/wine-builds/winehq.key
+          sudo -H gpg -o /etc/apt/trusted.gpg.d/winehq.key.gpg --dearmor winehq.key
+          sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main'
+          sudo apt install --install-recommends winehq-stable
       - name: npm install, build
         run: |
           cd application
           npm install -g @quasar/cli yarn --force
           yarn install
-          quasar build --mode electron --publish -T win32 win linux
+          quasar build --mode electron --publish -T win32 
+          quasar build --mode electron --publish -T win 
+          quasar build --mode electron --publish -T linux
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
