@@ -74,7 +74,7 @@ export default defineComponent({
 
   setup () {
     const ddosEnabled = ref(true)
-    const forceProxy = ref(false)
+    const forceProxy = ref(true)
     const atackCounter = ref(0)
     const currentAtack = ref('')
     const log = ref([] as Array<string>)
