@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build_and_test:
-    runs-on: node:12
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
