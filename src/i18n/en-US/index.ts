@@ -11,7 +11,7 @@ export default {
     },
     proxy: {
       name: 'Atack only using proxy',
-      description: 'Atack only using proxy servers and hide my real IP. Makes atacks less efficient but anoanonymous. Without this option, program choses best strategy on the fly.'
+      description: 'Without this option, program will be allowed to use your IP. You will make more efficient atack, but atacks will not be anonymous.'
     }
   }
 }

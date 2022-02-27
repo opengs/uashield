@@ -61,7 +61,10 @@ export default defineComponent({
 
   methods: {
     serveAtack (_event: unknown, data: { url: string, log: string }) {
-      this.currentAtack = data.url
+      if ((new Date()).getTime() - this.lastAtackChange.getTime() > 1000) {
+        this.currentAtack = data.url
+        this.lastAtackChange = new Date()
+      }
       this.atackCounter += 1
       if (this.log.length > 100) this.log.pop()
       this.log.unshift(data.log)
@@ -86,8 +89,9 @@ export default defineComponent({
     const forceProxy = ref(true)
     const atackCounter = ref(0)
     const currentAtack = ref('')
+    const lastAtackChange = ref(new Date())
     const log = ref([] as Array<string>)
-    return { ddosEnabled, forceProxy, atackCounter, currentAtack, log }
+    return { ddosEnabled, forceProxy, atackCounter, currentAtack, lastAtackChange, log }
   }
 })
 </script>
