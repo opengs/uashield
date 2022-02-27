@@ -10,6 +10,9 @@
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.description') }}</div>
       </q-card-section>
       <q-card-section>
+        <LanguageSelect />
+      </q-card-section>
+      <q-card-section>
         <q-list>
           <q-item tag="label" v-ripple>
             <q-item-section>
@@ -48,10 +51,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import LanguageSelect from '../components/LanguageSelect.vue'
 // import { ipcRenderer, IpcRendererEvent } from 'electron'
 
 export default defineComponent({
   name: 'PageIndex',
+
+  components: { LanguageSelect },
 
   methods: {
     serveAtack (_event: unknown, data: { url: string, log: string }) {
