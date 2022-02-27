@@ -97,7 +97,7 @@ export class Doser {
         }
       }
 
-      const ATACKS_PER_TARGET = 100
+      const ATACKS_PER_TARGET = 256
 
       let proxy = null
       for (let atackIndex = 0; (atackIndex < ATACKS_PER_TARGET) && this.working; atackIndex++) {

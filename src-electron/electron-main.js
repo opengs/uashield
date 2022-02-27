@@ -49,7 +49,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  const doser = new Doser(true, 64)
+  const doser = new Doser(true, 32)
   const window = mainWindow
   doser.listen('atack', (data) => console.log(data.log))
   doser.listen('atack', (data) => window.webContents.send('atack', data))
@@ -70,6 +70,10 @@ function createWindow () {
 
   ipcMain.on('updateForceProxy', (event, arg) => {
     doser.forceProxy(arg.newVal)
+  })
+
+  ipcMain.on('updateTasksCount', (event, arg) => {
+
   })
 }
 
