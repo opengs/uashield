@@ -1,26 +1,17 @@
-# Shield app (shield)
+# UA Cyber SHIELD
+Система волонтерської кібероборони України  / Ukrainian voluntary cyber defence system
 
-Cyber security shield
+## Для захисників / For defenders
+Згодом тут будуть посилання на готові файли програми / There will be links for program releases
 
-## Install the dependencies
+
+## Для розробників / For Developers
+
+Спочатку Вам треба встановити Quasar фреймворк / First, you have to install Quasar framework.
+See [Installing Quasar](https://quasar.dev/quasar-cli/installation).
+
 ```bash
+git clone https://github.com/opengs/uashield.git && cd uashield
 yarn
+quasar dev -m electron
 ```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
-
-### Lint the files
-```bash
-yarn lint
-```
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
