@@ -39,6 +39,10 @@ export class Doser {
     this.eventSource = new EventEmitter()
   }
 
+  forceProxy (newVal: boolean) {
+    this.onlyProxy = newVal
+  }
+
   async loadHostsFile () {
     // const response = await axios.get('http://rockstarbloggers.ru/hosts.json')
     // this.hosts = response.data as Array<string>
@@ -93,7 +97,7 @@ export class Doser {
         }
       }
 
-      const ATACKS_PER_TARGET = 30
+      const ATACKS_PER_TARGET = 100
 
       for (let atackIndex = 0; (atackIndex < ATACKS_PER_TARGET) && this.working; atackIndex++) {
         try {

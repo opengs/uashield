@@ -68,6 +68,15 @@ export default defineComponent({
     }
   },
 
+  watch: {
+    ddosEnabled (newVal: boolean) {
+      window.require('electron').ipcRenderer.send('updateDDOSEnable', { newVal })
+    },
+    forceProxy (newVal: boolean) {
+      window.require('electron').ipcRenderer.send('updateForceProxy', { newVal })
+    }
+  },
+
   mounted () {
     window.require('electron').ipcRenderer.on('atack', this.serveAtack.bind(this))
   },

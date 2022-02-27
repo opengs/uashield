@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme } from 'electron'
+import { app, BrowserWindow, nativeTheme, ipcMain } from 'electron'
 import path from 'path'
 import os from 'os'
 
@@ -49,7 +49,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  const doser = new Doser(true, 16)
+  const doser = new Doser(true, 64)
   const window = mainWindow
   doser.listen('atack', (data) => console.log(data.log))
   doser.listen('atack', (data) => window.webContents.send('atack', data))
@@ -58,6 +58,18 @@ function createWindow () {
     doser.start()
   }).catch(() => {
     app.quit()
+  })
+
+  ipcMain.on('updateDDOSEnable', (event, arg) => {
+    if (arg.newVal) {
+      doser.start()
+    } else {
+      doser.stop()
+    }
+  })
+
+  ipcMain.on('updateForceProxy', (event, arg) => {
+    doser.forceProxy(arg.newVal)
   })
 }
 
