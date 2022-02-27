@@ -13,12 +13,8 @@ jobs:
           node-version: '14'
       - name: wine install
         run: |
-          sudo dpkg --add-architecture i386
-          sudo wget -nc https://dl.winehq.org/wine-builds/winehq.key
-          sudo -H gpg -o /etc/apt/trusted.gpg.d/winehq.key.gpg --dearmor winehq.key
-          sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main'
           sudo apt update
-          sudo apt install --install-recommends winehq-stable
+          sudo apt install --install-recommends wine32 wine64
       - name: npm install, build
         run: |
           cd application
