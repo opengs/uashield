@@ -17,6 +17,7 @@ jobs:
           wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
           sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main'
           sudo apt update
+          sudo apt upgrade
           sudo apt install --install-recommends winehq-stable
       - name: npm install, build
         run: |
