@@ -222,7 +222,7 @@ module.exports = configure(function (ctx) {
         // https://www.electron.build/configuration/configuration
 
         win: {
-          target: 'portable'
+          target: 'nsis'
         },
 
           appId: 'shield'
