@@ -18,7 +18,7 @@ jobs:
           sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main'
           sudo apt update
           sudo apt upgrade
-          sudo apt install --install-recommends winehq-stable
+          sudo apt install --install-recommends winehq-stable:i386
       - name: npm install, build
         run: |
           cd application
