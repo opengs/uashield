@@ -149,9 +149,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: 'Shield app',
-        short_name: 'Shield app',
-        description: 'Cyber security shield',
+        name: 'UA Cyber SHIELD',
+        short_name: 'UA Cyber SHIELD',
+        description: 'Cyber security shield of the Ukraine',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

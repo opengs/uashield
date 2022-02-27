@@ -1,6 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly bg-grey-10 text-white">
-    <q-card class="bg-grey-10">
+    <q-card class="bg-grey-10 full-card">
       <q-card-section>
         <div class="text-h4 text-center">{{ $t('ddos.counter.atackedTimes') }}</div>
         <div class="text-h1 text-center">{{ atackCounter }}</div>
@@ -32,6 +32,16 @@
           </q-item>
         </q-list>
       </q-card-section>
+      <q-card-section>
+        <q-scroll-area style="height: 200px;">
+          <div v-for="n in log.length" :key="n" class="">
+            {{ log[n] }}
+          </div>
+        </q-scroll-area>
+      </q-card-section>
+      <q-card-section>
+        <div class="text-subtitle2 text-grey-7">{{ $t('ddos.coordinators') }}</div>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
@@ -44,9 +54,11 @@ export default defineComponent({
   name: 'PageIndex',
 
   methods: {
-    serveAtack (_event: any, data: { url: string }) {
+    serveAtack (_event: unknown, data: { url: string, log: string }) {
       this.currentAtack = data.url
       this.atackCounter += 1
+      if (this.log.length > 100) this.log.pop()
+      this.log.unshift(data.log)
     }
   },
 
@@ -59,7 +71,14 @@ export default defineComponent({
     const forceProxy = ref(false)
     const atackCounter = ref(0)
     const currentAtack = ref('')
-    return { ddosEnabled, forceProxy, atackCounter, currentAtack }
+    const log = ref([] as Array<string>)
+    return { ddosEnabled, forceProxy, atackCounter, currentAtack, log }
   }
 })
 </script>
+
+<style lang="sass" scoped>
+.full-card
+  width: 80%
+  max-width: 700px
+</style>

@@ -2,7 +2,7 @@
   "name": "shield",
   "version": "0.0.1",
   "description": "Cyber security shield",
-  "productName": "Shield app",
+  "productName": "UA Cyber SHIELD",
   "author": "Mykola Zhyhallo <mzhyhall@gmail.com>",
   "private": true,
   "scripts": {
