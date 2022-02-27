@@ -43,18 +43,16 @@ import { defineComponent, ref } from 'vue'
 export default defineComponent({
   name: 'PageIndex',
 
-  /*
   methods: {
-    serveAtack (_event: IpcRendererEvent, data: { url: string }) {
+    serveAtack (_event: any, data: { url: string }) {
       this.currentAtack = data.url
       this.atackCounter += 1
     }
   },
 
   mounted () {
-    ipcRenderer.on('atack', this.serveAtack.bind(this))
+    window.require('electron').ipcRenderer.on('atack', this.serveAtack.bind(this))
   },
-  */
 
   setup () {
     const ddosEnabled = ref(true)

