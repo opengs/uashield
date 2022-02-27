@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:14
 RUN npm install -g @quasar/cli yarn --force
 RUN mkdir /uashield
 COPY application/package.json /uashield
