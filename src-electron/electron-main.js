@@ -51,6 +51,7 @@ function createWindow () {
 
   const doser = new Doser(true, 16)
   const window = mainWindow
+  doser.listen('atack', (data) => console.log(data.log))
   doser.listen('atack', (data) => window.webContents.send('atack', data))
   doser.listen('error', (data) => window.webContents.send('error', data))
   doser.loadHostsFile().then(() => {
