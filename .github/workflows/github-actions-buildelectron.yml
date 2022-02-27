@@ -22,8 +22,7 @@ jobs:
           rm -rf dist/
           npm install -g @quasar/cli yarn --force
           yarn install
-          quasar build --mode electron --publish -T win 
-          quasar build --mode electron --publish -T linux
+          quasar build --mode electron --publish -T win,linux
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
