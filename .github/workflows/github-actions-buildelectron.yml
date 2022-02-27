@@ -1,0 +1,22 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  build_and_test:
+    runs-on: node:12
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: npm install, build
+        run: |
+          cd application
+          npm install -g @quasar/cli yarn --force
+          npm install
+          quasar build --mode electron
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-upload
+          path: |
+            application/dist
