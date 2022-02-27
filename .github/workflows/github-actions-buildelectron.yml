@@ -11,6 +11,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
+      - name: wine install
+        run: |
+          sudo apt update && sudo apt install -y wine
       - name: npm install, build
         run: |
           cd application
