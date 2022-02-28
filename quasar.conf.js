@@ -226,7 +226,8 @@ module.exports = configure(function (ctx) {
           appId: 'shield',
 
         publish: {
-          provider: "github"
+          provider: "github",
+          releaseType: "release"
         }
       },
 
