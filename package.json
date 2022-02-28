@@ -1,10 +1,11 @@
 {
   "name": "shield",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Cyber security shield",
   "productName": "UA Cyber SHIELD",
   "author": "Mykola Zhyhallo <mzhyhall@gmail.com>",
   "private": true,
+  "repository": "github:opengs/uashield",
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
@@ -15,6 +16,7 @@
     "@types/superagent": "^4.1.15",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "electron-updater": "^4.6.5",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",
     "quasar": "^2.0.0",
