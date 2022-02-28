@@ -219,6 +219,9 @@ module.exports = configure(function (ctx) {
         win: {
           target: 'nsis'
         },
+        linux: {
+          target: ["AppImage", "tar.gz"]
+        },
 
           appId: 'shield',
 
