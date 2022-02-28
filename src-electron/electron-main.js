@@ -49,7 +49,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  const doser = new Doser(true, 32)
+  const doser = new Doser(true, 16)
   const window = mainWindow
   doser.listen('atack', (data) => console.log(data.log))
   doser.listen('atack', (data) => window.webContents.send('atack', data))
