@@ -1,6 +1,7 @@
 export default {
+  language: 'Language',
   ddos: {
-    description: 'DDOS atack makes a lot of reqquests to the target enemy server. Target servers will start to lag and stop working properly.',
+    description: 'DDOS atack makes a lot of requests to the target enemy server. Target server will start to lag and stop working properly.',
     counter: {
       atackedTimes: 'Times atacked:',
       currentTarget: 'Current target: '

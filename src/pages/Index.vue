@@ -46,6 +46,36 @@
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.coordinators') }}</div>
       </q-card-section>
     </q-card>
+
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn fab icon="settings" color="grey-9" @click="advancedSettingsDialog = true"/>
+    </q-page-sticky>
+
+    <q-dialog v-model="advancedSettingsDialog">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">{{ $t('ddos.advanced.header') }}</div>
+          <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.description') }}</q-item-label>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <div class="text-h7">{{ $t('ddos.advanced.masDosersCount.name') }}</div>
+          <q-slider
+            v-model="maxDosersCount"
+            :min="16"
+            :max="256"
+            :step="16"
+            label
+            color="light-green"
+          />
+          <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.masDosersCount.description') }}</q-item-label>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" class="fit" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -91,7 +121,11 @@ export default defineComponent({
     const currentAtack = ref('')
     const lastAtackChange = ref(new Date())
     const log = ref([] as Array<string>)
-    return { ddosEnabled, forceProxy, atackCounter, currentAtack, lastAtackChange, log }
+
+    const advancedSettingsDialog = ref(false)
+    const maxDosersCount = ref(16)
+
+    return { ddosEnabled, forceProxy, atackCounter, currentAtack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount }
   }
 })
 </script>
