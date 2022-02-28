@@ -219,15 +219,18 @@ module.exports = configure(function (ctx) {
         win: {
           target: 'nsis'
         },
+        mac: {
+          target: 'tar.gz'
+        },
         linux: {
-          target: ["AppImage", "tar.gz"]
+          target: ['AppImage', 'tar.gz']
         },
 
-          appId: 'shield',
+        appId: 'shield',
 
         publish: {
-          provider: "github",
-          releaseType: "release"
+          provider: 'github',
+          releaseType: 'release'
         }
       },
 

@@ -1,6 +1,6 @@
 name: Node CI
 
-on: 
+on:
   push:
     branches:
       - master
@@ -33,3 +33,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           quasar build --mode electron --publish always -T win
+      - name: npm install, build
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          quasar build --mode electron --publish always -T darwin

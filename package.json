@@ -1,6 +1,6 @@
 {
   "name": "shield",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Cyber security shield",
   "productName": "UA Cyber SHIELD",
   "author": "Mykola Zhyhallo <mzhyhall@gmail.com>",
@@ -34,6 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "electron": "^17.1.0",
+    "electron-builder": "20.39.0",
     "electron-packager": "^15.2.0",
     "eslint": "^7.14.0",
     "eslint-config-standard": "^16.0.2",
