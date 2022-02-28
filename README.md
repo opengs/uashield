@@ -1,7 +1,7 @@
 # UA Cyber SHIELD
 Система волонтерської кібероборони України  / Ukrainian voluntary cyber defence system
 
-[![Інструкція на українській мові](https://img.youtube.com/vi/snTzpRt7a5k/maxresdefault.jpg)](https://youtu.be/snTzpRt7a5k)
+![Відо інструкція на українській мові](https://youtu.be/snTzpRt7a5k)
 
 ## Для захисників / For defenders
 1. Програми знаходяться в [релізах](https://github.com/opengs/uashield/releases).
