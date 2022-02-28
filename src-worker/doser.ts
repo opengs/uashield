@@ -32,11 +32,15 @@ export class Doser {
   private workers: number
   private eventSource: EventEmitter
 
+  private workerActive: Array<boolean>
+
   constructor (onlyProxy: boolean, workers: number) {
     this.onlyProxy = onlyProxy
     this.working = false
     this.workers = workers
     this.eventSource = new EventEmitter()
+    this.workerActive = new Array<boolean>(256)
+    this.workerActive.fill(false)
   }
 
   forceProxy (newVal: boolean) {
@@ -98,8 +102,17 @@ export class Doser {
 
   start () {
     this.working = true
-    for (let i = 0; i < this.workers; i++) {
-      setImmediate(() => void this.worker.bind(this)())
+    this.setWorkersCount(this.workers)
+    for (let i = 0; i < 256; i++) {
+      const setI = i
+      setImmediate(() => void this.worker.bind(this)(setI))
+    }
+  }
+
+  setWorkersCount (newCount: number) {
+    this.workers = newCount
+    for (let wIndex = 0; wIndex < 256; wIndex++) {
+      this.workerActive[wIndex] = (wIndex < newCount)
     }
   }
 
@@ -111,10 +124,15 @@ export class Doser {
     this.eventSource.addListener(event, callback)
   }
 
-  private async worker () {
+  private async worker (workerIndex: number) {
     let config = await this.getSitesAndProxyes()
     let configTimestamp = new Date()
     while (this.working) {
+      if (!this.workerActive[workerIndex]) {
+        await new Promise(resolve => setTimeout(resolve, 10000))
+        continue
+      }
+
       if ((new Date()).getTime() - configTimestamp.getTime() > 300000) {
         config = await this.getSitesAndProxyes()
         configTimestamp = new Date()

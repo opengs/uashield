@@ -72,8 +72,8 @@ function createWindow () {
     doser.forceProxy(arg.newVal)
   })
 
-  ipcMain.on('updateTasksCount', (event, arg) => {
-
+  ipcMain.on('updateMaxDosersCount', (event, arg) => {
+    doser.setWorkersCount(arg.newVal)
   })
 }
 

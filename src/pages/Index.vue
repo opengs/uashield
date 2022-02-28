@@ -107,6 +107,9 @@ export default defineComponent({
     },
     forceProxy (newVal: boolean) {
       window.require('electron').ipcRenderer.send('updateForceProxy', { newVal })
+    },
+    maxDosersCount (newVal: boolean) {
+      window.require('electron').ipcRenderer.send('updateMaxDosersCount', { newVal })
     }
   },
 
@@ -123,7 +126,7 @@ export default defineComponent({
     const log = ref([] as Array<string>)
 
     const advancedSettingsDialog = ref(false)
-    const maxDosersCount = ref(16)
+    const maxDosersCount = ref(32)
 
     return { ddosEnabled, forceProxy, atackCounter, currentAtack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount }
   }
