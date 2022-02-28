@@ -21,7 +21,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          cd application
           rm -rf dist/
           npm install -g @quasar/cli yarn --force
           yarn install
@@ -36,7 +35,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          cd application
           quasar build --mode electron --publish onTag -T win
       # - name: Archive production artifacts
       #   uses: actions/upload-artifact@v2
