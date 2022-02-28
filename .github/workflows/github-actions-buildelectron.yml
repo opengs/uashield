@@ -1,6 +1,9 @@
 name: Node CI
 
-on: [push]
+on: 
+  push:
+  release:
+    types: [created]
 
 jobs:
   build_and_test:
