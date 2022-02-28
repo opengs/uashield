@@ -3,7 +3,7 @@ name: Node CI
 on: 
   push:
     tags:
-      - *
+      - '*'
   release:
     types: [created]
 
