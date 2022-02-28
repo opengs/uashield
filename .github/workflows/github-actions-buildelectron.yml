@@ -1,6 +1,9 @@
 name: Node CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - 'master'
 
 jobs:
   build_and_test:
@@ -24,21 +27,9 @@ jobs:
           rm -rf dist/
           npm install -g @quasar/cli yarn --force
           yarn install
-          quasar build --mode electron --publish onTag -T linux
-      # - name: Archive production artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: dist-upload
-      #     path: |
-      #       application/dist
+          quasar build --mode electron --publish always -T linux
       - name: npm install, build
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          quasar build --mode electron --publish onTag -T win
-      # - name: Archive production artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: dist-upload
-      #     path: |
-      #       application/dist
+          quasar build --mode electron --publish always -T win
