@@ -1,9 +1,6 @@
 name: Node CI
 
-on: 
-  push:
-    tags:
-      - 'v*'
+on: [push]
 
 jobs:
   build_and_test:
@@ -27,9 +24,9 @@ jobs:
           rm -rf dist/
           npm install -g @quasar/cli yarn --force
           yarn install
-          quasar build --mode electron --publish onTagOrDraft -T linux
+          quasar build --mode electron --publish always -T linux
       - name: npm install, build
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          quasar build --mode electron --publish onTagOrDraft -T win
+          quasar build --mode electron --publish always -T win
