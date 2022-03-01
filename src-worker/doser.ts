@@ -31,16 +31,28 @@ export class Doser {
   private working: boolean
   private workers: number
   private eventSource: EventEmitter
+  private verboseError: boolean;
 
   private workerActive: Array<boolean>
 
-  constructor (onlyProxy: boolean, workers: number) {
+  constructor (onlyProxy: boolean, workers: number, verboseError = true) {
     this.onlyProxy = onlyProxy
     this.working = false
     this.workers = workers
     this.eventSource = new EventEmitter()
     this.workerActive = new Array<boolean>(256)
     this.workerActive.fill(false)
+    this.verboseError = verboseError;
+  }
+
+  private logError(message:string, cause: unknown){
+    console.log(message);
+
+    if (this.verboseError){
+      console.log(cause)
+    } else{
+      console.log((cause as AxiosError)?.message)
+    }
   }
 
   forceProxy (newVal: boolean) {
@@ -69,8 +81,7 @@ export class Doser {
           proxyes
         }
       } catch (e) {
-        console.log('Error while loading hosts')
-        console.log(e)
+        this.logError('Error while loading hosts', e)
       }
     }
     return null
@@ -93,8 +104,7 @@ export class Doser {
           proxy: proxyes
         } as TargetData
       } catch (e) {
-        console.log('Error while loading hosts')
-        console.log(e)
+        this.logError('Error while loading hosts', e)
       }
     }
     return null
@@ -105,7 +115,7 @@ export class Doser {
     this.setWorkersCount(this.workers)
     for (let i = 0; i < 256; i++) {
       const setI = i
-      setImmediate(() => void this.worker.bind(this)(setI))
+      setImmediate(() => void this.worker.bind(this)(setI).catch(err=>this.logError("err",err)))
     }
   }
 
@@ -154,7 +164,7 @@ export class Doser {
           const response = await axios.get(target.site.page, { timeout: 10000 })
           directRequest = response.status === 200
         } catch (e) {
-          this.eventSource.emit('error', { type: 'error', error: e })
+          this.eventSource.emit('error', { type: 'error', error: this.verboseError ? e : (e as Error).message })
           directRequest = false
         }
       }
@@ -199,11 +209,11 @@ export class Doser {
             }
           }
         } catch (e) {
-          console.log(e)
+          this.logError('Error while performing request', e)
+
           proxy = null
           let code = (e as AxiosError).code
           if (code === undefined) {
-            console.log(e)
             code = 'UNKNOWN'
           }
           this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${code}` })
