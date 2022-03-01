@@ -7,6 +7,9 @@
   "private": true,
   "repository": "github:opengs/uashield",
   "scripts": {
+    "start:dev": "quasar dev -m electron",
+    "start:electron": "electron ./dist/electron/UnPackaged/electron-main.js",
+    "build:electron": "quasar build -m electron",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },
