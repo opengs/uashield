@@ -3,7 +3,7 @@ import path from 'path'
 import os from 'os'
 
 import { Doser } from '../src-worker/doser'
-const { autoUpdater } = require("electron-updater");
+const { autoUpdater, dialog } = require("electron-updater");
 
 
 // needed in case process is undefined under Linux
@@ -111,12 +111,23 @@ autoUpdater.on('download-progress', (progressObj) => {
 })
 autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow('Update downloaded');
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version has been downloaded. Should we restart?'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
 });
 
 app.whenReady().then(createWindow)
 
 app.on('ready', function()  {
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdates();
 });
 
 app.on('window-all-closed', () => {
