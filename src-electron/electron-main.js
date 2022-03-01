@@ -3,6 +3,8 @@ import path from 'path'
 import os from 'os'
 
 import { Doser } from '../src-worker/doser'
+const { autoUpdater } = require("electron-updater");
+
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform()
@@ -15,6 +17,9 @@ try {
 
 let mainWindow
 
+function sendStatusToWindow(text) {
+  mainWindow.webContents.send('message', text);
+}
 function createWindow () {
   /**
    * Initial window options
@@ -35,6 +40,7 @@ function createWindow () {
   mainWindow.setMenu(null)
   mainWindow.loadURL(process.env.APP_URL)
 
+  mainWindow.webContents.openDevTools()
   if (process.env.DEBUGGING) {
     // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
@@ -77,7 +83,33 @@ function createWindow () {
   })
 }
 
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+})
+autoUpdater.on('update-available', (info) => {
+  sendStatusToWindow('Update available.');
+})
+autoUpdater.on('update-not-available', (info) => {
+  sendStatusToWindow('Update not available.');
+})
+autoUpdater.on('error', (err) => {
+  sendStatusToWindow('Error in auto-updater. ' + err);
+})
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  sendStatusToWindow(log_message);
+})
+autoUpdater.on('update-downloaded', (info) => {
+  sendStatusToWindow('Update downloaded');
+});
+
 app.whenReady().then(createWindow)
+
+app.on('ready', function()  {
+  autoUpdater.checkForUpdatesAndNotify();
+});
 
 app.on('window-all-closed', () => {
   if (platform !== 'darwin') {
