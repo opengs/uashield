@@ -43,3 +43,10 @@ Our voluntary defence center works is doing all the hard work: monitoring the ta
 2. Install dependencies `cd uashield && npm install`
 3. Build `npm run build:electron`
 4. Start the executable in `./dist/electron`, or start the **electron** version `npm run start:electron`
+
+## Headless версія / Headless version
+1. `docker build . -t uashield`
+2. `docker run uashield 500 true` - де `500` - номер потоків, і `true` | `false` чи ви бажаєте використати проксі
+
+1. `docker build . -t uashield`
+2. `docker run uashield 500 true` - where `500` - number of threads, and `true` | `false` if you want to use proxy

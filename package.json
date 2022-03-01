@@ -10,6 +10,8 @@
     "start:dev": "quasar dev -m electron",
     "start:electron": "electron ./dist/electron/UnPackaged/electron-main.js",
     "build:electron": "quasar build -m electron",
+    "build:headless": "tsc --project ./tsconfig.headless.json",
+    "start:headless": "NODE_ENV=production node ./build/headless/headless.js",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0"
   },
