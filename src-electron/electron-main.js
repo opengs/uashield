@@ -15,7 +15,7 @@ try {
   }
 } catch (_) { }
 
-let mainWindow
+var mainWindow
 
 function sendStatusToWindow(text) {
   mainWindow.webContents.send('message', text);
