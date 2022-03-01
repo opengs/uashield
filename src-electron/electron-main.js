@@ -109,7 +109,7 @@ autoUpdater.on('download-progress', (progressObj) => {
   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
   sendStatusToWindow(log_message);
 })
-autoUpdater.on('update-downloaded', (info) => {
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   sendStatusToWindow('Update downloaded');
   const dialogOpts = {
     type: 'info',
