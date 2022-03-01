@@ -12,7 +12,6 @@
 
 **В користувачів на Linux можливо треба буде додати аргумент "--no-sandbox" . Windows повинен працювати без всяких додаткових речей.**
 
-
 1. Compileg programs are in [releases](https://github.com/opengs/uashield/releases).
 2. Check newest release and you platform
 3. Download and run
@@ -28,11 +27,14 @@ Our voluntary center works with all hard work: monitoring targets, keeping techn
 
 ## Для розробників / For Developers
 
-Спочатку Вам треба встановити Quasar фреймворк / First, you have to install Quasar framework.
-See [Installing Quasar](https://quasar.dev/quasar-cli/installation).
+**Білд із джерельних кодів**
+1. Клонуємо репозиторій `git clone https://github.com/opengs/uashield.git`
+2. Встановлюємо залежності `cd uashield && npm install`
+3. Запускаємо білд `npm run build:electron`
+4. Запускаємо виконавчий файл в `./dist/electron` або електрон версію в `npm run start:electron`
 
-```bash
-git clone https://github.com/opengs/uashield.git && cd uashield
-yarn
-quasar dev -m electron
-```
+**Build from sources**
+1. Clone repo `git clone https://github.com/opengs/uashield.git`
+2. Install dependencies `cd uashield && npm install`
+3. Build `npm run build:electron`
+4. Start executable in `./dist/electron` or start electron version `npm run start:electron`
