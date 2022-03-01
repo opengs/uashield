@@ -53,4 +53,4 @@ Our voluntary defence center works is doing all the hard work: monitoring the ta
 
 
 ## Deploy attacker on your Raspberry Pi!
-[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/Razikus/opengs.git)
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/Razikus/opengs)
