@@ -1,0 +1,10 @@
+.quasar
+.github
+.vscode
+build
+dist
+node_modules
+docs
+src
+src-electron
+public

@@ -47,3 +47,7 @@ git clone https://github.com/opengs/uashield.git && cd uashield
 yarn
 quasar dev -m electron
 ```
+
+## Headless версія / Headless version
+1. `docker build . -t uashield`
+2. `docker run uashield 500 true` - where `500` - number of threads, and `true` | `false` if you want to use proxy
