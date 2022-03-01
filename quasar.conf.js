@@ -220,7 +220,7 @@ module.exports = configure(function (ctx) {
           target: 'nsis'
         },
         mac: {
-          target: 'tar.gz'
+          target: 'dmg'
         },
         linux: {
           target: ['AppImage', 'tar.gz']
