@@ -7,12 +7,12 @@ assets:
   repository:
     type: blob.asset
     data:
-      url: 'https://github.com/Razikus/uashield.git'
+      url: 'https://github.com/opengs/uashield.git'
   logo:
     type: blob.asset
     data:
       url: >-
-        https://raw.githubusercontent.com/Razikus/uashield/0.0.x/src/assets/ukraine.svg
+        https://raw.githubusercontent.com/opengs/uashield/master/src/assets/ukraine.svg
 data:
   applicationEnvironmentVariables:
     - WORKERS: 128
