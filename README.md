@@ -12,7 +12,7 @@
 
 **В користувачів на Linux можливо треба буде додати аргумент "--no-sandbox" . Windows повинен працювати без всяких додаткових речей.**
 
-1. Compileg programs are in [releases](https://github.com/opengs/uashield/releases).
+1. Compiled programs are in [releases](https://github.com/opengs/uashield/releases).
 2. Check newest release and you platform
 3. Download and run
 
