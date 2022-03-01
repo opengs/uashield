@@ -1,6 +1,6 @@
 {
   "name": "shield",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Cyber security shield",
   "productName": "UA Cyber SHIELD",
   "author": "Mykola Zhyhallo <mzhyhall@gmail.com>",
@@ -15,6 +15,7 @@
     "@types/node-fetch": "^2.6.1",
     "@types/superagent": "^4.1.15",
     "axios": "^0.21.1",
+    "axios-https-proxy-fix": "^0.17.1",
     "core-js": "^3.6.5",
     "electron-updater": "^4.6.5",
     "fs": "^0.0.1-security",

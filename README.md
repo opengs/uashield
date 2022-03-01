@@ -1,6 +1,8 @@
 # UA Cyber SHIELD
 Система волонтерської кібероборони України  / Ukrainian voluntary cyber defence system
 
+Комюніті / community: [Discord](https://discord.gg/7BfJ9JKQ98)
+
 [Відо інструкція на українській мові](https://youtu.be/snTzpRt7a5k)
 
 ## Для захисників / For defenders

