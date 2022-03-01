@@ -12,12 +12,23 @@
 
 **В користувачів на Linux можливо треба буде додати аргумент "--no-sandbox" . Windows повинен працювати без всяких додаткових речей.**
 
+**Для MacOS виконавчий файл не функціонує коректно. Використовуйте запуск із джерельних кодів**
+1. Клонуємо репозиторій `git clone https://github.com/opengs/uashield.git`
+2. Встановлюємо залежності `cd uashield && npm install`
+3. Запускаємо білд `npm run build:electron`
+4. Запускаємо електрон-версію `npm run start:electron`
 
 1. Compileg programs are in [releases](https://github.com/opengs/uashield/releases).
 2. Check newest release and you platform
 3. Download and run
 
 **Linux may require additional "--no-sandbox" argument. We are trying to solve this problem. Windows works without any additional steps.**
+
+**For MacOS executable is not working now. Use sources to run package**
+1. Clone repo `git clone https://github.com/opengs/uashield.git`
+2. Install dependencies `cd uashield && npm install`
+3. Build `npm run build:electron`
+4. Start electron version `npm run start:electron`
 
 ## Як це працює / How it works
 Наш центр волонтерів займається всією тяжкою роботою: моніторингом цілей, підтримкою технічної структури, координацією атак, передачі даних до програм клієнтів, тощо. Тому на момент атаки всі підготовчі дані є. Вам остається тільки встановити програму і приєднуватися. Цілі міняються автоматично і підгружаються з центру координації
