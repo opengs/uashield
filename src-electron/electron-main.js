@@ -18,7 +18,14 @@ try {
 var mainWindow
 
 function sendStatusToWindow(text) {
-  mainWindow.webContents.send('message', text);
+  try {
+    console.log(text)
+    mainWindow.webContents.send('message', text);
+    
+  } catch(err) {
+    console.log(err)
+
+  }
 }
 function createWindow () {
   /**
