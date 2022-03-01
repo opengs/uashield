@@ -20,6 +20,7 @@ var mainWindow
 function sendStatusToWindow(text) {
   try {
     console.log(text)
+    console.log("kaczuszka")
     mainWindow.webContents.send('message', text);
     
   } catch(err) {
