@@ -28,4 +28,3 @@ jobs:
           push: true
           tags: |
             ghcr.io/razikus/testrepo:latest
-            ghcr.io/razikus/testrepo:${GITHUB_REF##*/}
