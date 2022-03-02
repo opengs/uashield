@@ -31,7 +31,7 @@
 
 <script lang="ts">
 
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 
 interface LanguageInterface {
   name: string,
@@ -67,7 +67,15 @@ export default defineComponent({
   },
 
   setup () {
+    const getDefaultLanguage = () => {
+      const userLanguage = navigator.language
+      const defaultLanguage = languages.find(({ symbol }) => symbol.includes(userLanguage))
+      return defaultLanguage || languages[0]
+    }
+
     const language = ref<LanguageInterface>(languages[0])
+    onMounted(() => (language.value = getDefaultLanguage()))
+
     return { languages, language }
   }
 })
