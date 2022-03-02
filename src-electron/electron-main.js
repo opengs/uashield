@@ -125,6 +125,9 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 app.whenReady().then(createWindow)
 
 app.on('ready', function()  {
+  console.log("KACZUSZKA")
+  console.log("KACZUSZKA")
+  console.log("KACZUSZKA")
   autoUpdater.checkForUpdates();
 });
 
