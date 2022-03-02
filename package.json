@@ -5,7 +5,7 @@
   "productName": "UA Cyber SHIELD",
   "author": "Mykola Zhyhallo <mzhyhall@gmail.com>",
   "private": true,
-  "repository": "github:opengs/uashield",
+  "repository": "github:razikus/testrepo2",
   "scripts": {
     "start:dev": "quasar dev -m electron",
     "start:electron": "electron ./dist/electron/UnPackaged/electron-main.js",
