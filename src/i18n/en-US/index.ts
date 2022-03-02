@@ -3,8 +3,8 @@ export default {
   ddos: {
     description: 'DDoS attack generates a lot of requests to the target enemy server. Target server will start to lag and stop working properly.',
     counter: {
-      atackedTimes: 'Times atacked:',
-      currentTarget: 'Current target: '
+      attackedTimes: 'Times attacked:',
+      currentTarget: 'Current target:'
     },
     enable: {
       name: 'DDoS attack',
@@ -13,6 +13,14 @@ export default {
     proxy: {
       name: 'Attack only using proxy',
       description: 'Without this option, program will be allowed to use your IP. You will make more efficient attack, but attacks will not be anonymous'
+    },
+    advanced: {
+      header: 'Extended settings',
+      description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effect and decrease effectiveness of the application',
+      masDosersCount: {
+        name: 'Level of parallelism',
+        description: 'Defines amount of dosers. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of dosers according to new settings.'
+      }
     }
   }
 }
