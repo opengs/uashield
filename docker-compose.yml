@@ -6,7 +6,7 @@ services:
       container_name: uashield
       environment:
         WORKERS: '256'
-        USEPROXY: 'false'
+        USEPROXY: 'true'
       networks:
         - shield
 
