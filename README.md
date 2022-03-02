@@ -60,7 +60,7 @@ Our voluntary defence center works is doing all the hard work: monitoring the ta
 
 ## Деплой за допомогою Ansible / Deploy with Ansible
 
-![Readme](ansible/README.md)
+![Readme](tools/ansible/README.md)
 
 
 ## Deploy attacker on your Raspberry Pi!
