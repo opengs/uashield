@@ -4,7 +4,8 @@
       <q-card-section>
         <div class="text-h4 text-center">{{ $t('ddos.counter.attackedTimes') }}</div>
         <div class="text-h1 text-center">{{ atackCounter }}</div>
-        <div class="text-h5 text-center">{{ $t('ddos.counter.currentTarget') + currentAtack }}</div>
+        <div class="text-h5 text-center">{{ $t('ddos.counter.currentTarget') }}</div>
+        <div class="text-h5 text-center">{{ currentAttack }}</div>
       </q-card-section>
       <q-card-section>
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.description') }}</div>
@@ -60,23 +61,27 @@
 
         <q-card-section class="q-pt-none">
           <div class="text-h7">{{ $t('ddos.advanced.masDosersCount.name') }}</div>
-          <q-slider
-            v-model="maxDosersCount"
-            :min="16"
-            :max="maxNumberOfWorkers"
-            :step="16"
-            label
-            color="light-green"
-          />
-          <q-input
-            :model-value="maxDosersCount"
-            type="number"
-            :min="1"
-            filled
-            required
-            @update:modelValue="updateNumberOfWorkers"
-            style="max-width: 200px"
-          />
+          <div class="max-dosers-count-wrapper">
+            <q-slider
+              v-model="maxDosersCount"
+              :min="16"
+              :max="maxNumberOfWorkers"
+              :step="16"
+              label
+              color="light-green"
+            />
+          </div>
+          <div class="custom-max-dosers-count-wrapper">
+            <q-input
+              :model-value="maxDosersCount"
+              type="number"
+              :min="1"
+              filled
+              square
+              required
+              @update:modelValue="updateNumberOfWorkers"
+            />
+          </div>
           <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.masDosersCount.description') }}</q-item-label>
         </q-card-section>
 
@@ -114,7 +119,7 @@ export default defineComponent({
 
     serveAtack (_event: unknown, data: { url: string, log: string }) {
       if ((new Date()).getTime() - this.lastAtackChange.getTime() > 1000) {
-        this.currentAtack = data.url
+        this.currentAttack = data.url
         this.lastAtackChange = new Date()
       }
       this.atackCounter += 1
@@ -145,14 +150,14 @@ export default defineComponent({
     const ddosEnabled = ref(true)
     const forceProxy = ref(true)
     const atackCounter = ref(0)
-    const currentAtack = ref('')
+    const currentAttack = ref('')
     const lastAtackChange = ref(new Date())
     const log = ref([] as Array<string>)
 
     const advancedSettingsDialog = ref(false)
     const maxDosersCount = ref(32)
 
-    return { ddosEnabled, forceProxy, atackCounter, currentAtack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount }
+    return { ddosEnabled, forceProxy, atackCounter, currentAttack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount }
   }
 })
 </script>
