@@ -6,9 +6,8 @@ services:
       environment:
         WORKERS: '512'
         USEPROXY: 'true'
-      networks:
-        - shield
+      deploy:
+        replicas: 6
+      restart_policy:
+        condition: always
 
-networks:
-  shield:
-    driver: bridge
