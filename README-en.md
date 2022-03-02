@@ -40,7 +40,7 @@ Targets being attacked are changed automatically and are downloaded from the con
 1. Build an image: `docker build . -t uashield`
 2. Run: `docker run uashield 512 true` - where `512` - threads count, and `true` | `false` if you want to use a proxy or not
 
-Or use pre-built version:
+Or use pre-built image:
 
 ```bash
 docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
