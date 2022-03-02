@@ -10,5 +10,5 @@ docker_pip_executable: pip3
 
 #Uashield
 
-uashield_git_url: "https://github.com/opengs/uashield"
+uashield_git_url: "https://github.com/dmpanch/uashield"
 uashield_work_dir: /root/uashield/
