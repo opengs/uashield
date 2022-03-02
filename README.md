@@ -40,6 +40,12 @@
 1. Збірка імежду: `docker build . -t uashield`
 2. Запуск: `docker run uashield 500 true` - де `500` - кількість потоків, і `true` | `false` чи ви бажаєте використати проксі
 
+Або за допомогою вже зібраного імежду:
+
+```bash
+docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
+```
+
 ## Docker-compose версія
 
 1. Запуск: `docker-compose up -d`
@@ -52,3 +58,7 @@
 ## Деплой за допомогою Ansible
 
 [Readme](tools/ansible/README.md)
+
+## Деплой на Play With Docker - безкоштовний інстанс на 4 години
+
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/0.0.x/pwd-docker-compose.yml)

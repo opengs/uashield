@@ -4,7 +4,7 @@
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-**The voluntary Ukrainian cyber defence system**
+**The voluntary Ukrainian cyber defense system**
 
 - Community: [Discord](https://discord.gg/7BfJ9JKQ98)
 - Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
@@ -40,9 +40,11 @@ Targets being attacked are changed automatically and are downloaded from the con
 1. Build an image: `docker build . -t uashield`
 2. Run: `docker run uashield 512 true` - where `512` - threads count, and `true` | `false` if you want to use a proxy or not
 
-# Or use prebuilded version
+Or use pre-built version:
 
-1. Run: `docker run -d ghcr.io/opengs/uashield:0.0.x 512 true` - where `512` - threads count, and `true` | `false` if you want to use a proxy or not
+```bash
+docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
+```
 
 ## Docker-compose version
 
