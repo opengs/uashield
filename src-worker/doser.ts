@@ -1,7 +1,8 @@
-import axios, { AxiosError } from 'axios-https-proxy-fix'
+import { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
-import { DoserEventType, TargetData, ProxyData, SiteData } from './worker.types'
+import { DoserEventType, TargetData, ProxyData, SiteData, GetSitesAndProxiesResponse } from './types'
 import { Runner } from './runner'
+import { getSites, getProxies } from './requests'
 
 const CONFIGURATION_INVALIDATION_TIME = 300000
 
@@ -88,7 +89,7 @@ export class Doser {
     }, wasPreviousUpdateSuccessful ? CONFIGURATION_INVALIDATION_TIME : CONFIGURATION_INVALIDATION_TIME / 10)
   }
 
-  async getSitesAndProxies (): Promise<{ sites: SiteData[]; proxies: ProxyData[]} | null> {
+  async getSitesAndProxies (): Promise<GetSitesAndProxiesResponse> {
     while (this.working) { // escaping unavailable hosts
       try {
         const [proxies, sites] = await Promise.all([getProxies(), getSites()])
@@ -97,7 +98,7 @@ export class Doser {
 
         return {
           sites: sites.data,
-          proxyes: proxies.data
+          proxies: proxies.data
         }
       } catch (e) {
         this.logError('Error while loading hosts', e)
