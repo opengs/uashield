@@ -51,6 +51,13 @@ Our voluntary defence center works is doing all the hard work: monitoring the ta
 1. `docker build . -t uashield`
 2. `docker run uashield 500 true` - where `500` - number of threads, and `true` | `false` if you want to use proxy
 
+## Docker-compose версія / Docker-compose version
+1. `docker-compose up -d`
+2. Відредагуйте значення змінних `WORKERS` та `USEPROXY` `docker-compose.yml` - де `256` - номер потоків, і `true` | `false` чи ви бажаєте використати проксі
+
+1. `docker-compose up -d`
+2. Replace values of variables `WORKERS` and `USEPROXY` `docker-compose.yml` where `256` - number of threads, and `true` | `false` if you want to use proxy
+
 
 ## Deploy attacker on your Raspberry Pi!
 [![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/opengs/uashield)
