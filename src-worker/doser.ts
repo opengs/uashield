@@ -1,4 +1,4 @@
-import axios from 'axios-https-proxy-fix'
+import axios, { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
 import { DoserEventType, TargetData, ProxyData, SiteData } from './worker.types'
 import { Runner } from './runner'
@@ -18,13 +18,26 @@ export class Doser {
     proxies: ProxyData[];
   } | null = null
 
-  constructor (onlyProxy: boolean, numberOfWorkers: number) {
+  private verboseError: boolean;
+
+  constructor (onlyProxy: boolean, numberOfWorkers: number, verboseError: boolean) {
     this.onlyProxy = onlyProxy
     this.working = false
     this.eventSource = new EventEmitter()
+    this.verboseError = verboseError
     this.initialize(numberOfWorkers).catch(error => {
       console.error('Wasnt able to initialize:', error)
     })
+  }
+
+  private logError (message:string, cause: unknown) {
+    console.log(message)
+
+    if (this.verboseError) {
+      console.log(cause)
+    } else {
+      console.log((cause as AxiosError)?.message)
+    }
   }
 
   private async initialize (numberOfWorkers: number, attemptNumber = 1): Promise<void> {
@@ -92,8 +105,7 @@ export class Doser {
           proxies
         }
       } catch (e) {
-        console.log('Error while loading hosts')
-        console.log(e)
+        this.logError('Error while loading hosts', e)
       }
     }
     return null
@@ -116,8 +128,7 @@ export class Doser {
           proxy: proxyes
         } as TargetData
       } catch (e) {
-        console.log('Error while loading hosts')
-        console.log(e)
+        this.logError('Error while loading hosts', e)
       }
     }
     return null
@@ -180,6 +191,12 @@ export class Doser {
         type: 'atack',
         ...event
       })
+    })
+
+    worker.eventSource.on('error', event => {
+      if (this.verboseError) {
+        this.eventSource.emit('error', event)
+      }
     })
     return worker
   }

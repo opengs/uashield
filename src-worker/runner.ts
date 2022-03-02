@@ -51,7 +51,10 @@ export class Runner {
         const response = await axios.get(target.site.page, { timeout: 10000 })
         directRequest = response.status === 200
       } catch (e) {
-        this.eventSource.emit('error', { type: 'error', error: e })
+        this.eventSource.emit('error', {
+          message: (e as Error).message,
+          error: e
+        })
         directRequest = false
       }
     }
@@ -64,7 +67,7 @@ export class Runner {
       try {
         if (directRequest) {
           const r = await axios.get(target.site.page, { timeout: 5000, validateStatus: () => true })
-          this.eventSource.emit('atack', { url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}` })
+          this.eventSource.emit('attack', { url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}` })
         } else {
           if (proxy === null) {
             proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
@@ -100,7 +103,7 @@ export class Runner {
         proxy = null
         const code = (e as AxiosError).code || 'UNKNOWN'
         if (code === 'UNKNOWN') {
-          console.log(e)
+          console.error(e)
         }
 
         this.eventSource.emit('attack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${code}` })
