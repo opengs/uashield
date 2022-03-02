@@ -2,11 +2,10 @@
 
 *Дивись цю сторінку [українською](README.md)*
 
-The voluntary Ukrainian cyber defenіe system
+**The voluntary Ukrainian cyber defenіe system**
 
-Community: [Discord](https://discord.gg/7BfJ9JKQ98)
-
-Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
+- Community: [Discord](https://discord.gg/7BfJ9JKQ98)
+- Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
 
 ## For cyber defenders
 

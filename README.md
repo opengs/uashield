@@ -2,11 +2,10 @@
 
 *See this README [in English](README-en.md)*
 
-Система волонтерської кібероборони України
+**Система волонтерської кібероборони України**
 
-Ком'юніті: [Discord](https://discord.gg/7BfJ9JKQ98)
-
-Відео інструкція [українською](https://youtu.be/snTzpRt7a5k)
+- Ком'юніті: [Discord](https://discord.gg/7BfJ9JKQ98)
+- Відео інструкція [українською](https://youtu.be/snTzpRt7a5k)
 
 ## Для кіберзахисників
 
