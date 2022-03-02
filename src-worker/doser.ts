@@ -134,7 +134,6 @@ export class Doser {
     return null
   }
 
-  
   setWorkersCount (newCount: number) {
     console.debug(`Updating workers count to ${this.numberOfWorkers} => ${newCount}`)
     if (newCount < this.numberOfWorkers) {
