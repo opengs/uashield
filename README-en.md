@@ -48,3 +48,7 @@ Targets being attacked are changed automatically and are downloaded from the con
 ## Deploy on Raspberry Pi
 
 [![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/opengs/uashield)
+
+## Deploy with Ansible
+
+![Readme](tools/ansible/README.md)
