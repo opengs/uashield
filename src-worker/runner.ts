@@ -51,10 +51,8 @@ export class Runner {
         const response = await axios.get(target.site.page, { timeout: 10000 })
         directRequest = response.status === 200
       } catch (e) {
-        this.eventSource.emit('error', {
-          message: (e as Error).message,
-          error: e
-        })
+        console.debug((e as Error).message)
+        this.eventSource.emit('error', { error: e })
         directRequest = false
       }
     }
