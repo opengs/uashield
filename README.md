@@ -50,3 +50,7 @@ Our voluntary defence center works is doing all the hard work: monitoring the ta
 
 1. `docker build . -t uashield`
 2. `docker run uashield 500 true` - where `500` - number of threads, and `true` | `false` if you want to use proxy
+
+
+## Deploy attacker on your Raspberry Pi!
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/opengs/uashield)
