@@ -1,0 +1,17 @@
+version: '3'
+services:
+    uashield:
+      build: .
+      restart: always
+      privileged: true
+      container_name: uashield
+      tty: true 
+      environment:
+        WORKERS: '500'
+        USEPROXY: 'true'
+      networks:
+        - shield
+
+networks:
+  shield:
+    driver: bridge
