@@ -4,7 +4,7 @@
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-**The voluntary Ukrainian cyber defenіe system**
+**The voluntary Ukrainian cyber defence system**
 
 - Community: [Discord](https://discord.gg/7BfJ9JKQ98)
 - Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
@@ -38,7 +38,11 @@ Targets being attacked are changed automatically and are downloaded from the con
 ## Headless version (Docker)
 
 1. Build an image: `docker build . -t uashield`
-2. Run: `docker run uashield 500 true` - where `500` - threads count, and `true` | `false` if you want to use a proxy or not
+2. Run: `docker run uashield 512 true` - where `512` - threads count, and `true` | `false` if you want to use a proxy or not
+
+# Or use prebuilded version
+
+1. Run: `docker run -d ghcr.io/opengs/uashield:0.0.x 512 true` - where `512` - threads count, and `true` | `false` if you want to use a proxy or not
 
 ## Docker-compose version
 
@@ -52,3 +56,7 @@ Targets being attacked are changed automatically and are downloaded from the con
 ## Deploy with Ansible
 
 [Readme](tools/ansible/README.md)
+
+## Deploy with Play With Docker - free instance for 4 hours
+
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/master/docker-compose.yml)
