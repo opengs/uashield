@@ -7,6 +7,6 @@
   roles:
     - tools
     - docker
-#    - uashield
+    - uashield
   handlers:
     - include: handlers/main.yml
