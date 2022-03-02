@@ -3,9 +3,3 @@
   service: 
     name: docker 
     state: restarted
-
-- name: Start uashield
-  systemd:
-    name: uashield
-    state: started
-    enabled: yes

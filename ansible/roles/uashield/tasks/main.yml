@@ -11,3 +11,12 @@
   shell: "docker-compose up -d"
   args:
     chdir: "{{uashield_work_dir}}"
+
+- name: Check docker started
+  shell: "docker ps"
+  args:
+    chdir: "{{uashield_work_dir}}"
+  register: output
+
+- ansible.builtin.debug:
+        var: output
