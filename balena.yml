@@ -1,5 +1,6 @@
 name: UAShield
 type: sw.application
+joinable: false
 description: >-
   Together - stronger. Deploy DDOSer across your fleet and help Ukraine in DDOSing invader!
   Application automaticaly download targets.
