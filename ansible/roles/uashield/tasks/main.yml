@@ -1,0 +1,13 @@
+---
+- name: Clone Home Assistant repo
+  git:
+    repo: "{{uashield_git_url}}"
+    dest: "{{uashield_work_dir}}"
+    accept_hostkey: true
+    force: true
+    version: "master"
+
+- name: Run uashield
+  shell: "docker-compose up -d"
+  args:
+    chdir: "{{uashield_work_dir}}"
