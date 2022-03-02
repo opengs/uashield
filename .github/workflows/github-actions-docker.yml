@@ -17,7 +17,7 @@ jobs:
         uses: docker/login-action@v1 
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: razikus
           password: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Build and push
@@ -27,5 +27,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/testrepo:latest
-            ghcr.io/${{ github.repository_owner }}/testrepo:${GITHUB_REF##*/}
+            ghcr.io/razikus/testrepo:latest
+            ghcr.io/razikus/testrepo:${GITHUB_REF##*/}
