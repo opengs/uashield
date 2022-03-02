@@ -69,7 +69,7 @@ export default defineComponent({
   setup () {
     const getDefaultLanguage = () => {
       const userLanguage = navigator.language
-      const defaultLanguage = languages.find(({symbol}) => symbol.includes(userLanguage))
+      const defaultLanguage = languages.find(({ symbol }) => symbol.includes(userLanguage))
       return defaultLanguage || languages[0]
     }
 
