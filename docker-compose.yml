@@ -5,7 +5,7 @@ services:
       restart: always
       container_name: uashield
       environment:
-        WORKERS: '25'
+        WORKERS: '256'
         USEPROXY: 'false'
       networks:
         - shield
