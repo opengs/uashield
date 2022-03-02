@@ -70,24 +70,26 @@ export class Runner {
           if (proxy === null) {
             proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
           }
+          let proxyObj: any = {}
           const proxyAddressSplit = proxy.ip.split(':')
           const proxyIP = proxyAddressSplit[0]
           const proxyPort = parseInt(proxyAddressSplit[1])
-          const proxyAuthSplit = proxy.auth.split(':')
-          const proxyUsername = proxyAuthSplit[0]
-          const proxyPassword = proxyAuthSplit[1]
+          proxyObj.host = proxyIP
+          proxyObj.port = proxyPort
+
+          if(proxy.auth) {
+            const proxyAuthSplit = proxy.auth.split(':')
+            const proxyUsername = proxyAuthSplit[0]
+            const proxyPassword = proxyAuthSplit[1]
+            proxyObj.auth = { username: proxyUsername, password: proxyPassword }
+
+          }
+
 
           const r = await axios.get(target.site.page, {
             timeout: 10000,
             validateStatus: () => true,
-            proxy: {
-              host: proxyIP,
-              port: proxyPort,
-              auth: {
-                username: proxyUsername,
-                password: proxyPassword
-              }
-            }
+            proxy: proxyObj
           })
 
           this.eventSource.emit('attack', { url: target.site.page, log: `${target.site.page} | PROXY | ${r.status}` })
