@@ -58,7 +58,7 @@ Our voluntary defence center works is doing all the hard work: monitoring the ta
 1. `docker-compose up -d`
 2. Replace values of variables `WORKERS` and `USEPROXY` `docker-compose.yml` where `256` - number of threads, and `true` | `false` if you want to use proxy
 
-## Деплой за допомогою Ansioble / Deploy with Ansible
+## Деплой за допомогою Ansible / Deploy with Ansible
 
 ![Readme](ansible/README.md)
 
