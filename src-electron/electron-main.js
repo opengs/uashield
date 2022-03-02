@@ -1,9 +1,9 @@
-import { app, BrowserWindow, nativeTheme, ipcMain } from 'electron'
+import { app, BrowserWindow, nativeTheme, ipcMain, dialog } from 'electron'
 import path from 'path'
 import os from 'os'
 
 import { Doser } from '../src-worker/doser'
-const { autoUpdater, dialog } = require("electron-updater");
+const { autoUpdater } = require("electron-updater");
 
 
 // needed in case process is undefined under Linux
