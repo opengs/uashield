@@ -22,7 +22,7 @@
 
 ## Як це працює / How it works
 #### УКР
-Наш центр волонтерів займається всією тяжкою роботою: моніторингом цілей, підтримкою технічної структури, координацією атак, передачі даних до програм клієнтів, тощо. Тому на момент атаки всі підготовчі дані є. Вам остається тільки встановити програму і приєднуватися. Цілі міняються автоматично і підгружаються з центру координації
+Наш центр волонтерів займається всією тяжкою роботою: моніторингом цілей, підтримкою технічної структури, координацією атак, передачі даних до програм клієнтів, тощо. Тому на момент атаки всі підготовчі дані є. Вам залишається тільки встановити програму і приєднуватися. Цілі міняються автоматично і підгружаються з центру координації
 
 #### ENG
 Our voluntary defence center works is doing all the hard work: monitoring the targets, running the technical infrastructure, cooridnation of the attack targets, coordination with the client applications, etc. When the attack is performed, the application gets the data that it needs automatically. The only thing you need to do is to install it. Targets being attacked are changed automatically and are downloaded from the control center/server.
