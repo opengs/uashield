@@ -2,7 +2,7 @@
   <q-page class="row items-center justify-evenly bg-grey-10 text-white">
     <q-card class="bg-grey-10 full-card">
       <q-card-section>
-        <div class="text-h4 text-center">{{ $t('ddos.counter.atackedTimes') }}</div>
+        <div class="text-h4 text-center">{{ $t('ddos.counter.attackedTimes') }}</div>
         <div class="text-h1 text-center">{{ atackCounter }}</div>
         <div class="text-h5 text-center">{{ $t('ddos.counter.currentTarget') + currentAtack }}</div>
       </q-card-section>
