@@ -8,6 +8,4 @@ services:
         USEPROXY: 'true'
       deploy:
         replicas: 6
-      restart_policy:
-        condition: always
 
