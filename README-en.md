@@ -2,6 +2,8 @@
 
 *Дивись цю сторінку [українською](README.md)*
 
+[![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
+
 **The voluntary Ukrainian cyber defenіe system**
 
 - Community: [Discord](https://discord.gg/7BfJ9JKQ98)
@@ -10,7 +12,7 @@
 ## For cyber defenders
 
 1. You can find binaries on [releases page](https://github.com/opengs/uashield/releases)
-2. Find the latest release and your platform
+2. Find the [latest release](https://github.com/opengs/uashield/releases/latest) and your platform
 3. Download and run the binary file
 
 **Running on Linux may require an additional `--no-sandbox` argument. It doesn't affect Windows**

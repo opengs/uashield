@@ -2,6 +2,8 @@
 
 *See this README [in English](README-en.md)*
 
+[![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
+
 **Система волонтерської кібероборони України**
 
 - Ком'юніті: [Discord](https://discord.gg/7BfJ9JKQ98)
@@ -10,7 +12,7 @@
 ## Для кіберзахисників
 
 1. Програми знаходяться в [релізах](https://github.com/opengs/uashield/releases)
-2. Вибираємо найновший реліз і свою платформу
+2. Вибираємо [найновший реліз](https://github.com/opengs/uashield/releases/latest) і свою платформу
 3. Скачуємо і запускаємо
 
 **В користувачів на Linux можливо треба буде додати аргумент `--no-sandbox`. Windows повинен працювати без всяких додаткових речей**
