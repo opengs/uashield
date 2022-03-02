@@ -1,5 +1,5 @@
 ---
-- name: Clone Home Assistant repo
+- name: Clone uashield repo
   git:
     repo: "{{uashield_git_url}}"
     dest: "{{uashield_work_dir}}"
