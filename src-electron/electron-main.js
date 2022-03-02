@@ -22,7 +22,7 @@ function sendStatusToWindow(text) {
     console.log(text)
     console.log("kaczuszka123123")
     mainWindow.webContents.send('message', text);
-    
+
   } catch(err) {
     console.log(err)
 
@@ -89,6 +89,10 @@ function createWindow () {
   ipcMain.on('updateMaxDosersCount', (event, arg) => {
     doser.setWorkersCount(arg.newVal)
   })
+
+  ipcMain.on('installUpdate', () => {
+    autoUpdater.quitAndInstall()
+  })
 }
 
 autoUpdater.on('checking-for-update', () => {
@@ -110,19 +114,13 @@ autoUpdater.on('download-progress', (progressObj) => {
   sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-  sendStatusToWindow('Update downloaded');
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Update',
+  sendStatusToWindow('Update downloaded')
+  const obj = {
     message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail: 'A new version has been downloaded. Should we restart?'
   }
 
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
-  })
-});
+  mainWindow?.webContents.send('update', obj)
+})
 
 app.whenReady().then(createWindow)
 
