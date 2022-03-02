@@ -27,5 +27,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/Razikus/testrepo:latest
-            ghcr.io/Razikus/testrepo:${GITHUB_REF##*/}
+            ghcr.io/${{ github.repository_owner }}/testrepo:latest
+            ghcr.io/${{ github.repository_owner }}/testrepo:${GITHUB_REF##*/}
