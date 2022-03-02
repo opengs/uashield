@@ -51,4 +51,4 @@ Targets being attacked are changed automatically and are downloaded from the con
 
 ## Deploy with Ansible
 
-![Readme](tools/ansible/README.md)
+[Readme](tools/ansible/README.md)

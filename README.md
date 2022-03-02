@@ -51,4 +51,4 @@
 
 ## Деплой за допомогою Ansible
 
-![Readme](tools/ansible/README.md)
+[Readme](tools/ansible/README.md)
