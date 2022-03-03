@@ -20,7 +20,7 @@ export default {
       description: 'Jeżeli nie jesteś doświadczonym użytkownikiem nie zmieniaj ustawień zaawansowanych. Może to mieć zły wpływ na działanie programu',
       masDosersCount: {
         name: 'Poziom równoległości',
-        description: 'Określa liczbę równoległych procesów. Stosowane są mechanizmy asynchroniczne (nie strumieniowe), więc nie ma to dużego wpływu na procesor / RAM. Obecnie opcja działa w trybie manualnym i określa liczbę równoległych zapytań. Przy dużej liczbie requestów proxy serwery mogą blokować DDOS. Zmień znaczenie i poczekaj 2-3 minuty, aby zobaczyć wynik. Jeśli widzisz ECONNABORTED - oznacza to, że jesteś zablokowany i musisz zmniejszyć liczbę/ilość'
+        description: 'Określa liczbę równoległych procesów. Stosowane są mechanizmy asynchroniczne (nie strumieniowe), więc nie ma to dużego wpływu na procesor / RAM. Obecnie opcja działa w trybie manualnym i określa liczbę równoległych zapytań. Przy dużej liczbie requestów proxy serwery mogą blokować DDoS. Zmień znaczenie i poczekaj 2-3 minuty, aby zobaczyć wynik. Jeśli widzisz ECONNABORTED - oznacza to, że jesteś zablokowany i musisz zmniejszyć liczbę/ilość'
       }
     }
   }
