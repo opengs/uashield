@@ -12,9 +12,6 @@
   args:
     chdir: "{{uashield_work_dir}}"
 
-- name: Remove old uashield containers
-  shell: "docker rm uashield"
-
 - name: Remove old uashield images
   shell: "docker rmi -f uashield"
 
