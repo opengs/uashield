@@ -4,7 +4,7 @@ export default {
     description: 'Ataque DDOS que realiza muchas requests/solicitudes a targets de servidores enemigos. Los targets/objetivos comenzarán a funcionar mal o con lag.',
     counter: {
       attackedTimes: 'Número de ataques:',
-      currentTarget: 'Target/Objetivo actual:'
+      currentTarget: 'Target/Objetivo actual: '
     },
     enable: {
       name: 'Ataque DDOS',
