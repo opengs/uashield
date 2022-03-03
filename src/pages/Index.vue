@@ -63,10 +63,19 @@
           <q-slider
             v-model="maxDosersCount"
             :min="16"
-            :max="256"
+            :max="maxNumberOfWorkers"
             :step="16"
             label
             color="light-green"
+          />
+          <q-input
+            :model-value="maxDosersCount"
+            type="number"
+            :min="1"
+            filled
+            required
+            @update:modelValue="updateNumberOfWorkers"
+            style="max-width: 200px"
           />
           <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.masDosersCount.description') }}</q-item-label>
         </q-card-section>
@@ -89,7 +98,20 @@ export default defineComponent({
 
   components: { LanguageSelect },
 
+  computed: {
+    maxNumberOfWorkers (): number {
+      return Math.max(this.maxDosersCount, 256)
+    }
+  },
+
   methods: {
+    updateNumberOfWorkers (numberOfWorkers: number | undefined) {
+      // When entering via input form it can be undefined
+      if (numberOfWorkers !== undefined) {
+        this.maxDosersCount = numberOfWorkers
+      }
+    },
+
     serveAtack (_event: unknown, data: { url: string, log: string }) {
       if ((new Date()).getTime() - this.lastAtackChange.getTime() > 1000) {
         this.currentAtack = data.url
@@ -108,8 +130,10 @@ export default defineComponent({
     forceProxy (newVal: boolean) {
       window.require('electron').ipcRenderer.send('updateForceProxy', { newVal })
     },
-    maxDosersCount (newVal: boolean) {
-      window.require('electron').ipcRenderer.send('updateMaxDosersCount', { newVal })
+    maxDosersCount (newVal: number | undefined) {
+      if (newVal !== undefined) {
+        window.require('electron').ipcRenderer.send('updateMaxDosersCount', { newVal })
+      }
     }
   },
 
