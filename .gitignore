@@ -34,3 +34,7 @@ yarn-error.log*
 
 # Headless version
 build
+
+.nuxt
+
+/docs/dist
