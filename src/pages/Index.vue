@@ -3,8 +3,9 @@
     <q-card class="bg-grey-10 full-card">
       <q-card-section>
         <div class="text-h4 text-center">{{ $t('ddos.counter.attackedTimes') }}</div>
-        <div class="text-h1 text-center">{{ atackCounter }}</div>
-        <div class="text-h5 text-center">{{ $t('ddos.counter.currentTarget') + currentAtack }}</div>
+        <div class="text-h1 text-center">{{ attackCounter }}</div>
+        <div class="text-h5 text-center">{{ $t('ddos.counter.currentTarget') }}</div>
+        <div class="text-h5 text-center">{{ currentAttack }}</div>
       </q-card-section>
       <q-card-section>
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.description') }}</div>
@@ -65,18 +66,19 @@
             :min="16"
             :max="maxNumberOfWorkers"
             :step="16"
-            label
             color="light-green"
           />
-          <q-input
-            :model-value="maxDosersCount"
-            type="number"
-            :min="1"
-            filled
-            required
-            @update:modelValue="updateNumberOfWorkers"
-            style="max-width: 200px"
-          />
+          <div class="custom-max-dosers-count-wrapper">
+            <q-input
+              :model-value="maxDosersCount"
+              type="number"
+              :min="1"
+              filled
+              square
+              required
+              @update:modelValue="updateNumberOfWorkers"
+            />
+          </div>
           <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.masDosersCount.description') }}</q-item-label>
         </q-card-section>
 
@@ -136,12 +138,12 @@ export default defineComponent({
       }
     },
 
-    serveAtack (_event: unknown, data: { url: string, log: string }) {
-      if ((new Date()).getTime() - this.lastAtackChange.getTime() > 1000) {
-        this.currentAtack = data.url
-        this.lastAtackChange = new Date()
+    serveAttack (_event: unknown, data: { url: string, log: string }) {
+      if ((new Date()).getTime() - this.lastAttackChange.getTime() > 1000) {
+        this.currentAttack = data.url
+        this.lastAttackChange = new Date()
       }
-      this.atackCounter += 1
+      this.attackCounter += 1
       if (this.log.length > 100) this.log.pop()
       this.log.unshift(data.log)
     },
@@ -171,7 +173,7 @@ export default defineComponent({
   },
 
   mounted () {
-    window.require('electron').ipcRenderer.on('atack', this.serveAtack.bind(this))
+    window.require('electron').ipcRenderer.on('atack', this.serveAttack.bind(this))
 
     window.require('electron').ipcRenderer.on('update', this.askForInstallUpdate.bind(this))
   },
@@ -179,9 +181,9 @@ export default defineComponent({
   setup () {
     const ddosEnabled = ref(true)
     const forceProxy = ref(true)
-    const atackCounter = ref(0)
-    const currentAtack = ref('')
-    const lastAtackChange = ref(new Date())
+    const attackCounter = ref(0)
+    const currentAttack = ref('')
+    const lastAttackChange = ref(new Date())
     const log = ref([] as Array<string>)
 
     const advancedSettingsDialog = ref(false)
@@ -189,7 +191,7 @@ export default defineComponent({
     const updateDialog = ref(false)
     const updateMessage = ref('message')
 
-    return { ddosEnabled, forceProxy, atackCounter, currentAtack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
+    return { ddosEnabled, forceProxy, attackCounter, currentAttack, lastAttackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
   }
 })
 </script>
