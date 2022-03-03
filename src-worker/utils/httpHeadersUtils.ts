@@ -23,6 +23,9 @@ export class HttpHeadersUtils {
     if (Random.bool()) {
       headers = { ...headers, ...HttpHeadersUtils.acceptEncoding() }
     }
+    if (Random.bool()) {
+      headers = { ...headers, ...HttpHeadersUtils.secHeaders() }
+    }
     return headers
   }
 
@@ -44,6 +47,18 @@ export class HttpHeadersUtils {
       'ru,en;q=0.9,en-US;q=0.8'
     ]
     return { 'Accept-Language': options[Random.int(options.length)] }
+  }
+  
+  private static secHeaders () {
+    return {
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-site": "none",
+      "sec-fetch-dest": "document",
+      "sec-fetch-user": "?1",
+      "sec-ch-ua-platform": "Windows",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua": '" Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"'
+    }
   }
 
   private static accept () {
