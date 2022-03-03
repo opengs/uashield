@@ -13,14 +13,19 @@ export default {
     },
     proxy: {
       name: 'Attack only using proxy',
-      description: 'Without this option, program will be allowed to use your IP. You will make more efficient attack, but attacks will not be anonymous'
+      description: 'Without this option, program will be allowed to use your IP. You will make more efficient attack, but attacks will not be anonymous.'
+    },
+    update: {
+      title: 'Update available',
+      cancel: 'Cancel',
+      confirm: 'Install update'
     },
     advanced: {
       header: 'Extended settings',
       description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effect and decrease effectiveness of the application',
       masDosersCount: {
         name: 'Level of parallelism',
-        description: 'Defines amount of threads. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of threads according to new settings'
+        description: 'Defines the amount of threads. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of threads according to new settings'
       }
     }
   }
