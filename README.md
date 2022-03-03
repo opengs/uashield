@@ -35,6 +35,10 @@
 3. Запускаємо білд: `npm run build:electron`
 4. Запускаємо виконавчий файл в `./dist/electron` або електрон версію: `npm run start:electron`
 
+## Як додадти нову мову до інтерфейсу програми
+
+Документацію можна знайти тут: [docs/add-new-language.md](docs/add-new-language.md)
+
 ## Headless версія (Docker)
 
 1. Збірка імежду: `docker build . -t uashield`
