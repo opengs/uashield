@@ -7,8 +7,16 @@
     force: true
     version: "master"
 
+- name: Stop all containers
+  shell: "docker-compose down"
+  args:
+    chdir: "{{uashield_work_dir}}"
+
+- name: Remove old uashield images
+  shell: "docker rmi -f uashield"
+
 - name: Run uashield
-  shell: "docker-compose up -d --build --force-recreate"
+  shell: "docker-compose up -d"
   args:
     chdir: "{{uashield_work_dir}}"
 
