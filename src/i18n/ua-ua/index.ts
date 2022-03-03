@@ -1,11 +1,11 @@
 export default {
   language: 'Мова',
   ddos: {
-    description: 'Атака DDoS робить величезну кількість запитів на ворожі сайти, чим спричиняє їхню величезну завантаженість і виводить їх з ладу. В наслідку атаки DDoS, сервери не можуть працювати в штатному режимі / лагають, або взагалі не працюють.',
-    coordinators: 'Для координацій цілей: https://t.me/incourse911 ',
+    description: 'Атака DDoS робить величезну кількість запитів на ворожі сайти, чим спричиняє їхню величезну завантаженість і виводить їх з ладу. В наслідку атаки DDoS, сервери не можуть працювати в штатному режимі / лагають, або взагалі не працюють',
+    coordinators: 'Для координацій цілей: https://t.me/incourse911',
     counter: {
       attackedTimes: 'Атаковано разів:',
-      currentTarget: 'Теперішня ціль:'
+      currentTarget: 'Теперішня ціль: '
     },
     enable: {
       name: 'Атака DDoS',
@@ -16,11 +16,11 @@ export default {
       description: 'З атакою без проксі, програма зможе використовувати ваш реальний IP. Це дозволяє робити атаки більш ефективними, але водночас зробить ваш IP відомим ворогу'
     },
     advanced: {
-      header: 'Extended settings',
-      description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effect and decrease effectiveness of the application',
+      header: 'Розширені налаштування',
+      description: 'Якщо якась термінологія вам незрозуміла, не змінюйте розширені налаштування. Це може призвести до негативного ефекту та знизити ефективність застосування',
       masDosersCount: {
-        name: 'Level of parallelism',
-        description: 'Defines amount of parallel processes. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of dosers according to new settings.'
+        name: 'Рівень паралелизму',
+        description: 'Визначає кількість паралельних потоків. Додаток покладається на асинхронні операції (не паралельні), завдяки цьому ЦП/ОЗУ не перевантажуються. Після налаштування, зазвичай потрібно близько 10 секунд, щоб відрегулювати кількість потоків відповідно до нових налаштувань'
       }
     }
   }

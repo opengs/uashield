@@ -35,6 +35,10 @@ Targets being attacked are changed automatically and are downloaded from the con
 3. Run build: `npm run build:electron`
 4. Run the binary from `./dist/electron` or electron version: `npm run start:electron`
 
+## How to add a new language to the program
+
+You can find a documentation here: [docs/add-new-language.md](docs/add-new-language.md)
+
 ## Headless version (Docker)
 
 1. Build an image: `docker build . -t uashield`

@@ -53,7 +53,7 @@ const languages : LanguageInterface[] = [
   {
     name: 'Español',
     symbol: 'es-ES',
-    icon: ''
+    icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAoSIAANbYAExW0yVAAAAp0lEQVQ4y2NgGHBwjFvuPyV4EBjw/wjDf3T8+yDjf2zi2DCKAT8PMP0/WML/f0u+8P+Xa1hJN+DKEtH/S4J4/q+tjvx/fb3p/w+72Ik34O8Bhv+Hq0z+d9nJ/59eUPr/aHfY/+crhEgw4CDD/1PLTP+viuP+vyZc4v/pXo3/z9YLkeaFR9sk/n/cxfP/+SaJ/2938/3/tI+LsAHHuWX/U4IHQUIacAAATr27n7zDjuMAAAAASUVORK5CYII='
   },
   {
     name: 'Polski',
