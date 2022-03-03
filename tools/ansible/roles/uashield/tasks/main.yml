@@ -8,7 +8,7 @@
     version: "master"
 
 - name: Remove old uashield images and containers
-  shell: "docker container prune && docker image prune -a -f"
+  shell: "docker system prune -f"
   args:
     chdir: "{{uashield_work_dir}}"
 
