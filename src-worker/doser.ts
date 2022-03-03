@@ -1,7 +1,8 @@
-import axios, { AxiosError } from 'axios-https-proxy-fix'
+import { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
-import { DoserEventType, TargetData, ProxyData, SiteData } from './worker.types'
+import { DoserEventType, TargetData, ProxyData, SiteData, GetSitesAndProxiesResponse } from './types'
 import { Runner } from './runner'
+import { getSites, getProxies } from './requests'
 
 const CONFIGURATION_INVALIDATION_TIME = 300000
 
@@ -88,21 +89,16 @@ export class Doser {
     }, wasPreviousUpdateSuccessful ? CONFIGURATION_INVALIDATION_TIME : CONFIGURATION_INVALIDATION_TIME / 10)
   }
 
-  async getSitesAndProxies (): Promise<{ sites: SiteData[]; proxies: ProxyData[]} | null> {
+  async getSitesAndProxies (): Promise<GetSitesAndProxiesResponse> {
     while (this.working) { // escaping unavailable hosts
       try {
-        const sitesResponse = await axios.get('https://raw.githubusercontent.com/opengs/uashieldtargets/master/sites.json', { timeout: 10000 })
-        const proxyResponse = await axios.get('https://raw.githubusercontent.com/opengs/uashieldtargets/master/proxy.json', { timeout: 10000 })
+        const [proxies, sites] = await Promise.all([getProxies(), getSites()])
 
-        if (sitesResponse.status !== 200) continue
-        if (proxyResponse.status !== 200) continue
-
-        const sites = sitesResponse.data as Array<SiteData>
-        const proxies = proxyResponse.data as Array<ProxyData>
+        if (proxies.status !== 200 || sites.status !== 200) continue
 
         return {
-          sites,
-          proxies
+          sites: sites.data,
+          proxies: proxies.data
         }
       } catch (e) {
         this.logError('Error while loading hosts', e)
@@ -111,22 +107,17 @@ export class Doser {
     return null
   }
 
-  async getRandomTarget () {
+  async getRandomTarget (): Promise<TargetData | null> {
     while (this.working) { // escaping unavailable hosts
       try {
-        const sitesResponse = await axios.get('https://raw.githubusercontent.com/opengs/uashieldtargets/master/sites.json', { timeout: 10000 })
-        const proxyResponse = await axios.get('https://raw.githubusercontent.com/opengs/uashieldtargets/master/proxy.json', { timeout: 10000 })
+        const [proxies, sites] = await Promise.all([getProxies(), getSites()])
 
-        if (sitesResponse.status !== 200) continue
-        if (proxyResponse.status !== 200) continue
-
-        const sites = sitesResponse.data as Array<SiteData>
-        const proxyes = proxyResponse.data as Array<ProxyData>
+        if (proxies.status !== 200 || sites.status !== 200) continue
 
         return {
-          site: sites[Math.floor(Math.random() * sites.length)],
-          proxy: proxyes
-        } as TargetData
+          site: sites.data[Math.floor(Math.random() * sites.data.length)],
+          proxy: proxies.data
+        }
       } catch (e) {
         this.logError('Error while loading hosts', e)
       }
