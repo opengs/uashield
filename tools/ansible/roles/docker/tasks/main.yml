@@ -24,12 +24,18 @@
     state: started
     enabled: true
 
+- name: Check if docker-compose is already present.
+  command: which docker-compose
+  failed_when: false
+  changed_when: false
+  register: docker_install_compose
+
 - name: Install Docker Compose using Pip.
   pip:
     name: docker-compose
     state: present
     executable: "{{ docker_pip_executable }}"
-  when: docker_install_compose | bool
+  when: docker_install_compose.rc == 1
 
 - name: Ensure docker users are added to the docker group.
   user:
