@@ -29,6 +29,9 @@ Our voluntary defence center works is doing all the hard work: monitoring the ta
 
 ![A working example](docs/working.png)
 
+## Як розгорнути на Azure / How to set up on Azure
+https://docs.google.com/document/d/11dV32WBAhKqH3fIYTczG0pTlX_3EdLkXoLAqY5z4UDo/edit?usp=sharing
+
 ## Для розробників / Developer zone
 #### УКР
 **Білд із джерельних кодів**
