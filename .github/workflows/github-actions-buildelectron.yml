@@ -29,11 +29,11 @@ jobs:
           npm install -g @quasar/cli yarn --force
           yarn install
           quasar build --mode electron --publish always -T linux
-       - name: npm install, build
-         env:
-           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-         run: |
-           quasar build --mode electron --publish always -T win
+      - name: npm install, build
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          quasar build --mode electron --publish always -T win
       - name: npm install, build
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
