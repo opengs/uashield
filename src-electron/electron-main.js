@@ -20,8 +20,6 @@ var mainWindow
 function sendStatusToWindow(text) {
   try {
     console.log(text)
-    console.log("kaczuszka123123")
-    mainWindow.webContents.send('message', text);
 
   } catch(err) {
     console.log(err)
@@ -47,16 +45,14 @@ function createWindow () {
 
   mainWindow.setMenu(null)
   mainWindow.loadURL(process.env.APP_URL)
-
-  mainWindow.webContents.openDevTools()
   if (process.env.DEBUGGING) {
     // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
   } else {
     // we're on production; no access to devtools pls
-    // mainWindow.webContents.on('devtools-opened', () => {
-    //   mainWindow.webContents.closeDevTools()
-    // })
+    mainWindow.webContents.on('devtools-opened', () => {
+      mainWindow.webContents.closeDevTools()
+    })
   }
 
   mainWindow.on('closed', () => {
@@ -125,9 +121,6 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 app.whenReady().then(createWindow)
 
 app.on('ready', function()  {
-  console.log("KACZUSZKA")
-  console.log("KACZUSZKA")
-  console.log("KACZUSZKA")
   autoUpdater.checkForUpdates();
 });
 
