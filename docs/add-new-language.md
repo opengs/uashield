@@ -29,4 +29,4 @@ export default {
 }
 ```
 
-4. If you are able to build an app from [source code](../src/README-en.md#how-to-build-from-source-code) it could be tested as well
+1. If you are able to build an app from [source code](../README-en.md#how-to-build-from-source-code) it could be tested as well
