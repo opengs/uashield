@@ -14,7 +14,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/opengs/uashield
   pullPolicy: IfNotPresent
-  # You can a tag here: https://github.com/opengs/uashield/pkgs/container/uashield
+  # We can find a tag here: https://github.com/opengs/uashield/pkgs/container/uashield
   tag: "0.0.x"
 
 resources:
