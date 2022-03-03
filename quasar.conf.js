@@ -10,6 +10,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const { version } = require('./package.json')
 
 module.exports = configure(function (ctx) {
   return {
@@ -136,6 +137,10 @@ module.exports = configure(function (ctx) {
         ctx.prod ? 'compression' : '',
         'render' // keep this as last one
       ]
+    },
+
+    htmlVariables: {
+      version
     },
 
     // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
