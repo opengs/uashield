@@ -1,0 +1,14 @@
+---
+##@ref https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html#variables-and-vaults
+
+#Docker
+
+docker_version: 5.0.3
+docker_install_compose: true
+docker_users: []
+docker_pip_executable: pip3
+
+#Uashield
+
+uashield_git_url: "https://github.com/opengs/uashield"
+uashield_work_dir: /root/uashield/

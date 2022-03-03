@@ -31,7 +31,7 @@
 
 <script lang="ts">
 
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 
 interface LanguageInterface {
   name: string,
@@ -51,6 +51,11 @@ const languages : LanguageInterface[] = [
     icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAABKklEQVQ4jcWQv0rDcBSFz/0laZqkAbVY8U9FrRRcRBAHhw6uPoIP0+fxCdwyFSfpaBAUG0GFxNKSNk2bxOQ6iJv1B+3gt5zpHL57gf+G2u3rnq6XmZmhKER5zvyTaZbSlXdzO6+cxjGpzfPTurm+qfT6n7g4MuC4U5zt63j0M7w9ezhoVffmDQxd1xcP3pA/xgVOdktw3ClazTK6XoIVU6CxVZGeIHZqFbINgfv3DMf1Eu56CQ43NAyiAi/+RDqghpOEtbTAmiXghzlqtoJBVEDXCLapyQ3GSUGzjKEpBH+UwygR+lEOZkBTxd9tIqiN8GlmvI4sBlAHEAffiQCoEAOSN6iXehCtblctqetvMEPiKEeAefE20fIGqt/pOMNudyGNNI5pWYHl+QJYo3QxhpvieAAAAABJRU5ErkJggg=='
   },
   {
+    name: 'Español',
+    symbol: 'es-ES',
+    icon: ''
+  },
+  {
     name: 'Polski',
     symbol: 'pl-PL',
     icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAc0lEQVQ4jWNgGGjAuOPkzXtiwvzM5Gh+9fbjXxYxYX5mFTlxOTId8IiJTI1wMAwMYLycnvlbUEyUhRzN71+9/sPCJyTIICwkSJbtf//8GQRhQLkBf/7+I1vzn7//GFg+377ZfOveHXZyDPj/9+9Psm2HAQBUliKKS0ahOgAAAABJRU5ErkJggg=='
@@ -67,7 +72,15 @@ export default defineComponent({
   },
 
   setup () {
+    const getDefaultLanguage = () => {
+      const userLanguage = navigator.language
+      const defaultLanguage = languages.find(({ symbol }) => symbol.includes(userLanguage))
+      return defaultLanguage || languages[0]
+    }
+
     const language = ref<LanguageInterface>(languages[0])
+    onMounted(() => (language.value = getDefaultLanguage()))
+
     return { languages, language }
   }
 })

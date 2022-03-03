@@ -1,0 +1,22 @@
+---
+- name: Clone uashield repo
+  git:
+    repo: "{{uashield_git_url}}"
+    dest: "{{uashield_work_dir}}"
+    accept_hostkey: true
+    force: true
+    version: "master"
+
+- name: Run uashield
+  shell: "docker-compose up -d --build --force-recreate"
+  args:
+    chdir: "{{uashield_work_dir}}"
+
+- name: Check docker started
+  shell: "docker ps"
+  args:
+    chdir: "{{uashield_work_dir}}"
+  register: output
+
+- ansible.builtin.debug:
+        var: output
