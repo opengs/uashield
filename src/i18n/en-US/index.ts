@@ -19,7 +19,7 @@ export default {
       description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effect and decrease effectiveness of the application',
       masDosersCount: {
         name: 'Level of parallelism',
-        description: 'Defines amount of dosers. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of dosers according to new settings.'
+        description: 'Defines the amount of dosers. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust the2 amount of dosers according to new settings.'
       }
     }
   }
