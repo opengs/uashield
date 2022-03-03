@@ -61,16 +61,13 @@
 
         <q-card-section class="q-pt-none">
           <div class="text-h7">{{ $t('ddos.advanced.masDosersCount.name') }}</div>
-         <div class="max-dosers-count-wrapper">
-            <q-slider
-              v-model="maxDosersCount"
-              :min="16"
-              :max="maxNumberOfWorkers"
-              :step="16"
-              label
-              color="light-green"
-            />
-          </div>
+          <q-slider
+            v-model="maxDosersCount"
+            :min="16"
+            :max="maxNumberOfWorkers"
+            :step="16"
+            color="light-green"
+          />
           <div class="custom-max-dosers-count-wrapper">
             <q-input
               :model-value="maxDosersCount"
