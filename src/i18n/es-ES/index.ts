@@ -16,11 +16,11 @@ export default {
       description: 'Sin esta opción, el programa permitirá usar tu IP. Realizarás ataques más eficientes, pero los ataques no serán anónimos.'
     },
     advanced: {
-      header: 'Extended settings',
-      description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effect and decrease effectiveness of the application',
+      header: 'Configuración extendida',
+      description: 'Si alguna terminología no es clara para uster, por favor, no cambie la configuración extendida. Puede conllevar efectos negativos y disminuir la efectividad de la aplicación',
       masDosersCount: {
-        name: 'Level of parallelism',
-        description: 'Defines amount of threads. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of threads according to new settings'
+        name: 'Nivel de paralelismo',
+        description: 'Define la cantidad de hilos/threads. La aplicación se basa en operaciones asíncronas (no paralela via threads/hilos), gracias a ello la CPU/RAM no se sobrecarga. Una vez ajustado, tomará alrededor de 10 segundos en ajustar la cantidad de threads o hilos de acuerdo a la nueva configuración'
       }
     }
   }
