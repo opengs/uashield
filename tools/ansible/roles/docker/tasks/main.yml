@@ -1,0 +1,39 @@
+---
+- name: Check if Docker is already present.
+  command: which docker
+  failed_when: false
+  changed_when: false
+  register: docker_command_result
+
+- name: Download Docker install convenience script.
+  get_url:
+    url: https://get.docker.com/
+    dest: /tmp/get-docker.sh
+    mode: 0775
+  when: docker_command_result.rc == 1
+
+- name: Run Docker install convenience script.
+  command: /tmp/get-docker.sh
+  environment:
+    CHANNEL: stable
+  when: docker_command_result.rc == 1
+
+- name: Ensure Docker is started.
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Install Docker Compose using Pip.
+  pip:
+    name: docker-compose
+    state: present
+    executable: "{{ docker_pip_executable }}"
+  when: docker_install_compose | bool
+
+- name: Ensure docker users are added to the docker group.
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  with_items: "{{ docker_users }}"

@@ -4,8 +4,8 @@ export default {
     description: 'Ataki DDoS robią bardzo dużo żądań do serwera wroga. Serwery dzięki temu zaczynają lagować i przestają przyjmować nowe żądania.',
     coordinators: 'Koordynacja https://t.me/incourse911 ',
     counter: {
-      atackedTimes: 'Zaatakowano już:',
-      currentTarget: 'Aktualny cel: '
+      attackedTimes: 'Zaatakowano już:',
+      currentTarget: 'Aktualny cel:'
     },
     enable: {
       name: 'Atak DDoS',
