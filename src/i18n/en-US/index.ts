@@ -5,7 +5,7 @@ export default {
     coordinators: 'Coordinators https://discord.gg/7BfJ9JKQ98 ',
     counter: {
       attackedTimes: 'Times attacked:',
-      currentTarget: 'Current target:'
+      currentTarget: 'Current target: '
     },
     enable: {
       name: 'DDoS attack',
