@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import axios, { AxiosError } from 'axios-https-proxy-fix'
-import { TargetData, ProxyData, SiteData } from './types'
+import { TargetData, ProxyData, SiteData, GetSitesAndProxiesResponse } from './types'
 import { HttpHeadersUtils } from './utils/httpHeadersUtils'
 
 export class Runner {
@@ -34,7 +34,7 @@ export class Runner {
     this.active = false
   }
 
-  updateConfiguration (config: { sites: SiteData[]; proxies: ProxyData[]; }) {
+  updateConfiguration (config: GetSitesAndProxiesResponse) {
     this.sites = config.sites
     this.proxies = config.proxies
   }

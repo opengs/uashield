@@ -73,7 +73,7 @@ function createWindow () {
   })
 
   ipcMain.on('updateMaxDosersCount', (event, arg) => {
-    doser.setWorkersCount(arg.newVal)
+    doser.updateCapacity(arg.newVal || 0)
   })
 }
 

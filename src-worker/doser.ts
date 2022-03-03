@@ -1,10 +1,13 @@
 import { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
-import { DoserEventType, TargetData, ProxyData, SiteData, GetSitesAndProxiesResponse } from './types'
+import { DoserEventType, GetSitesAndProxiesResponse } from './types'
 import { Runner } from './runner'
-import { getSites, getProxies } from './requests'
+import { ConfigurationService } from './services/configurationService'
+import { Timeout } from './utils/timeout'
 
-const CONFIGURATION_INVALIDATION_TIME = 300000
+const CONFIGURATION_INVALIDATION_TIME = 300000 // 5 min
+const CONFIGURATION_WAIT_MIN_TIMEOUT = 10000 // 10 sec
+const CONFIGURATION_WAIT_MAX_TIMEOUT = 120000 // 2 min
 
 export class Doser {
   private onlyProxy: boolean
@@ -13,25 +16,24 @@ export class Doser {
   private workers: Runner[] = []
   private numberOfWorkers = 0
   private eventSource: EventEmitter
-  private ddosConfiguration: {
-    updateTime: Date;
-    sites: SiteData[];
-    proxies: ProxyData[];
-  } | null = null
+  private ddosConfiguration: GetSitesAndProxiesResponse | null = null
 
-  private verboseError: boolean;
+  private verboseError: boolean
+  private capacity: number
+  private configurationService: ConfigurationService
 
   constructor (onlyProxy: boolean, numberOfWorkers: number, verboseError: boolean) {
+    this.configurationService = new ConfigurationService()
     this.onlyProxy = onlyProxy
     this.working = false
     this.eventSource = new EventEmitter()
+    this.capacity = numberOfWorkers
     this.verboseError = verboseError
-    this.initialize(numberOfWorkers).catch(error => {
-      console.error('Wasnt able to initialize:', error)
-    })
+    console.log(`Init doser. Capasity: ${this.capacity}`)
+    this.initialize(Timeout.zero())
   }
 
-  private logError (message:string, cause: unknown) {
+  private logError (message: string, cause: unknown) {
     console.log(message)
 
     if (this.verboseError) {
@@ -41,16 +43,21 @@ export class Doser {
     }
   }
 
-  private async initialize (numberOfWorkers: number, attemptNumber = 1): Promise<void> {
-    const config = await this.getSitesAndProxies()
-    if (!config) {
-      console.debug(`Wasnt able to get proxy configuration. Trying for ${attemptNumber} time`)
-      return this.initialize(numberOfWorkers, attemptNumber + 1)
-    }
-    console.debug('Initialized doser', config)
-    this.updateConfiguration(config)
-    this.listenForConfigurationUpdates()
-    return this.setWorkersCount(numberOfWorkers)
+  private initialize (timeout: Timeout, attemptNumber = 1) {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    setTimeout(async () => {
+      console.log('Pull config. Attempt ', attemptNumber, new Date())
+      try {
+        const config = await this.configurationService.pullConfiguration()
+        this.updateConfiguration(config)
+        this.listenForConfigurationUpdates(Timeout.fromValue(CONFIGURATION_INVALIDATION_TIME))
+        this.startWorkers()
+      } catch (e) {
+        const newTimeout = timeout.increase(CONFIGURATION_WAIT_MIN_TIMEOUT, CONFIGURATION_WAIT_MAX_TIMEOUT)
+        console.log('Can not pull configuration. Check after interval', newTimeout.interval)
+        this.initialize(newTimeout, attemptNumber + 1)
+      }
+    }, timeout.interval)
   }
 
   forceProxy (newVal: boolean) {
@@ -62,79 +69,54 @@ export class Doser {
     // this.hosts = response.data as Array<string>
   }
 
-  private updateConfiguration (configuration: { sites: SiteData[]; proxies: ProxyData[] }) {
-    this.ddosConfiguration = {
-      ...configuration,
-      updateTime: new Date()
-    }
+  private updateConfiguration (configuration: GetSitesAndProxiesResponse) {
+    console.log('update configuration')
+    this.ddosConfiguration = configuration
     this.workers.forEach(worker => {
       worker.updateConfiguration(configuration)
     })
   }
 
-  private listenForConfigurationUpdates (wasPreviousUpdateSuccessful = true) {
+  private listenForConfigurationUpdates (timeout: Timeout) {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     setTimeout(async () => {
-      if (!this.ddosConfiguration) {
-        return this.listenForConfigurationUpdates(false)
-      }
-
-      const config = await this.getSitesAndProxies()
-      if (!config) {
-        console.debug('Wasnt able to get configuration updates')
-        return this.listenForConfigurationUpdates(false)
-      }
-      this.updateConfiguration(config)
-      this.listenForConfigurationUpdates(true)
-    }, wasPreviousUpdateSuccessful ? CONFIGURATION_INVALIDATION_TIME : CONFIGURATION_INVALIDATION_TIME / 10)
-  }
-
-  async getSitesAndProxies (): Promise<GetSitesAndProxiesResponse> {
-    while (this.working) { // escaping unavailable hosts
       try {
-        const [proxies, sites] = await Promise.all([getProxies(), getSites()])
-
-        if (proxies.status !== 200 || sites.status !== 200) continue
-
-        return {
-          sites: sites.data,
-          proxies: proxies.data
-        }
+        console.log('Try updating config', new Date())
+        const config = await this.configurationService.pullConfiguration()
+        this.updateConfiguration(config)
+        /**
+         * we don't start workers with old configuration
+         * So it might happen that we have to start workers is configuration has been updated
+         */
+        this.startWorkers()
+        this.listenForConfigurationUpdates(Timeout.fromValue(CONFIGURATION_INVALIDATION_TIME))
       } catch (e) {
-        this.logError('Error while loading hosts', e)
+        // todo: if old configuration we have to stop all workers
+        const newTimeout = Timeout.fromValue(CONFIGURATION_INVALIDATION_TIME / 2)
+        console.log('Can not pull configuration. Check after interval', newTimeout.interval)
+        this.listenForConfigurationUpdates(newTimeout)
       }
-    }
-    return null
+    }, timeout.interval)
   }
 
-  async getRandomTarget (): Promise<TargetData | null> {
-    while (this.working) { // escaping unavailable hosts
-      try {
-        const [proxies, sites] = await Promise.all([getProxies(), getSites()])
-
-        if (proxies.status !== 200 || sites.status !== 200) continue
-
-        return {
-          site: sites.data[Math.floor(Math.random() * sites.data.length)],
-          proxy: proxies.data
-        }
-      } catch (e) {
-        this.logError('Error while loading hosts', e)
-      }
+  private startWorkers () {
+    if (this.capacity === this.numberOfWorkers) {
+      return
     }
-    return null
-  }
-
-  setWorkersCount (newCount: number) {
-    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${newCount}`)
-    if (newCount < this.numberOfWorkers) {
-      for (let i = this.numberOfWorkers; i >= newCount; i--) {
+    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${this.capacity}`)
+    if (this.capacity < this.numberOfWorkers) {
+      for (let i = this.numberOfWorkers; i >= this.capacity; i--) {
         this.workers[i]?.eventSource.removeAllListeners()
         this.workers[i]?.stop()
       }
-      this.workers = this.workers.slice(0, newCount)
+      this.workers = this.workers.slice(0, this.capacity)
     } else {
-      while (this.workers.length < newCount) {
+      // we don't want to spawn new workers with old configuration
+      if (this.configurationService.expired()) {
+        console.log('Can not start due to deprecated configuration')
+        return
+      }
+      while (this.workers.length < this.capacity) {
         const newWorker = this.createNewWorker()
         this.workers.push(newWorker)
         if (this.working) {
@@ -144,8 +126,7 @@ export class Doser {
         }
       }
     }
-
-    this.numberOfWorkers = newCount
+    this.numberOfWorkers = this.capacity
   }
 
   start () {
@@ -192,7 +173,12 @@ export class Doser {
     return worker
   }
 
-  listen (event: DoserEventType, callback: (data: any)=>void) {
+  listen (event: DoserEventType, callback: (data: any) => void) {
     this.eventSource.addListener(event, callback)
+  }
+
+  updateCapacity (numberOfWorkers: number) {
+    this.capacity = numberOfWorkers
+    this.startWorkers()
   }
 }
