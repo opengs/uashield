@@ -122,8 +122,19 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 
 app.whenReady().then(createWindow)
 
+function checkUpdates() {
+  try {
+    autoUpdater.checkForUpdates()
+  } catch(err) {
+    console.log(err, "Error while checking update")
+  }  
+}
+
 app.on('ready', function()  {
-  autoUpdater.checkForUpdates();
+  checkUpdates()
+  setInterval(() => {
+    checkUpdates()
+  }, 1000 * 60 * 60)
 });
 
 app.on('window-all-closed', () => {

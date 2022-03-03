@@ -54,7 +54,6 @@ export class Runner {
     let directRequest = false
     if (!this.onlyProxy) {
       try {
-        console.debug("DIRECT probing ", target.site.page)
         const response = await axios.get(target.site.page, {
           timeout: this.requestTimeout,
           headers: HttpHeadersUtils.generateRequestHeaders()

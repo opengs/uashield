@@ -5,7 +5,7 @@ services:
       restart: always
       environment:
         WORKERS: '512'
-        USEPROXY: 'true'
+        USEPROXY: 'false'
       deploy:
         replicas: 6
 
