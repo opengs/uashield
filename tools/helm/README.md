@@ -29,11 +29,10 @@ helm upgrade --install \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| connections | int | `1000` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"alpine/bombardier"` |  |
-| image.tag | string | `"latest"` |  |
+| image.repository | string | `"ghcr.io/opengs/uashield"` |  |
+| image.tag | string | `"0.0.x"` |  |
 | imagePullSecrets | list | `[]` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
@@ -42,5 +41,6 @@ helm upgrade --install \
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| site | string | `""` |  |
+| threadsCount | int | `256` |  |
 | tolerations | list | `[]` |  |
+| useProxy | bool | `false` |  |

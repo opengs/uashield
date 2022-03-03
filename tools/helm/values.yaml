@@ -5,8 +5,8 @@
 # How many threads do we use?
 threadsCount: 256
 
-# Do we want to enable proxy?
-useProxy: true
+# Do we want to enable proxy? (true|false)
+useProxy: false
 
 # How many pods do we want to run?
 replicaCount: 1
