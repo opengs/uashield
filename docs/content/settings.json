@@ -1,0 +1,10 @@
+{
+  "title": "UA Shield Docs",
+  "url": "https://github.com/opengs/uashield",
+  "logo": {
+    "light": "/icon.png",
+    "dark": "/icon.png"
+  },
+  "github": "opengs/uashield",
+  "twitter": "@nuxt_js"
+}
