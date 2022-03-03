@@ -2,7 +2,7 @@
 
 So, you want to add a new language to the program, just create a Pull Request with the following changes:
 
-1. Add a languange to the selector: `[../src/components/LanguageSelect.vue](../src/components/LanguageSelect.vue)`, example:
+1. Add a languange to the selector: [../src/components/LanguageSelect.vue](../src/components/LanguageSelect.vue), example:
 
 ```javascript
   {
@@ -15,9 +15,9 @@ So, you want to add a new language to the program, just create a Pull Request wi
 Copy-paste the following block of code and replace all values.
 You can download an icon from iconscout website in png format ([example](https://iconscout.com/icon/spain-flag-country-nation-union-empire)) and convert it to base64, for example [here](https://onlinepngtools.com/convert-png-to-base64)
 
-2. Create a new folder in `[../src/i18n/](../src/i18n/)`, copy-paste `index.ts` file from another directory and translate all values to the new language
+2. Create a new folder in [../src/i18n/](../src/i18n/), copy-paste `index.ts` file from another directory and translate all values to the new language
 
-3. Eventually add changes to the file `[../src/i18n/index.ts](../src/i18n/index.ts)`, for example:
+3. Eventually add changes to the file [../src/i18n/index.ts](../src/i18n/index.ts), for example:
 
 ```javascript
 ...
