@@ -15,6 +15,9 @@ export class HttpHeadersUtils {
   private static getAdditionalRandomHeaders () {
     let headers = {}
     if (Random.bool()) {
+      headers = { ...headers, ...HttpHeadersUtils.cacheControl() }
+    }
+    if (Random.bool()) {
       headers = { ...headers, ...HttpHeadersUtils.upgradeInsecureRequest() }
     }
     if (Random.bool()) {
@@ -54,5 +57,13 @@ export class HttpHeadersUtils {
     return {
       'User-Agent': agent.toString()
     }
+  }
+
+  private static cacheControl () {
+    const options = [
+      'no-cache',
+      'max-age=0'
+    ]
+    return { 'Cache-Control': options[Random.int(options.length)] }
   }
 }
