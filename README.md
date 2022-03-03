@@ -61,3 +61,32 @@ Our voluntary defence center works is doing all the hard work: monitoring the ta
 
 ## Deploy attacker on your Raspberry Pi!
 [![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/opengs/uashield)
+
+## Run in AWS or other Cloud
+1. Create Linux EC2 instance or VM. In AWS you can use free tier
+2. Setup pre-requisites
+- Git
+```bash
+sudo yum update -y
+sudo yum install git -y
+```
+- Yarn
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install node
+npm install --global yarn
+```
+3. Build
+```bash
+git clone https://github.com/opengs/uashield.git
+cd uashield
+yarn install
+yarn build:headless
+```
+4. Run
+   Start with 500 workers and a proxy
+```bash
+cd uashield
+nohup yarn start:headless 500 true > ~/uashield.log &
+```
