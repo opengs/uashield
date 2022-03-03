@@ -5,7 +5,7 @@
     dest: "{{uashield_work_dir}}"
     accept_hostkey: true
     force: true
-    version: "0.0.x"
+    version: "master"
 
 - name: Run uashield
   shell: "docker-compose up -d --build --force-recreate"
