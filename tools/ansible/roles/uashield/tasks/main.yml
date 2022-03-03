@@ -7,6 +7,11 @@
     force: true
     version: "master"
 
+- name: Remove old uashield images and containers
+  shell: "docker container prune && docker image prune -a"
+  args:
+    chdir: "{{uashield_work_dir}}"
+
 - name: Run uashield
   shell: "docker-compose up -d --build --force-recreate --no-cache"
   args:
