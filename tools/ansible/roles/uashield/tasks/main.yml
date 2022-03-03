@@ -18,7 +18,7 @@
     chdir: "{{uashield_work_dir}}"
 
 - name: Run uashield
-  shell: "docker-compose up -d --build --force-recreate --no-cache"
+  shell: "docker-compose up -d"
   args:
     chdir: "{{uashield_work_dir}}"
 
