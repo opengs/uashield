@@ -1,40 +1,82 @@
 # UA Cyber SHIELD
-Система волонтерської кібероборони України  / Ukrainian voluntary cyber defence system
 
-Комюніті / community: [Discord](https://discord.gg/7BfJ9JKQ98)
+*See this README [in English](README-en.md)*
 
-[Відо інструкція на українській мові](https://youtu.be/snTzpRt7a5k)
+[![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-## Для захисників / For defenders
-1. Програми знаходяться в [релізах](https://github.com/opengs/uashield/releases).
-2. Вибераємо найновший реліз і свою платформу
+**Система волонтерської кібероборони України**
+
+- Ком'юніті: [Discord](https://discord.gg/7BfJ9JKQ98)
+- Відео інструкція [українською](https://youtu.be/snTzpRt7a5k)
+
+## Для кіберзахисників
+
+1. Програми знаходяться в [релізах](https://github.com/opengs/uashield/releases)
+2. Вибираємо [найновший реліз](https://github.com/opengs/uashield/releases/latest) і свою платформу
 3. Скачуємо і запускаємо
 
-**В користувачів на Linux можливо треба буде додати аргумент "--no-sandbox" . Windows повинен працювати без всяких додаткових речей.**
+**В користувачів на Linux можливо треба буде додати аргумент `--no-sandbox`. Windows повинен працювати без всяких додаткових речей**
 
-1. Compiled programs are in [releases](https://github.com/opengs/uashield/releases).
-2. Check newest release and you platform
-3. Download and run
+## Як це працює
 
-**Linux may require additional "--no-sandbox" argument. We are trying to solve this problem. Windows works without any additional steps.**
+Наш центр волонтерів займається всією тяжкою роботою: моніторингом цілей, підтримкою технічної структури, координацією атак, передачею даних до програм клієнтів, тощо.
+Тому на момент атаки всі підготовчі дані є.
+Вам залишається тільки встановити програму і приєднатися.
+Цілі міняються автоматично і підвантажуються з центру координації
 
-## Як це працює / How it works
-Наш центр волонтерів займається всією тяжкою роботою: моніторингом цілей, підтримкою технічної структури, координацією атак, передачі даних до програм клієнтів, тощо. Тому на момент атаки всі підготовчі дані є. Вам остається тільки встановити програму і приєднуватися. Цілі міняються автоматично і підгружаються з центру координації
+## Інтерфейс програми
 
-Our voluntary center works with all hard work: monitoring targets, keeping technical structure, atack coordination, coordination with clients programs, ... When atack is performed - program has all the data that i needs. You just have to install program. Targets are changing automatically and are downloading from coordination center.
+![A working example](docs/working.png)
 
-![Working example](docs/working.png)
+## Збірка коду
 
-## Для розробників / For Developers
+1. Клонуємо репозиторій: `git clone https://github.com/opengs/uashield.git`
+2. Встановлюємо залежності: `cd uashield && npm install`
+3. Запускаємо білд: `npm run build:electron`
+4. Запускаємо виконавчий файл в `./dist/electron` або електрон версію: `npm run start:electron`
 
-**Білд із джерельних кодів**
-1. Клонуємо репозиторій `git clone https://github.com/opengs/uashield.git`
-2. Встановлюємо залежності `cd uashield && npm install`
-3. Запускаємо білд `npm run build:electron`
-4. Запускаємо виконавчий файл в `./dist/electron` або електрон версію в `npm run start:electron`
+## Headless версія (Docker)
 
-**Build from sources**
-1. Clone repo `git clone https://github.com/opengs/uashield.git`
-2. Install dependencies `cd uashield && npm install`
-3. Build `npm run build:electron`
-4. Start executable in `./dist/electron` or start electron version `npm run start:electron`
+1. Збірка імежду: `docker build . -t uashield`
+2. Запуск: `docker run uashield 500 true` - де `500` - кількість потоків, і `true` | `false` чи ви бажаєте використати проксі
+
+Або за допомогою вже [зібраного імежду](https://github.com/opengs/uashield/pkgs/container/uashield):
+
+```bash
+docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
+```
+
+## Docker-compose версія
+
+1. Запуск: `docker-compose up -d`
+2. Відредагуйте значення змінних `WORKERS` та `USEPROXY` в файлі `docker-compose.yml` - де `256` - кількість потоків, і `true` | `false` чи ви бажаєте використати проксі
+
+## Деплой на Raspberry Pi
+
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/opengs/uashield)
+
+## Деплой за допомогою Ansible
+
+[tools/ansible/README.md](tools/ansible/README.md)
+
+## Деплой у Kubernetes
+[tools/helm/README.md](tools/helm/README.md)
+
+## Деплой на Play With Docker - безкоштовний інстанс на 4 години
+
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/0.0.x/pwd-docker-compose.yml)
+
+## Пожертвування
+Пожертвування будуть використовуватися виключно для цілей програми:
+1. Закупівля проксі серверів для атак
+2. В рідких випадках серверів для розміщення IT структури
+
+Коли ми виграємо війну і настане мирний час, гроші що остануться будуть передані на благодійність.
+
+Рахунки для переведення коштів:
+- BTC: 11wxDarouPfY6P3misLvFuJ8k8oWhd4qb
+
+І якшо ви хочете дати на каву для розробників, щоб вони могли прогулювати роботу і не спати ночами:
+- BTC: 12CcLYn6zrBcnmvK5fRSAQcJre5jknyTxH
+
+В майбутньому ми додамо їх ще більше :)

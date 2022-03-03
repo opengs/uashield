@@ -1,0 +1,27 @@
+name: UAShield
+type: sw.application
+joinable: false
+description: >-
+  Together - stronger. Deploy DDOSer across your fleet and help Ukraine in DDOSing invader!
+  Application automaticaly download targets.
+assets:
+  repository:
+    type: blob.asset
+    data:
+      url: 'https://github.com/opengs/uashield.git'
+  logo:
+    type: blob.asset
+    data:
+      url: >-
+        https://raw.githubusercontent.com/opengs/uashield/master/src/assets/ukraine.svg
+data:
+  applicationEnvironmentVariables:
+    - WORKERS: 128
+    - USEPROXY: true
+  defaultDeviceType: raspberry-pi
+  supportedDeviceTypes:
+    - raspberry-pi
+    - raspberry-pi2
+    - raspberrypi3
+    - raspberrypi4-64
+version: 1.0.0
