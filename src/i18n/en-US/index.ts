@@ -26,7 +26,6 @@ export default {
         name: 'Level of parallelism',
         description: 'Defines amount of dosers. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of dosers according to new settings.'
       }
->>>>>>> 622d57a97f9fcf429d5283940555f1acc6dea6df
     }
   }
 }

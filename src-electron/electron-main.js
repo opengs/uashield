@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, nativeTheme, ipcMain } from 'electron'
 import path from 'path'
 import os from 'os'
 
@@ -114,8 +114,12 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const obj = {
     message: process.platform === 'win32' ? releaseNotes : releaseName,
   }
-
-  mainWindow?.webContents.send('update', obj)
+  try {
+    sendStatusToWindow(obj)
+    mainWindow?.webContents.send('update', obj)
+  } catch(err) {
+    console.log(err)
+  }
 })
 
 app.whenReady().then(createWindow)
