@@ -7,8 +7,13 @@
     force: true
     version: "master"
 
+- name: Stop all containers
+  shell: "docker-compose down"
+  args:
+    chdir: "{{uashield_work_dir}}"
+
 - name: Remove old uashield images and containers
-  shell: "docker system prune -f"
+  shell: "docker system prune --all --volumes --force"
   args:
     chdir: "{{uashield_work_dir}}"
 
