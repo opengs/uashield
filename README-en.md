@@ -66,3 +66,18 @@ docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
 ## Deploy with Play With Docker - free instance for 4 hours
 
 [![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/0.0.x/pwd-docker-compose.yml)
+
+## Donations
+Donations will be used to fund our operations:
+1. Expenses on constantly buying new proxy servers
+2. From time to time buying servers for new infastructure
+
+When we will win the war and will be peace in Ukraine, funds will be transfered to voluntary associations to help victims of this war.
+
+You can help us using:
+- BTC: 11wxDarouPfY6P3misLvFuJ8k8oWhd4qb
+
+Also, here are some variants if you want to help developers with some cofee. So we can continue to skip work and keep invest time in project all nights:
+- BTC: 12CcLYn6zrBcnmvK5fRSAQcJre5jknyTxH
+
+We will add more variants in future :)
