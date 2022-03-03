@@ -20,6 +20,13 @@ export interface TargetData {
   proxy: Array<ProxyData>;
 }
 
+  //03.03.2022//
+export interface TargetDataAlternative {
+  site: SiteData;
+  proxy: ProxyData;
+  NeedAttack : boolean
+}
+
 export type DoserEventType = 'atack' | 'error';
 
 export type GetSitesAndProxiesResponse = { sites: SiteData[]; proxies: ProxyData[]} | null
