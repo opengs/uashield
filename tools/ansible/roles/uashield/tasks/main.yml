@@ -12,10 +12,11 @@
   args:
     chdir: "{{uashield_work_dir}}"
 
-- name: Remove old uashield images and containers
-  shell: "docker system prune --all --volumes --force"
-  args:
-    chdir: "{{uashield_work_dir}}"
+- name: Remove old uashield containers
+  shell: "docker rm uashield"
+
+- name: Remove old uashield images
+  shell: "docker rmi -f uashield"
 
 - name: Run uashield
   shell: "docker-compose up -d"
