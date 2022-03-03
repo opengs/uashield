@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import axios, { AxiosError } from 'axios-https-proxy-fix'
-import { TargetData, ProxyData, SiteData } from './worker.types'
+import { TargetData, ProxyData, SiteData } from './types'
 import { HttpHeadersUtils } from './utils/httpHeadersUtils'
 
 export class Runner {
