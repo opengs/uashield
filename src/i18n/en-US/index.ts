@@ -11,8 +11,13 @@ export default {
       description: 'Enable DDoS attack on critical enemy servers: government, banking systems, propaganda webpages, etc'
     },
     proxy: {
-      name: 'Attack only using proxy',
-      description: 'Without this option, program will be allowed to use your IP. You will make more efficient attack, but attacks will not be anonymous'
+      name: 'Atack only using proxy',
+      description: 'Without this option, program will be allowed to use your IP. You will make more efficient atack, but atacks will not be anonymous.'
+    },
+    update: {
+      title: 'Update available',
+      cancel: 'Cancel',
+      confirm: 'Install update'
     },
     advanced: {
       header: 'Extended settings',
