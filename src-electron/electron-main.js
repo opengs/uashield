@@ -20,10 +20,8 @@ var mainWindow
 function sendStatusToWindow(text) {
   try {
     console.log(text)
-
   } catch(err) {
     console.log(err)
-
   }
 }
 function createWindow () {
