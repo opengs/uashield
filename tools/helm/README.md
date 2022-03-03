@@ -24,6 +24,7 @@ helm upgrade --install \
     -n ua-cyber-shield \
     -f values.yaml ua-cyber-shield .
 ```
+
 ## Values
 
 | Key | Type | Default | Description |
