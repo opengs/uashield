@@ -17,20 +17,28 @@ export class ConfigurationService {
 
     let valid = true
     if (!this.sites) {
-      const sites = await getSites()
-      if (sites.status === 200) {
-        this.sites = sites.data
-        this.updateExpirationDate()
-      } else {
+      try {
+        const sites = await getSites()
+        if (sites.status === 200) {
+          this.sites = sites.data
+          this.updateExpirationDate()
+        } else {
+          valid = false
+        }
+      } catch (e) {
         valid = false
       }
     }
     if (!this.proxies) {
-      const proxies = await getProxies()
-      if (proxies.status === 200) {
-        this.proxies = proxies.data
-        this.updateExpirationDate()
-      } else {
+      try {
+        const proxies = await getProxies()
+        if (proxies.status === 200) {
+          this.proxies = proxies.data
+          this.updateExpirationDate()
+        } else {
+          valid = false
+        }
+      } catch (e) {
         valid = false
       }
     }
@@ -50,7 +58,6 @@ export class ConfigurationService {
   }
 
   private updateExpirationDate () {
-    console.log('current exp date', this.expiredAt)
     if (this.expiredAt) {
       return
     }
