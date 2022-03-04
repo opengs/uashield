@@ -4,12 +4,12 @@ export default {
     description: 'Útok DDoS generuje množstvo požiadaviek na cieľový nepriateľský server. Cieľový server začne meškať a prestane správne fungovať.',
     coordinators: 'Coordinátori https://discord.gg/7BfJ9JKQ98 ',
     counter: {
-      attackedTimes: 'Počet atakov na cieľ:',
+      attackedTimes: 'Počet útokov na ciele:',
       currentTarget: 'Súčastný cieľ:'
     },
     enable: {
       name: 'DDoS útok',
-      description: 'Povoliť DDoS útok na kritické nepriateľské servery: vládu, bankové systémy, propagandistické webové stránky atď.'
+      description: 'Povoliť DDoS útok na kritické nepriateľské servery: vládu, bankové systémy, propagandistické webové stránky atď. v Rusku'
     },
     proxy: {
       name: 'Útok iba za použia proxy',
