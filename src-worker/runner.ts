@@ -82,7 +82,11 @@ export class Runner {
             headers: HttpHeadersUtils.generateRequestHeaders(),
             validateStatus: () => true
           })
-          this.eventSource.emit('attack', { url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}`, success: true })
+          this.eventSource.emit('attack', {
+            url: target.site.page,
+            log: `${target.site.page} | DIRECT | ${r.status}`,
+            success: true
+          })
         } else {
           if (proxy === null) {
             proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
@@ -99,9 +103,7 @@ export class Runner {
             const proxyUsername = proxyAuthSplit[0]
             const proxyPassword = proxyAuthSplit[1]
             proxyObj.auth = { username: proxyUsername, password: proxyPassword }
-
           }
-
 
           const r = await axios.get(target.site.page, {
             timeout: this.requestTimeout,
@@ -110,7 +112,11 @@ export class Runner {
             proxy: proxyObj
           })
 
-          this.eventSource.emit('attack', { url: target.site.page, log: `${target.site.page} | PROXY | ${r.status}`, success: true })
+          this.eventSource.emit('attack', {
+            url: target.site.page,
+            log: `${target.site.page} | PROXY | ${r.status}`,
+            success: true
+          })
 
           if (r.status === 407) {
             console.log(proxy)
@@ -124,7 +130,12 @@ export class Runner {
           console.error(e)
         }
 
-        this.eventSource.emit('attack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${code}`, success: false })
+        this.eventSource.emit('attack', {
+          type: 'atack',
+          url: target.site.page,
+          log: `${target.site.page} | ${code}`,
+          success: false
+        })
         if (code === 'ECONNABORTED') {
           break
         }

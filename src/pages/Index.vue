@@ -8,9 +8,12 @@
       </q-card-section>
 
       <q-card-section>
-        <div class="text-subtitle2 text-grey-7 text-center">{{ $t('ddos.successBar') }}</div>
+        <div class="text-subtitle2 text-grey-7 text-center">{{ $t('ddos.successBar.title') }}</div>
         <div class="bar">
-          <div class="bar-error" v-bind:style="{width: `${atackErrorCounter * 100 / atackCounter}%`}"></div>
+          <div class="bar-error" v-bind:style="{width: `${failureRate}%`}"></div>
+        </div>
+        <div class="text-caption text-grey-7 text-center" v-if="latest500Responses.length > 490">
+          {{ shouldChangeIp ? $t('ddos.successBar.restartVpn') : $t('ddos.successBar.keepVpn') }}
         </div>
       </q-card-section>
 
@@ -133,6 +136,14 @@ export default defineComponent({
   computed: {
     maxNumberOfWorkers (): number {
       return Math.max(this.maxDosersCount, 256)
+    },
+
+    failureRate (): number {
+      return this.atackErrorCounter * 100 / this.atackCounter
+    },
+
+    shouldChangeIp (): boolean {
+      return this.latest500Responses.filter(r => r).length < 50
     }
   },
 
@@ -149,8 +160,16 @@ export default defineComponent({
         this.currentAtack = data.url
         this.lastAtackChange = new Date()
       }
+
+      // Counters
       this.atackCounter += 1
       if (!data.success) this.atackErrorCounter += 1
+
+      // Latest 500 requests success/failure - used for IP change suggestion
+      if (this.latest500Responses.length > 500) this.latest500Responses.shift()
+      this.latest500Responses.push(data.success)
+
+      // Latest 100 requests logs
       if (this.log.length > 100) this.log.pop()
       this.log.unshift(data.log)
     },
@@ -198,8 +217,9 @@ export default defineComponent({
     const maxDosersCount = ref(32)
     const updateDialog = ref(false)
     const updateMessage = ref('message')
+    const latest500Responses = ref([] as boolean[])
 
-    return { ddosEnabled, forceProxy, atackCounter, atackErrorCounter, currentAtack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
+    return { ddosEnabled, forceProxy, atackCounter, atackErrorCounter, currentAtack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage, latest500Responses }
   }
 })
 </script>

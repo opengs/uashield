@@ -28,6 +28,10 @@ export default {
         description: 'Defines amount of dosers. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of dosers according to new settings.'
       }
     },
-    successBar: 'Successful request statistics'
+    successBar: {
+      title: 'Successful request statistics',
+      restartVpn: 'Successful requests percent is less than 10, you should change your IP',
+      keepVpn: 'The amount of successful requests is fine, keep using this IP'
+    }
   }
 }

@@ -14,6 +14,10 @@ export default {
       name: 'Atacar sólo usando proxy',
       description: 'Sin esta opción, el programa permitirá usar tu IP. Realizarás ataques más eficientes, pero los ataques no serán anónimos.'
     },
-    successBar: 'Successful request statistics'
+    successBar: {
+      title: 'Successful request statistics',
+      restartVpn: 'Successful requests percent is less than 10, you should change your IP',
+      keepVpn: 'The amount of successful requests is fine, keep using this IP'
+    }
   }
 }
