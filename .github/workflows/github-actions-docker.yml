@@ -35,3 +35,12 @@ jobs:
           push: true
           tags: |
             ghcr.io/opengs/uashield:${{ steps.extract_branch.outputs.branch }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./goguys
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/opengs/uashieldgo:${{ steps.extract_branch.outputs.branch }}
