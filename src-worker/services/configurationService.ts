@@ -15,41 +15,37 @@ export class ConfigurationService {
       this.expiredAt = undefined
     }
 
-    let valid = true
     if (!this.sites) {
       try {
         const sites = await getSites()
         if (sites.status === 200) {
           this.sites = sites.data
           this.updateExpirationDate()
-        } else {
-          valid = false
         }
       } catch (e) {
-        valid = false
+        console.log('can not pull the targets. Error: ', (e as Error).message)
       }
     }
+
     if (!this.proxies) {
       try {
         const proxies = await getProxies()
         if (proxies.status === 200) {
           this.proxies = proxies.data
           this.updateExpirationDate()
-        } else {
-          valid = false
         }
       } catch (e) {
-        valid = false
+        console.log('can not pull the proxies. Error: ', (e as Error).message)
       }
     }
 
-    if (!valid) {
+    if (!this.sites || !this.proxies) {
       throw Error('Can not pull configuration')
     }
 
     return {
-      sites: (this.sites as SiteData[]),
-      proxies: (this.proxies as ProxyData[])
+      sites: this.sites,
+      proxies: this.proxies
     }
   }
 
