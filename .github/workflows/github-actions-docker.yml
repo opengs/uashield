@@ -43,4 +43,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/opengs/uashieldgo:${{ steps.extract_branch.outputs.branch }}
+            ghcr.io/opengs/uashield:go-${{ steps.extract_branch.outputs.branch }}
