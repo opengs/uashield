@@ -7,5 +7,5 @@ services:
       image: uashield:latest
       environment:
         WORKERS: '256'
-        USEPROXY: 'true'
+        USEPROXY: 'false'
       network_mode: host
