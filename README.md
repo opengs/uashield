@@ -3,6 +3,7 @@
 *ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this prlatform on your own website!*
 
 *See this README [in English](README-en.md)*
+*See this README [in Slovak](README-sk.md)*
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
