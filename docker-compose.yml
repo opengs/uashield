@@ -7,6 +7,11 @@ services:
       environment:
         ONLYOK: '256'
         USEPROXY: 'true'
-        TIMEOUT: '5000'
-        WORKERS: '1024'
-      network_mode: host
+        TIMEOUT: '10000'
+        WORKERS: '10240'
+      networks:
+        - uashield
+
+networks:
+  uashield:
+    driver: bridge
