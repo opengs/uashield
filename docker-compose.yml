@@ -6,7 +6,7 @@ services:
       image: ghcr.io/opengs/uashield:go-experimental
       environment:
         ONLYOK: 'false'
-        USEPROXY: 'true'
+        USEPROXY: 'false'
         TIMEOUT: '300'
         WORKERS: '1024'
       networks:
