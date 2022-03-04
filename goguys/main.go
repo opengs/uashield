@@ -146,7 +146,7 @@ func requestMe(target string, proxyUrl string, proxyAuth string) {
 		}
 		return
 	}
-	log.Printf("200 OK!")
+	log.Println("200 OK!", target)
 }
 
 func gogogo(ebus chan int, id int) {
