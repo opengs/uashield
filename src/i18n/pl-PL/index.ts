@@ -2,10 +2,10 @@ export default {
   language: 'Język',
   ddos: {
     description: 'Ataki DDoS robią bardzo dużo żądań do serwera wroga. Serwery dzięki temu zaczynają lagować i przestają przyjmować nowe żądania.',
-    coordinators: 'Koordynacja https://t.me/incourse911 ',
+    coordinators: 'Koordynacja https://discord.gg/7BfJ9JKQ98 ',
     counter: {
       attackedTimes: 'Zaatakowano już:',
-      currentTarget: 'Aktualny cel:'
+      currentTarget: 'Aktualny cel: '
     },
     enable: {
       name: 'Atak DDoS',
@@ -22,6 +22,11 @@ export default {
         name: 'Poziom równoległości',
         description: 'Określa liczbę równoległych procesów. Stosowane są mechanizmy asynchroniczne (nie strumieniowe), więc nie ma to dużego wpływu na procesor / RAM. Obecnie opcja działa w trybie manualnym i określa liczbę równoległych zapytań. Przy dużej liczbie requestów proxy serwery mogą blokować DDOS. Zmień znaczenie i poczekaj 2-3 minuty, aby zobaczyć wynik. Jeśli widzisz ECONNABORTED - oznacza to, że jesteś zablokowany i musisz zmniejszyć liczbę/ilość'
       }
+    },
+    update: {
+      title: 'Dostępna aktualizacja',
+      cancel: 'Anuluj',
+      confirm: 'Zainstaluj aktualizację'
     }
   }
 }

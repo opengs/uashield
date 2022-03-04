@@ -6,10 +6,11 @@ import { HttpHeadersUtils } from './utils/httpHeadersUtils'
 export class Runner {
   private sites: SiteData[]
   private proxies: ProxyData[]
-  private readonly onlyProxy: boolean
+  private onlyProxy: boolean
   private readonly ATTACKS_PER_TARGET = 64
   private active = false
   public readonly eventSource: EventEmitter
+  private requestTimeout: number = 10000
 
   constructor (props: { sites: SiteData[]; proxies: ProxyData[]; onlyProxy: boolean }) {
     this.sites = props.sites
@@ -34,6 +35,10 @@ export class Runner {
     this.active = false
   }
 
+  setProxyActive(newProxyValue: boolean) {
+    this.onlyProxy = newProxyValue
+  }
+
   updateConfiguration (config: { sites: SiteData[]; proxies: ProxyData[]; }) {
     this.sites = config.sites
     this.proxies = config.proxies
@@ -50,12 +55,12 @@ export class Runner {
     if (!this.onlyProxy) {
       try {
         const response = await axios.get(target.site.page, {
-          timeout: 10000,
+          timeout: this.requestTimeout,
           headers: HttpHeadersUtils.generateRequestHeaders()
         })
         directRequest = response.status === 200
       } catch (e) {
-        console.debug((e as Error).message)
+        console.debug("DIRECT probing err ", (e as Error).message)
         this.eventSource.emit('error', { error: e })
         directRequest = false
       }
@@ -68,8 +73,12 @@ export class Runner {
       }
       try {
         if (directRequest) {
+          if(this.onlyProxy) {
+            console.log("Changing to only proxy")
+            break
+          }
           const r = await axios.get(target.site.page, {
-            timeout: 5000,
+            timeout: this.requestTimeout,
             headers: HttpHeadersUtils.generateRequestHeaders(),
             validateStatus: () => true
           })
@@ -95,7 +104,7 @@ export class Runner {
 
 
           const r = await axios.get(target.site.page, {
-            timeout: 10000,
+            timeout: this.requestTimeout,
             headers: HttpHeadersUtils.generateRequestHeaders(),
             validateStatus: () => true,
             proxy: proxyObj

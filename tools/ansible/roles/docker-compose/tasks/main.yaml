@@ -1,0 +1,17 @@
+- name: Check if docker-compose is already present.
+  command: which docker-compose
+  failed_when: false
+  changed_when: false
+  register: docker_install_compose
+
+- name: Install Docker Compose using Pip.
+  pip:
+    name: docker-compose
+    state: present
+    executable: "{{ docker_pip_executable }}"
+  when: docker_install_compose.rc == 1
+  register: docker_pip_compose
+
+- name: Install Docker Compose using apt-get
+  command: apt-get install docker-compose -y
+  when: docker_pip_compose.rc == 1

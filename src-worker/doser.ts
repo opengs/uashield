@@ -55,6 +55,15 @@ export class Doser {
 
   forceProxy (newVal: boolean) {
     this.onlyProxy = newVal
+    try {
+      this.workers.forEach((worker, i) => {
+        worker.setProxyActive(newVal)
+        console.debug(`Changing runner proxy value ${i}..`)
+      })
+
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async loadHostsFile () {
