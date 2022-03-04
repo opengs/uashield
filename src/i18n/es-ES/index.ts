@@ -1,7 +1,7 @@
 export default {
   language: 'Idioma',
   ddos: {
-    description: 'Ataque DDOS que realiza muchas requests/solicitudes a targets de servidores enemigos. Los targets/objetivos comenzarán a funcionar mal o con lag.',
+    description: 'Ataque DDOS que realiza muchas requests/solicitudes a targets de servidores enemigos. Los targets/objetivos comenzarán a funcionar mal o con lag. https://help-ukraine-win.com/',
     counter: {
       attackedTimes: 'Número de ataques:',
       currentTarget: 'Target/Objetivo actual:'

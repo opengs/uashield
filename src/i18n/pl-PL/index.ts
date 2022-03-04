@@ -1,7 +1,7 @@
 export default {
   language: 'Język',
   ddos: {
-    description: 'Ataki DDoS robią bardzo dużo żądań do serwera wroga. Serwery dzięki temu zaczynają lagować i przestają przyjmować nowe żądania.',
+    description: 'Ataki DDoS robią bardzo dużo żądań do serwera wroga. Serwery dzięki temu zaczynają lagować i przestają przyjmować nowe żądania. Szczegóły tutaj: https://help-ukraine-win.com/',
     coordinators: 'Koordynacja https://discord.gg/7BfJ9JKQ98 ',
     counter: {
       attackedTimes: 'Zaatakowano już:',
