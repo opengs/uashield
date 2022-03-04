@@ -1,11 +1,9 @@
-version: '2'
+version: '3'
 services:
     uashield:
-      build: .
       restart: always
       container_name: uashield
-      image: uashield:latest
-      environment:
-        WORKERS: '512'
-        USEPROXY: 'false'
-      network_mode: host
+      image: ghcr.io/opengs/uashield:latest
+      command:
+        - "256"
+        - "true"
