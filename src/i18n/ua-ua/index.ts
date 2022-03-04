@@ -16,11 +16,11 @@ export default {
       description: 'З атакою без проксі, програма зможе використовувати ваш реальний IP. Це дозволяє робити атаки більш ефективними, але водночас зробить ваш IP відомим ворогу'
     },
     advanced: {
-      header: 'Extended settings',
-      description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effect and decrease effectiveness of the application',
+      header: 'Розширені налаштування',
+      description: 'Якщо якась термінологія вам незрозуміла нічого не змінюйте. Це може призвести до негативного ефекту та знизити якість работи',
       masDosersCount: {
-        name: 'Level of parallelism',
-        description: 'Defines amount of parallel processes. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of dosers according to new settings.'
+        name: 'Рівень паралелизму',
+        description: 'Визначає кількість паралельних процесів. Додаток покладається на асинхронні операції (не паралельні через потоки), завдяки цьому CPU/RAM не перевантажуються. Після налаштування зазвичай потрібно близько 10 секунд, щоб застосувались зміни.'
       }
     },
     update: {
