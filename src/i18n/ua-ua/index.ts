@@ -5,7 +5,7 @@ export default {
     coordinators: 'Для координацій цілей: https://discord.gg/7BfJ9JKQ98 ',
     counter: {
       attackedTimes: 'Атаковано разів:',
-      currentTarget: 'Теперішня ціль:'
+      currentTarget: 'Теперішня ціль: '
     },
     enable: {
       name: 'Атака DDoS',

@@ -48,6 +48,9 @@ Optional step, can be skipped
 
     ansible-playbook -u root deploy.yaml -i hosts
 
+### 7. Get stats of successful requests
+
+    ansible-playbook -u root stats.yaml -i hosts
 
 ## UA
 ### 1. Інсталюйте ansible на свою машину
@@ -90,3 +93,7 @@ ssh-agent bash -c "ssh-add /path/to/keys/*.pem"
 ### 6. Запустіть плейбук та введіть паролі, коли він запитає
 
     ansible-playbook -u root deploy.yaml -i hosts
+
+### 7. Перевірка статистики успішних запитів
+
+    ansible-playbook -u root stats.yaml -i hosts

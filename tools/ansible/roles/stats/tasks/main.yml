@@ -1,0 +1,6 @@
+- name: Get stats
+  shell: echo $(docker logs uashield | grep '| 200' -c)
+  register: echo_content
+
+- debug:
+    msg: "Hits {{ echo_content.stdout }} requests."
