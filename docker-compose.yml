@@ -5,10 +5,10 @@ services:
       container_name: uashield
       image: ghcr.io/opengs/uashield:go-experimental
       environment:
-        ONLYOK: '256'
+        ONLYOK: 'false'
         USEPROXY: 'true'
-        TIMEOUT: '10000'
-        WORKERS: '10240'
+        TIMEOUT: '300'
+        WORKERS: '1024'
       networks:
         - uashield
 
