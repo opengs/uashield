@@ -5,7 +5,6 @@ import { Runner } from './runner'
 import { ConfigurationService } from './services/configurationService'
 import { Timeout } from './utils/timeout'
 
-const CONFIGURATION_INVALIDATION_TIME = 300000 // 5 min
 const CONFIGURATION_WAIT_MIN_TIMEOUT = 10000 // 10 sec
 const CONFIGURATION_WAIT_MAX_TIMEOUT = 120000 // 2 min
 
@@ -29,7 +28,7 @@ export class Doser {
     this.eventSource = new EventEmitter()
     this.capacity = numberOfWorkers
     this.verboseError = verboseError
-    console.log(`Init doser. Capasity: ${this.capacity}`)
+    console.log(`Init doser. Capacity: ${this.capacity}`)
     this.initialize(Timeout.zero())
   }
 
@@ -50,7 +49,7 @@ export class Doser {
       try {
         const config = await this.configurationService.pullConfiguration()
         this.updateConfiguration(config)
-        this.listenForConfigurationUpdates(Timeout.fromValue(CONFIGURATION_INVALIDATION_TIME))
+        this.listenForConfigurationUpdates(Timeout.fromValue(ConfigurationService.CONFIGURATION_INVALIDATION_TIME))
         this.startWorkers()
       } catch (e) {
         const newTimeout = timeout.increase(CONFIGURATION_WAIT_MIN_TIMEOUT, CONFIGURATION_WAIT_MAX_TIMEOUT)
@@ -67,8 +66,7 @@ export class Doser {
         worker.setProxyActive(newVal)
         console.debug(`Changing runner proxy value ${i}..`)
       })
-
-    } catch(err) {
+    } catch (err) {
       console.log(err)
     }
   }
@@ -98,10 +96,10 @@ export class Doser {
          * So it might happen that we have to start workers is configuration has been updated
          */
         this.startWorkers()
-        this.listenForConfigurationUpdates(Timeout.fromValue(CONFIGURATION_INVALIDATION_TIME))
+        this.listenForConfigurationUpdates(Timeout.fromValue(ConfigurationService.CONFIGURATION_INVALIDATION_TIME))
       } catch (e) {
         // todo: if old configuration we have to stop all workers
-        const newTimeout = Timeout.fromValue(CONFIGURATION_INVALIDATION_TIME / 2)
+        const newTimeout = Timeout.fromValue(ConfigurationService.CONFIGURATION_INVALIDATION_TIME / 2)
         console.log('Can not pull configuration. Check after interval', newTimeout.interval)
         this.listenForConfigurationUpdates(newTimeout)
       }

@@ -2,22 +2,37 @@ import { GetSitesAndProxiesResponse, ProxyData, SiteData } from '../types'
 import { getProxies, getSites } from '../requests'
 
 export class ConfigurationService {
+  public static readonly CONFIGURATION_INVALIDATION_TIME = 300000 // 5 min
   private proxies: ProxyData[] | undefined = undefined
   private sites: SiteData[] | undefined = undefined
+  private expiredAt: Date | undefined = undefined
 
   async pullConfiguration (): Promise<GetSitesAndProxiesResponse> {
-    const [proxies, sites] = await Promise.all([getProxies(), getSites()])
-    let valid = true
-
-    if (proxies.status === 200) {
-      this.proxies = proxies.data
-    } else {
-      valid = false
+    if ((this.proxies && this.sites) || this.expired()) {
+      console.log('Reset configs')
+      this.proxies = undefined
+      this.sites = undefined
+      this.expiredAt = undefined
     }
-    if (sites.status === 200) {
-      this.sites = sites.data
-    } else {
-      valid = false
+
+    let valid = true
+    if (!this.sites) {
+      const sites = await getSites()
+      if (sites.status === 200) {
+        this.sites = sites.data
+        this.updateExpirationDate()
+      } else {
+        valid = false
+      }
+    }
+    if (!this.proxies) {
+      const proxies = await getProxies()
+      if (proxies.status === 200) {
+        this.proxies = proxies.data
+        this.updateExpirationDate()
+      } else {
+        valid = false
+      }
     }
 
     if (!valid) {
@@ -31,6 +46,15 @@ export class ConfigurationService {
   }
 
   expired (): boolean {
-    return false
+    return !this.expiredAt || this.expiredAt <= new Date()
+  }
+
+  private updateExpirationDate () {
+    console.log('current exp date', this.expiredAt)
+    if (this.expiredAt) {
+      return
+    }
+    this.expiredAt = new Date(new Date().getTime() + ConfigurationService.CONFIGURATION_INVALIDATION_TIME)
+    console.log('Config valid until', this.expiredAt)
   }
 }
