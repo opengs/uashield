@@ -10,8 +10,6 @@ COPY tsconfig.headless.json ./tsconfig.json
 
 RUN yarn build:headless
 
-FROM node:14-alpine
-
 WORKDIR /code
 
 COPY packageheadless.json ./package.json
