@@ -7,7 +7,7 @@ services:
       environment:
         ONLYOK: 'false'
         USEPROXY: 'false'
-        TIMEOUT: '300'
+        TIMEOUT: '5000'
         WORKERS: '1024'
       networks:
         - uashield
