@@ -27,6 +27,7 @@ export default {
       title: 'Dostępna aktualizacja',
       cancel: 'Anuluj',
       confirm: 'Zainstaluj aktualizację'
-    }
+    },
+    successBar: 'Successful request statistics'
   }
 }

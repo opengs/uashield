@@ -13,6 +13,7 @@ export default {
     proxy: {
       name: 'Atacar sólo usando proxy',
       description: 'Sin esta opción, el programa permitirá usar tu IP. Realizarás ataques más eficientes, pero los ataques no serán anónimos.'
-    }
+    },
+    successBar: 'Successful request statistics'
   }
 }

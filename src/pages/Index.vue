@@ -8,6 +8,7 @@
       </q-card-section>
 
       <q-card-section>
+        <div class="text-subtitle2 text-grey-7 text-center">{{ $t('ddos.successBar') }}</div>
         <div class="bar">
           <div class="bar-error" v-bind:style="{width: `${atackErrorCounter * 100 / atackCounter}%`}"></div>
         </div>
