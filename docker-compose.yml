@@ -8,9 +8,4 @@ services:
       environment:
         WORKERS: '512'
         USEPROXY: 'false'
-      networks:
-        - shield
-
-networks:
-  shield:
-    driver: host
+      network_mode: host
