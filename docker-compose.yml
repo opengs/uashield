@@ -6,11 +6,11 @@ services:
       container_name: uashield
       image: uashield:latest
       environment:
-        WORKERS: '256'
+        WORKERS: '512'
         USEPROXY: 'false'
       networks:
         - shield
 
 networks:
   shield:
-    driver: bridge
+    driver: host
