@@ -6,6 +6,13 @@
         <div class="text-h1 text-center">{{ atackCounter }}</div>
         <div class="text-h5 text-center">{{ $t('ddos.counter.currentTarget') + currentAtack }}</div>
       </q-card-section>
+
+      <q-card-section>
+        <div class="bar">
+          <div class="bar-error" v-bind:style="{width: `${atackErrorCounter * 100 / atackCounter}%`}"></div>
+        </div>
+      </q-card-section>
+
       <q-card-section>
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.description') }}</div>
       </q-card-section>
@@ -136,12 +143,13 @@ export default defineComponent({
       }
     },
 
-    serveAtack (_event: unknown, data: { url: string, log: string }) {
+    serveAtack (_event: unknown, data: { url: string, log: string, success: boolean }) {
       if ((new Date()).getTime() - this.lastAtackChange.getTime() > 1000) {
         this.currentAtack = data.url
         this.lastAtackChange = new Date()
       }
       this.atackCounter += 1
+      if (!data.success) this.atackErrorCounter += 1
       if (this.log.length > 100) this.log.pop()
       this.log.unshift(data.log)
     },
@@ -180,6 +188,7 @@ export default defineComponent({
     const ddosEnabled = ref(true)
     const forceProxy = ref(true)
     const atackCounter = ref(0)
+    const atackErrorCounter = ref(0)
     const currentAtack = ref('')
     const lastAtackChange = ref(new Date())
     const log = ref([] as Array<string>)
@@ -189,7 +198,7 @@ export default defineComponent({
     const updateDialog = ref(false)
     const updateMessage = ref('message')
 
-    return { ddosEnabled, forceProxy, atackCounter, currentAtack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
+    return { ddosEnabled, forceProxy, atackCounter, atackErrorCounter, currentAtack, lastAtackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
   }
 })
 </script>
@@ -198,4 +207,15 @@ export default defineComponent({
 .full-card
   width: 80%
   max-width: 700px
+
+.bar
+  height: 12px
+  width: 100%
+  background: $green-10
+  border-radius: 4px
+  overflow: hidden
+
+.bar-error
+  height: 100%
+  background: $red-10
 </style>
