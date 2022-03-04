@@ -5,7 +5,7 @@ export default {
     coordinators: 'De planners van de aanval: https://discord.gg/7BfJ9JKQ98',
     counter: {
       attackedTimes: 'Aantal aanvallen:',
-      currentTarget: 'Huidige doelwit:'
+      currentTarget: 'Huidige doelwit: '
     },
     enable: {
       name: 'DDoS aanvallen',

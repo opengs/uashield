@@ -5,7 +5,7 @@ export default {
     coordinators: 'Koordinátoři https://discord.gg/7BfJ9JKQ98 ',
     counter: {
       attackedTimes: 'Počet napadení:',
-      currentTarget: ' Aktuální cíl:'
+      currentTarget: ' Aktuální cíl: '
     },
     enable: {
       name: 'DDoS útok',

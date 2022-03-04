@@ -5,7 +5,7 @@ export default {
     coordinators: 'Koordinatorai: https://discord.gg/7BfJ9JKQ98',
     counter: {
       attackedTimes: 'Kartų užpulta:',
-      currentTarget: 'Dabartinis tikslas:'
+      currentTarget: 'Dabartinis tikslas: '
     },
     enable: {
       name: 'DDoS puolimas',
