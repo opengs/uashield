@@ -6,9 +6,9 @@ do
   EXIST="$(cat hosts | awk '{print $1}' | grep $IP)"
   if [ "$EXIST" == "$IP" ]
   then
-    echo "[Skipping] $IP already in present"
+    echo "[Skipping] $IP already exist"
   else
     echo $IP >> hosts
-    echo "[Changed] $IP added to hosts"
+    echo "[Changed] $IP is added to hosts"
   fi
 done
