@@ -22,6 +22,6 @@ export interface TargetData {
 
 export type DoserEventType = 'atack' | 'error';
 
-export type GetSitesAndProxiesResponse = { sites: SiteData[]; proxies: ProxyData[]} | null
+export type GetSitesAndProxiesResponse = { sites: SiteData[]; proxies: ProxyData[]}
 export const sitesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/sites.json'
 export const proxiesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/proxy.json'
