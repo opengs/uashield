@@ -1,11 +1,12 @@
 version: '2'
 services:
     uashield:
-      build: .
       restart: always
       container_name: uashield
-      image: uashield:latest
+      image: ghcr.io/opengs/uashield:go-experimental
       environment:
-        WORKERS: '256'
-        USEPROXY: 'false'
+        ONLYOK: '256'
+        USEPROXY: 'true'
+        TIMEOUT: '5000'
+        WORKERS: '1024'
       network_mode: host
