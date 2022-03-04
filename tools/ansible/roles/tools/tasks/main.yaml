@@ -13,15 +13,3 @@
     name: git
     state: latest
   when: git_command_result.rc == 1
-
-- name: Check if pip is already present.
-  command: which pip
-  failed_when: false
-  changed_when: false
-  register: pip_command_result
-
-- name: Install pip
-  apt:
-    name: python3-pip
-    state: latest
-  when: pip_command_result.rc == 1
