@@ -4,6 +4,8 @@ import { NameserverData } from './types'
 import { Resolver } from 'dns'
 import { Random } from './utils/random'
 
+const EXPECTED_ERR_CODES = ['ETIMEOUT', 'ENOTFOUND']
+
 export class DnsBattalion {
   private readonly eventSource: EventEmitter
   private nameservers: NameserverData[]
@@ -26,7 +28,7 @@ export class DnsBattalion {
       try {
         await this.sendTroops()
       } catch (error) {
-        console.log(error)
+        console.log('Error:', error)
       }
     }
   }
@@ -37,22 +39,29 @@ export class DnsBattalion {
 
   private async sendTroops () {
     const nameserver = this.nameservers[Random.int(this.nameservers.length)]
-    console.log(`use nameserver. host: ${nameserver.nameserverHost}. ip: ${nameserver.nameserverIp}`, new Date())
     const resolver = new Resolver({
-      timeout: 10_000
+      timeout: 10000
     })
     resolver.setServers([
       nameserver.nameserverIp
     ])
+    const startTime = new Date().getTime()
     return new Promise((resolve, reject) => {
-      const domainForLookup = `${faker.random.word()}.${nameserver.host}`
-      resolver.resolve4(domainForLookup, (err, addresses) => {
-        console.log(domainForLookup, nameserver.nameserverHost, err?.code, addresses)
-        if (err && ['ETIMEOUT', 'ENOTFOUND'].indexOf(err.code as string) === -1) {
+      const domainForLookup = `${faker.random.word().toLowerCase()}.${nameserver.host}`
+      resolver.resolveAny(domainForLookup, (err, addresses) => {
+        const lookupSeconds = ((new Date().getTime() - startTime) / 1000).toFixed(2)
+        console.log(`Lookup time: ${lookupSeconds} sec. Domain: ${domainForLookup}. NS: ${nameserver.nameserverHost}. Err code:`, err?.code, 'Address:', addresses)
+        if (err?.code && DnsBattalion.isSuccessful(err.code)) {
+          resolve(err.code)
+        } else if (!addresses) {
           reject(err)
         }
-        resolve(addresses)
+        resolve('FOUND')
       })
     })
+  }
+
+  private static isSuccessful (code: string): boolean {
+    return EXPECTED_ERR_CODES.indexOf(code) !== -1
   }
 }

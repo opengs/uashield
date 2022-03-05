@@ -34,4 +34,4 @@ export type GetSitesAndProxiesResponse = {
 }
 export const sitesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/sites.json'
 export const proxiesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/proxy.json'
-export const nameserversUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/nameservers.json'
+export const nameserversUrl = 'https://raw.githubusercontent.com/forzaukraine/uashieldtargets/dns-army/nameservers.json'

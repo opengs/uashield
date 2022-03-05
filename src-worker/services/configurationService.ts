@@ -1,22 +1,23 @@
 import { GetSitesAndProxiesResponse, NameserverData, ProxyData, SiteData } from '../types'
-import { getProxies, getSites } from '../requests'
+import { getNameservers, getProxies, getSites } from '../requests'
 
 export class ConfigurationService {
   public static readonly CONFIGURATION_INVALIDATION_TIME = 300000 // 5 min
   private proxies: ProxyData[] | undefined = undefined
   private sites: SiteData[] | undefined = undefined
+  private nameservers: NameserverData[] | undefined = undefined
   private expiredAt: Date | undefined = undefined
-  private nameservers: NameserverData[] = []
 
   async pullConfiguration (): Promise<GetSitesAndProxiesResponse> {
     if ((this.proxies && this.sites && this.nameservers) || this.expired()) {
       console.log('Reset configs')
       this.proxies = undefined
       this.sites = undefined
+      this.nameservers = undefined
       this.expiredAt = undefined
     }
 
-    if (!this.sites) {
+    if (this.sites === undefined) {
       try {
         const sites = await getSites()
         if (sites.status === 200) {
@@ -28,7 +29,7 @@ export class ConfigurationService {
       }
     }
 
-    if (!this.proxies) {
+    if (this.proxies === undefined) {
       try {
         const proxies = await getProxies()
         if (proxies.status === 200) {
@@ -40,31 +41,34 @@ export class ConfigurationService {
       }
     }
 
-    if (!this.sites || !this.proxies) {
-      throw Error('Can not pull configuration')
-    }
     this.nameservers = [
       {
-        host: 'tinkoff.ru',
-        nameserverHost: 'ns8-l2.nic.ru.',
-        nameserverIp: '91.217.21.1'
+        host: 'ria.ru',
+        nameserverHost: 'ns9.rian.ru.',
+        nameserverIp: '178.248.236.20'
       },
       {
-        host: 'tinkoff.ru',
-        nameserverHost: 'ns2.tinkoff.ru.',
-        nameserverIp: '185.169.154.98'
-      },
-      {
-        host: 'tinkoff.ru',
-        nameserverHost: 'ns1.tinkoff.ru.',
-        nameserverIp: '178.248.239.11'
-      },
-      {
-        host: 'tinkoff.ru',
-        nameserverHost: 'ns4-l2.nic.ru.',
-        nameserverIp: '91.217.20.1'
+        host: 'ria.ru',
+        nameserverHost: 'ns10.rian.ru.',
+        nameserverIp: '178.248.233.32'
       }
     ]
+
+    // if (this.nameservers === undefined) {
+    //   try {
+    //     const nameservers = await getNameservers()
+    //     if (nameservers.status === 200) {
+    //       this.nameservers = nameservers.data
+    //       this.updateExpirationDate()
+    //     }
+    //   } catch (e) {
+    //     console.log('can not pull the nameservers. Error: ', (e as Error).message)
+    //   }
+    // }
+
+    if (!this.sites || !this.proxies || !this.nameservers) {
+      throw Error('Can not pull configuration')
+    }
 
     return {
       sites: this.sites,
