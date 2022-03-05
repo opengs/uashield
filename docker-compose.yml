@@ -1,17 +1,17 @@
 version: '2'
 services:
-    uashield:
-      restart: always
-      container_name: uashield
-      image: ghcr.io/opengs/uashield:go-experimental
-      environment:
-        ONLYOK: 'false'
-        USEPROXY: 'false'
-        TIMEOUT: '5000'
-        WORKERS: '1024'
-      networks:
-        - uashield
-
-networks:
-  uashield:
-    driver: bridge
+    repeater:
+        image: ghcr.io/opengs/uashield:go-experimental
+        restart: always
+        environment:
+            - ONLYOK=true
+            - USEPROXY=false
+            - TIMEOUT=5000
+            - WORKERS=128
+            - REPEATTARGET=true
+            - DISGUISEASBOTPERCENTAGE=1
+            - REPEATERSPAWNNEWWORKERS=true
+            - REPEATERSPAWNNEWWORKERSCOUNT=512
+            - REPEATSLEEPBEFORE=50
+            - MAXREPEATING=10240
+            - TARGETONLY200=false
