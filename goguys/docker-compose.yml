@@ -5,7 +5,7 @@ services:
         restart: always
         environment:
             - ONLYOK=true
-            - USEPROXY=false
+            - USEPROXY=true
             - TIMEOUT=5000
             - WORKERS=128
             - REPEATTARGET=true
