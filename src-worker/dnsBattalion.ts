@@ -1,8 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { EventEmitter } from 'events'
 import { NameserverData } from './types'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { Resolver } from 'dns'
 import { Random } from './utils/random'
 

@@ -8,7 +8,6 @@
   "repository": "github:opengs/uashield",
   "scripts": {
     "start:dev": "quasar dev -m electron",
-    "start:worker": "quasar dev -m worker",
     "start:electron": "electron ./dist/electron/UnPackaged/electron-main.js",
     "build:electron": "quasar build -m electron",
     "build:headless": "esbuild ./headless.ts --platform=node  --bundle --minify --sourcemap --sources-content=false --keep-names --target=node16 --outfile=./build/headless/headless.js",
