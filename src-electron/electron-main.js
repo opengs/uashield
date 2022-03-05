@@ -57,7 +57,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  const doser = new Doser(true, 32)
+  const doser = new Doser(true, 0, 1)
   const window = mainWindow
   doser.listen('atack', (data) => console.log(data.log))
   doser.listen('atack', (data) => window.webContents.send('atack', data))
@@ -127,7 +127,7 @@ function checkUpdates() {
     autoUpdater.checkForUpdates()
   } catch(err) {
     console.log(err, "Error while checking update")
-  }  
+  }
 }
 
 app.on('ready', function()  {

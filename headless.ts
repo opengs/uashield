@@ -14,7 +14,7 @@ if(process.env.USEPROXY) {
 
 console.log(`Using ${workers} workers, proxy - ${useProxy}`);
 
-const doser = new Doser(useProxy, workers, false);
+const doser = new Doser(false, 0, 5);
 
 doser.listen('atack', (data: any) => console.log(data.log))
 

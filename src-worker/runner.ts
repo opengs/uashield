@@ -123,8 +123,8 @@ export class Runner {
         if (code === 'UNKNOWN') {
           console.error(e)
         }
-
-        this.eventSource.emit('attack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${code}` })
+        const reqType = directRequest ? 'DIRECT' : 'PROXY'
+        this.eventSource.emit('attack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${reqType} | ${code}` })
         if (code === 'ECONNABORTED') {
           break
         }

