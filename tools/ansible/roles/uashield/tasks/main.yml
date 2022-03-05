@@ -41,14 +41,8 @@
   args:
     chdir: "{{uashield_work_dir}}"
 
-- name: Run Instances
-  shell: "{{ item }}"
-  with_items:
-    - "docker run -d uashield {{ uashield_threads }} {{ uashield_proxy }}"
-    - "docker run -d uashield {{ uashield_threads }} {{ uashield_proxy }}"
-    - "docker run -d uashield {{ uashield_threads }} {{ uashield_proxy }}"
-    - "docker run -d uashield {{ uashield_threads }} {{ uashield_proxy }}"
-    - "docker run -d uashield {{ uashield_threads }} {{ uashield_proxy }}"
+- name: Run Instance
+  shell: "docker run -d uashield {{ uashield_threads }} {{ uashield_proxy }}"
 
 - name: Check Docker is started
   command: "docker ps"

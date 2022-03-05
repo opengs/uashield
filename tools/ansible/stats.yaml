@@ -1,5 +1,7 @@
 ---
 - hosts: servers
+  strategy: linear
+  gather_facts: no
   become: yes
   become_user: root
   vars_files:
