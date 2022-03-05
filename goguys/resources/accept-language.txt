@@ -1,0 +1,15 @@
+en-US,en;q=0.9
+ru-RU,ru
+ru,en;q=0.9,en-US;q=0.8
+ru-RU;q=0.8
+ru-RU;q=0.9
+ru-RU;q=0.8
+ru-RU;q=0.9
+ru-RU;q=0.8
+ru-RU;q=0.9
+ru-RU;q=0.8
+ru-RU;q=0.7
+ru-RU;q=0.9
+ru-RU;q=0.8
+ru-RU;q=0.9
+en-US
