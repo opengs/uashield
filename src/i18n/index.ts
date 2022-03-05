@@ -6,6 +6,7 @@ import csCS from './cs-CS'
 import deDE from './de-DE'
 import nlNL from './nl-NL'
 import skSK from './sk-SK'
+import esES from './es-ES'
 
 export default {
   'en-US': enUS,
@@ -15,5 +16,6 @@ export default {
   'cs-CS': csCS,
   'de-DE': deDE,
   'nl-NL': nlNL,
-  'sk-SK': skSK
+  'sk-SK': skSK,
+  'es-ES': esES
 }
