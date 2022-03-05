@@ -9,7 +9,7 @@ COPY --from=builder /repeater /usr/bin/repeater
 COPY resources /resources
 WORKDIR /
 
-ENV ONLYOK=false
+ENV ONLYOK=true
 ENV USEPROXY=true
 ENV TIMEOUT=5000
 ENV WORKERS=128
