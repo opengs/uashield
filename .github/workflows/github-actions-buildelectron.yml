@@ -33,9 +33,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          rm -rf dist/
-          npm install -g @quasar/cli yarn --force
-          yarn install
           quasar build --mode electron --publish always -T linux --arch ia32
       - name: Windows 64bit
         env:
