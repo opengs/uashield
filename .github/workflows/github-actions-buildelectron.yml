@@ -21,7 +21,7 @@ jobs:
           sudo apt update
           sudo apt install -y wine32
           sudo snap install snapcraft --classic
-      - name: npm install, build
+      - name: Linux 64 bit
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
@@ -29,12 +29,25 @@ jobs:
           npm install -g @quasar/cli yarn --force
           yarn install
           quasar build --mode electron --publish always -T linux
-      - name: npm install, build
+      - name: Linux 32bit
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          rm -rf dist/
+          npm install -g @quasar/cli yarn --force
+          yarn install
+          quasar build --mode electron --publish always -T linux --arch ia32
+      - name: Windows 64bit
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           quasar build --mode electron --publish always -T win
-      - name: npm install, build
+      - name: Windows 32bit
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          quasar build --mode electron --publish always -T win --arch ia32
+      - name: MacOS 64bit
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
