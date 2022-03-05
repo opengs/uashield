@@ -12,7 +12,7 @@ export class Runner {
   private readonly ATTACKS_PER_PRIORITIZED_TARGET = 32
   private active = false
   public readonly eventSource: EventEmitter
-  private requestTimeout: number = 10000
+  private requestTimeout = 10000
   private doserInstance: Doser
   private canAddPrioritized: boolean
 
@@ -71,7 +71,7 @@ export class Runner {
     this.active = false
   }
 
-  setProxyActive(newProxyValue: boolean) {
+  setProxyActive (newProxyValue: boolean) {
     this.onlyProxy = newProxyValue
   }
 
@@ -146,7 +146,7 @@ export class Runner {
       let probe = await this.requestMe(target, this.requestTimeout, undefined)
       directRequest = probe[0]! >= 200 && probe[0] != 407 && probe[0]! < 510
       if(!directRequest) {
-        console.debug("DIRECT probing err ", probe[1], "will use proxy")
+        console.debug('DIRECT probing err ', probe[1], "will use proxy")
         this.eventSource.emit('error', { error: directRequest })
       } else {
         this.eventSource.emit('attack', { url: target.page, log: `${target.page} | DIRECT | ${probe[0]} ${probe[1] != undefined ? probe[1] : ""}` })
@@ -164,8 +164,8 @@ export class Runner {
       try {
         if (directRequest) {
           // PROBABLY NOT REACHED ANYMORE
-          if(this.onlyProxy) {
-            console.log("Changing to only proxy")
+          if (this.onlyProxy) {
+            console.log('Changing to only proxy')
             break
           }
           const r = await this.requestMe(target, this.requestTimeout, undefined)
@@ -182,7 +182,7 @@ export class Runner {
           proxyObj.host = proxyIP
           proxyObj.port = proxyPort
 
-          if(proxy.auth) {
+          if (proxy.auth) {
             const proxyAuthSplit = proxy.auth.split(':')
             const proxyUsername = proxyAuthSplit[0]
             const proxyPassword = proxyAuthSplit[1]
