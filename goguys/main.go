@@ -202,6 +202,8 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 	if(targetonly200 && resp.StatusCode != 200) {
 		if(ebus != nil) {
 			ebus <- id
+		} else {
+			repeatingbus <- 0
 		}
 		return
 	}
