@@ -29,6 +29,7 @@ var workers int
 var useProxy bool
 var onlyOk bool
 var repeattarget bool
+var targetonly200 bool
 var repeatsleepbefore int
 var repeaterspawnnewworkers bool
 var repeaterspawnnewworkerscount int
@@ -198,9 +199,15 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 		}
 		return
 	}
+	if(targetonly200 && resp.StatusCode != 200) {
+		if(ebus != nil) {
+			ebus <- id
+		}
+		return
+	}
 	if(repeattarget) {
 		if(repeaterspawnnewworkers && ebus != nil) {
-			fmt.Println("200 OK! Spawning repeater workers... ", target)
+			fmt.Println(resp.StatusCode, " OK! Spawning repeater workers... ", target)
 			for i := 0; i < repeaterspawnnewworkerscount; i++ {
 				for(repeaterspawnnewworkerscount >= maxrepeatingworkers){
 					time.Sleep(time.Millisecond * 50)
@@ -214,9 +221,9 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 			
 		} else {
 			if(ebus == nil){ 
-				log.Println("200 OK! Continue to target a ", target)
+				log.Println(resp.StatusCode, " OK! Continue to target a ", target)
 			} else {
-				log.Println("200 OK! Found a working target, repeating ", target)
+				log.Println(resp.StatusCode, " OK! Found a working target, repeating ", target)
 			}
 			requestMe(target, proxyUrl, proxyAuth, ebus, id, repeatingbus)
 		}
@@ -454,6 +461,10 @@ func main() {
 	repeaterspawnnewworkerscount , _ = strconv.Atoi(os.Getenv("REPEATERSPAWNNEWWORKERSCOUNT"))
 	repeaterspawnnewworkersOs := os.Getenv("REPEATERSPAWNNEWWORKERS")
 	repeaterspawnnewworkers = repeaterspawnnewworkersOs == "true"
+	targetonly200Os := os.Getenv("TARGETONLY200")
+	targetonly200 = targetonly200Os == "true"
+
+	
 
 	maxrepeatingworkers, _ = strconv.Atoi(os.Getenv("MAXREPEATING"))
 
