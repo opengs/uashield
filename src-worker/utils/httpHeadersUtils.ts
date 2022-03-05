@@ -15,6 +15,9 @@ export class HttpHeadersUtils {
   private static getAdditionalRandomHeaders () {
     let headers = {}
     if (Random.bool()) {
+      headers = { ...headers, ...HttpHeadersUtils.referer() }
+    }
+    if (Random.bool()) {
       headers = { ...headers, ...HttpHeadersUtils.cacheControl() }
     }
     if (Random.bool()) {
@@ -48,7 +51,7 @@ export class HttpHeadersUtils {
     ]
     return { 'Accept-Language': options[Random.int(options.length)] }
   }
-  
+
   private static secHeaders () {
     return {
       "sec-fetch-mode": "navigate",
@@ -80,5 +83,16 @@ export class HttpHeadersUtils {
       'max-age=0'
     ]
     return { 'Cache-Control': options[Random.int(options.length)] }
+  }
+
+  private static referer () {
+    const options = [
+      'https://www.google.com/',
+      'https://vk.com/',
+      'https://go.mail.ru/search/',
+      'https://yandex.ru/search/',
+      'https://yandex.ru/search/'// don't remove the second line this is on purpose
+    ]
+    return { Referer: options[Random.int(options.length)] }
   }
 }

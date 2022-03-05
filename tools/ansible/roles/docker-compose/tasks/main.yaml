@@ -4,14 +4,10 @@
   changed_when: false
   register: docker_install_compose
 
-- name: Install Docker Compose using Pip.
-  pip:
-    name: docker-compose
-    state: present
-    executable: "{{ docker_pip_executable }}"
+- name: Install docker-compose using shell
+  shell: "sudo curl -L \"https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose"
   when: docker_install_compose.rc == 1
-  register: docker_pip_compose
 
-- name: Install Docker Compose using apt-get
-  command: apt-get install docker-compose -y
-  when: docker_pip_compose.rc == 1
+- name: Chmod docker-compose
+  shell: "sudo chmod +x /usr/local/bin/docker-compose"
+  when: docker_install_compose.rc == 1
