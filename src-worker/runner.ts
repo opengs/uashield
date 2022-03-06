@@ -9,10 +9,10 @@ export class Runner {
   private proxies: ProxyData[]
   private onlyProxy: boolean
   private readonly ATTACKS_PER_TARGET = 2
-  private readonly ATTACKS_PER_PRIORITIZED_TARGET = 64
+  private readonly ATTACKS_PER_PRIORITIZED_TARGET = 32
   private active = false
   public readonly eventSource: EventEmitter
-  private requestTimeout: number = 8000
+  private requestTimeout: number = 5000
   private doserInstance: Doser
 
   constructor (props: { sites: SiteData[]; proxies: ProxyData[]; onlyProxy: boolean; doserInstance: Doser }) {
@@ -28,6 +28,7 @@ export class Runner {
     while (this.active) {
       try {
         let pTargets = this.doserInstance.getPrioritizedTargets()
+        console.log(pTargets.length)
         let pTarget = undefined
         if(pTargets.length > 0) {
           pTarget = pTargets[Math.floor(Math.random() * pTargets.length)]
@@ -91,9 +92,14 @@ export class Runner {
         } 
         this.eventSource.emit('attack', { url: target.site.page, log: `${target.site.page} | PRIORITIZED | ${r[0] == -1 ? "" : r[0]} ${r[1]  ? r[1] : r[0] == -1 ? "Undefined error" : "OK"}` }) 
       }
-      if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 4)) {
+      if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 8)) {
         this.doserInstance.addPrioritizedTarget(target, proxy)
-        this.doserInstance.addPrioritizedTarget(target, proxy)
+        if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 4)) {
+          this.doserInstance.addPrioritizedTarget(target, proxy)
+        }
+        if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 2)) {
+          this.doserInstance.addPrioritizedTarget(target, proxy)
+        }
       }
       return
     }
