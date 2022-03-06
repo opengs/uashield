@@ -23,7 +23,6 @@
     "axios": "^0.21.1",
     "axios-https-proxy-fix": "^0.17.1",
     "core-js": "^3.6.5",
-    "dns2": "^2.0.1",
     "electron-updater": "^4.6.5",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",

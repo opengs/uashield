@@ -3599,11 +3599,6 @@ dns-txt@^2.0.2:
   dependencies:
     buffer-indexof "^1.0.0"
 
-dns2@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/dns2/-/dns2-2.0.1.tgz#030676e6367ba08e78257fad82884b0362e86adf"
-  integrity sha512-jHRTCcS2h/MEQjhcCnOWGENtz5A4RrLoK1YFqlHCejGfK5zYu99C8cxVwTsIY7JUqolhDN8zuGlyqnbEe6azqg==
-
 docopt@~0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/docopt/-/docopt-0.6.2.tgz#b28e9e2220da5ec49f7ea5bb24a47787405eeb11"
