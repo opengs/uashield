@@ -6,8 +6,9 @@ services:
       container_name: uashield
       image: uashield:latest
       environment:
-        WORKERS: '256'
-        USEPROXY: 'true'
+        WORKERS: '0' #fix before the release
+        USEPROXY: 'false'
+        DNS_WORKERS: '512' #fix before the release
       networks:
         - shield
 

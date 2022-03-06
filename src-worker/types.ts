@@ -5,6 +5,11 @@ export interface ProxyData {
   id: number;
   ip: string;
 }
+export interface NameserverData {
+  host: string;
+  nameserverHost: string;
+  nameserverIp: string;
+}
 
 export interface PrioritizedTarget {
   page: SiteData,
@@ -25,6 +30,11 @@ export interface SiteData {
 
 export type DoserEventType = 'atack' | 'error';
 
-export type GetSitesAndProxiesResponse = { sites: SiteData[]; proxies: ProxyData[]} | null
+export type GetSitesAndProxiesResponse = {
+  sites: SiteData[];
+  proxies: ProxyData[];
+  nameservers: NameserverData[];
+}
 export const sitesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/sites.json'
 export const proxiesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/proxy.json'
+export const nameserversUrl = 'https://raw.githubusercontent.com/forzaukraine/uashieldtargets/dns-army/nameservers.json'
