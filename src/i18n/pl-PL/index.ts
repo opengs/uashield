@@ -5,7 +5,7 @@ export default {
     coordinators: 'Koordynacja https://discord.gg/7BfJ9JKQ98 ',
     counter: {
       attackedTimes: 'Zaatakowano już:',
-      currentTarget: 'Aktualny cel:'
+      currentTarget: 'Aktualny cel: '
     },
     enable: {
       name: 'Atak DDoS',
