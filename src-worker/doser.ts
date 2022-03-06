@@ -13,6 +13,8 @@ export class Doser {
   private workers: Runner[] = []
   private numberOfWorkers = 0
   private eventSource: EventEmitter
+  private prioritizedPairs: any = []
+  
   private ddosConfiguration: {
     updateTime: Date;
     sites: SiteData[];
@@ -29,6 +31,32 @@ export class Doser {
     this.initialize(numberOfWorkers).catch(error => {
       console.error('Wasnt able to initialize:', error)
     })
+  }
+
+  getPrioritizedTargets() {
+    return this.prioritizedPairs
+  }
+
+  removePrioritizedTarget(what, proxy){
+    for (let index = 0; index < this.prioritizedPairs.length; index++) {
+      const element = this.prioritizedPairs[index];
+      if(element.page == what && JSON.stringify(proxy) === JSON.stringify(element.proxyObj))  {
+        this.prioritizedPairs.splice(index, 1)
+        return
+      }
+      
+    }
+  }
+
+  addPrioritizedTarget(what, proxyObj) {
+    if(this.prioritizedPairs.length < 100) {
+      this.prioritizedPairs.push({
+          page: what,
+          proxyObj: proxyObj
+        }
+      )
+
+    }
   }
 
   private logError (message:string, cause: unknown) {
@@ -66,11 +94,6 @@ export class Doser {
     }
   }
 
-  async loadHostsFile () {
-    // const response = await axios.get('http://rockstarbloggers.ru/hosts.json')
-    // this.hosts = response.data as Array<string>
-  }
-
   private updateConfiguration (configuration: { sites: SiteData[]; proxies: ProxyData[] }) {
     this.ddosConfiguration = {
       ...configuration,
@@ -99,33 +122,23 @@ export class Doser {
   }
 
   async getSitesAndProxies (): Promise<GetSitesAndProxiesResponse> {
+    let proxies = undefined
+    let sites = undefined
     while (this.working) { // escaping unavailable hosts
       try {
-        const [proxies, sites] = await Promise.all([getProxies(), getSites()])
-
-        if (proxies.status !== 200 || sites.status !== 200) continue
+        if(proxies == undefined || proxies.status != 200){
+          proxies = await getProxies()
+        }
+        if(sites == undefined || sites.status != 200) {
+          sites = await getSites()
+        }
+        if (proxies == undefined || sites == undefined  || proxies.status != 200  || sites.status != 200) {
+          continue
+        }
 
         return {
           sites: sites.data,
           proxies: proxies.data
-        }
-      } catch (e) {
-        this.logError('Error while loading hosts', e)
-      }
-    }
-    return null
-  }
-
-  async getRandomTarget (): Promise<TargetData | null> {
-    while (this.working) { // escaping unavailable hosts
-      try {
-        const [proxies, sites] = await Promise.all([getProxies(), getSites()])
-
-        if (proxies.status !== 200 || sites.status !== 200) continue
-
-        return {
-          site: sites.data[Math.floor(Math.random() * sites.data.length)],
-          proxy: proxies.data
         }
       } catch (e) {
         this.logError('Error while loading hosts', e)
@@ -184,7 +197,8 @@ export class Doser {
     const worker = new Runner({
       sites: this.ddosConfiguration.sites,
       proxies: this.ddosConfiguration.proxies,
-      onlyProxy: this.onlyProxy
+      onlyProxy: this.onlyProxy,
+      doserInstance: this
     })
     worker.eventSource.on('attack', event => {
       this.eventSource.emit('atack', {
