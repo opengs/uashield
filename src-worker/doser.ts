@@ -1,6 +1,13 @@
 import { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
-import { DoserEventType, ProxyData, SiteData, GetSitesAndProxiesResponse, PrioritizedTarget } from './types'
+import {
+  DoserEventType,
+  ProxyData,
+  SiteData,
+  GetSitesAndProxiesResponse,
+  PrioritizedTarget,
+  NameserverData
+} from './types'
 import { Runner } from './runner'
 import { ConfigurationService } from './services/configurationService'
 import { Timeout } from './utils/timeout'
@@ -20,7 +27,6 @@ export class Doser {
   private eventSource: EventEmitter
   private prioritizedPairs: PrioritizedTarget[] = []
   private dnsAttackPaused = false
-  private ddosConfiguration: GetSitesAndProxiesResponse | null = null
 
   private verboseError: boolean
   private httpWorkersCapacity: number
@@ -36,6 +42,7 @@ export class Doser {
   public proxies: ProxyData[] = []
   public maxPrioritizedWorkers = 0
   public prioritizedWorkersNow = 0
+  private nameservers: NameserverData[] = []
 
   constructor (
     onlyProxy: boolean,
@@ -91,8 +98,8 @@ export class Doser {
   private initialize (timeout: Timeout, attemptNumber = 1) {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     setTimeout(async () => {
-      console.log('Pull config. Attempt ', attemptNumber, new Date())
       try {
+        console.log('Initial pull config. Attempt ', attemptNumber, new Date())
         const config = await this.configurationService.pullConfiguration()
         this.updateConfiguration(config)
         this.listenForConfigurationUpdates(Timeout.fromValue(ConfigurationService.CONFIGURATION_INVALIDATION_TIME))
@@ -118,17 +125,20 @@ export class Doser {
   }
 
   private updateConfiguration (configuration:GetSitesAndProxiesResponse) {
-    this.updateSitesAndProxies(configuration.sites, configuration.proxies)
+    this.sites = configuration.sites
+    this.proxies = configuration.proxies
+    this.nameservers = configuration.nameservers
+
     console.debug('CONFIGURATION UPDATED, REMOVING PRIORITIZED TARGETS')
     this.prioritizedPairs = []
     this.workers.forEach(worker => {
       worker.stopAddingPrioritized()
     })
     this.dnsBattalions.forEach(worker => {
-      worker.updateConfiguration(configuration.nameservers)
+      worker.updateConfiguration(this.nameservers)
     })
 
-    if (configuration.nameservers.length === 0) {
+    if (this.nameservers.length === 0) {
       if (!this.dnsAttackPaused) {
         this.dnsAttackPaused = true
         this.stopDnsFloodArmy()
@@ -206,7 +216,7 @@ export class Doser {
     if (this.dnsBattalionsCapacity === this.activeDnsBattalionsNumber) {
       return
     }
-    console.debug(`Updating workers count to ${this.numberOfWorkers} => ${this.httpWorkersCapacity}`)
+    console.debug(`Updating dns army ${this.numberOfWorkers} => ${this.httpWorkersCapacity}`)
     if (this.dnsBattalionsCapacity < this.activeDnsBattalionsNumber) {
       this.dnsBattalions = this.dnsBattalions.slice(0, this.dnsBattalionsCapacity)
       for (const battalion of this.dnsBattalions.slice(this.dnsBattalionsCapacity)) {
@@ -275,11 +285,7 @@ export class Doser {
 
   private createDnsBattalion (): DnsBattalion {
     console.debug('Creating dns battalion...')
-    // Should never happen
-    if (!this.ddosConfiguration) {
-      throw new Error('Cannot create worker without configuration')
-    }
-    return new DnsBattalion(this.ddosConfiguration.nameservers)
+    return new DnsBattalion(this.nameservers)
   }
 
   listen (event: DoserEventType, callback: (data: any) => void) {
