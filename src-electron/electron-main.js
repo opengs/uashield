@@ -62,11 +62,12 @@ function createWindow () {
   doser.listen('atack', (data) => console.log(data.log))
   doser.listen('atack', (data) => window.webContents.send('atack', data))
   doser.listen('error', (data) => window.webContents.send('error', data))
-  doser.loadHostsFile().then(() => {
-    doser.start()
-  }).catch(() => {
-    app.quit()
-  })
+  doser.start()
+  // doser.loadHostsFile().then(() => {
+  //   doser.start()
+  // }).catch(() => {
+  //   app.quit()
+  // })
 
   ipcMain.on('updateDDOSEnable', (event, arg) => {
     if (arg.newVal) {
