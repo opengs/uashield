@@ -14,6 +14,8 @@ COPY tsconfig.headless.json ./tsconfig.json
 
 RUN yarn build:headless
 
+
+# Optimizes the build, so no NODE_MODULES included in image. Don't remove this
 FROM node:16.9.0-alpine
 
 WORKDIR /code
