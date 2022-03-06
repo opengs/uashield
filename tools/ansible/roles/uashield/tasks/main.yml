@@ -1,30 +1,52 @@
 ---
-- name: Clone uashield repo
+- name: Check if repo is exist
+  stat:
+    path: "{{uashield_work_dir}}"
+  failed_when: false
+  changed_when: false
+  register: check_uashield_repo
+
+- name: Clone repo
   git:
     repo: "{{uashield_git_url}}"
     dest: "{{uashield_work_dir}}"
     accept_hostkey: true
     force: true
     version: "master"
+  when: not check_uashield_repo.stat.exists
 
-- name: Stop all containers
-  shell: "docker-compose down"
+- name: Pull Latest Changes
+  shell: "git pull"
   args:
     chdir: "{{uashield_work_dir}}"
+  when: check_uashield_repo.stat.exists
 
-- name: Remove old uashield images
+- name: Get Running Docker Containers
+  shell: "docker ps -aq"
+  register: docker_info
+
+- name: Stop Running Docker Containers
+  shell: "docker stop $(docker ps -aq)"
+  when: docker_info.stdout
+
+- name: Remove Docker Containers
+  shell: "docker rm $(docker ps -aq)"
+  when: docker_info.stdout
+
+- name: Remove Old Docker Image
   shell: "docker rmi -f uashield"
 
-- name: Run uashield
-  shell: "docker-compose up -d"
+- name: Build Docker Image
+  shell: "docker build . -t uashield"
   args:
     chdir: "{{uashield_work_dir}}"
 
-- name: Check docker started
-  shell: "docker ps"
-  args:
-    chdir: "{{uashield_work_dir}}"
+- name: Run Instance
+  shell: "docker run -d uashield {{ uashield_threads }} {{ uashield_proxy }}"
+
+- name: Check Docker is started
+  command: "docker ps"
   register: output
 
 - ansible.builtin.debug:
-        var: output
+    var: output.stdout_lines

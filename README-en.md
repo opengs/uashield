@@ -45,7 +45,7 @@ Targets being attacked are changed automatically and are downloaded from the con
 Or use [pre-built image](https://github.com/opengs/uashield/pkgs/container/uashield):
 
 ```bash
-docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
+docker run -d ghcr.io/opengs/uashield:master 512 true
 ```
 
 ## Docker-compose version
@@ -67,7 +67,7 @@ docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
 
 ## Deploy with Play With Docker - free instance for 4 hours
 
-[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/0.0.x/pwd-docker-compose.yml)
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/master/pwd-docker-compose.yml)
 
 ## Donations
 Donations will be used to fund our operations:

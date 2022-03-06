@@ -2,7 +2,7 @@ import { GetSitesAndProxiesResponse, NameserverData, ProxyData, SiteData } from 
 import { getNameservers, getProxies, getSites } from '../requests'
 
 export class ConfigurationService {
-  public static readonly CONFIGURATION_INVALIDATION_TIME = 300000 // 5 min
+  public static readonly CONFIGURATION_INVALIDATION_TIME = 600_000 // 10 min
   private proxies: ProxyData[] | undefined = undefined
   private sites: SiteData[] | undefined = undefined
   private nameservers: NameserverData[] | undefined = undefined
