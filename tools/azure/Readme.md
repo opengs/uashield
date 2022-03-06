@@ -18,14 +18,15 @@ PLEASE SHARE WITH YOUR FRIENDS AND ANYONE WHO WANTS TO HELP BUT DOESN&#39;T KNOW
 
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/5.jpg)
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/6.jpg)
+
 7. In the config do the following:
-  a. Virtual machine name – something like &quot;vm1&quot;, &quot;vm2&quot; or whatever you want.
-  b. Region – as close to the aim as possible (I prefer Japan East) :D
-  c. Image – Ubuntu Server 20.04.
-  d. Check &quot;Azure Spot Instance&quot;.
-  e. Eviction policy – delete.
-  f. Size – Standart\_D2s\_v3 – 2 vcpus, 8 GiB memory. (As you can see, the price for the server is something like 0.129$/hr. With a free 200$ for &quot;Free account&quot; we&#39;re able to use 200/0.129 = 1550 hrs of server time for free. For example, 5 servers will work for free for 1550/5 = 310 hrs.
-If you are not allowed to choose this one, try to find one available with 2 vCPUs and choose it.
+* Virtual machine name – something like &quot;vm1&quot;, &quot;vm2&quot; or whatever you want.
+* Region – as close to the aim as possible (I prefer Japan East) :D
+* Image – Ubuntu Server 20.04.
+* Check &quot;Azure Spot Instance&quot;.
+* Eviction policy – delete.
+* Size – Standart\_D2s\_v3 – 2 vcpus, 8 GiB memory. (As you can see, the price for the server is something like 0.129$/hr. With a free 200$ for &quot;Free account&quot; we&#39;re able to use 200/0.129 = 1550 hrs of server time for free. For example, 5 servers will work for free for 1550/5 = 310 hrs. If you are not allowed to choose this one, try to find one available with 2 vCPUs and choose it.
+
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/7.jpg)
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/8.jpg)
 
