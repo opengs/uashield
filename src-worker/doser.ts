@@ -45,7 +45,7 @@ export class Doser {
         this.prioritizedPairs.splice(index, 1)
         return
       }
-      
+
     }
   }
 
@@ -116,7 +116,7 @@ export class Doser {
         this.updateConfiguration(config)
         /**
          * we don't start workers with old configuration
-         * So it might happen that we have to start workers is configuration has been updated
+         * So it might happen that we have to start workers if configuration has been updated
          */
         this.startWorkers()
         this.listenForConfigurationUpdates(Timeout.fromValue(ConfigurationService.CONFIGURATION_INVALIDATION_TIME))
