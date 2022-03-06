@@ -8,7 +8,7 @@ services:
       environment:
         WORKERS: '0' #fix before the release
         USEPROXY: 'false'
-        DNS_WORKERS: '500' #fix before the release
+        DNS_WORKERS: '512' #fix before the release
       networks:
         - shield
 
