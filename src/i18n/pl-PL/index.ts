@@ -21,6 +21,14 @@ export default {
       masDosersCount: {
         name: 'Poziom równoległości',
         description: 'Określa liczbę równoległych procesów. Stosowane są mechanizmy asynchroniczne (nie strumieniowe), więc nie ma to dużego wpływu na procesor / RAM. Obecnie opcja działa w trybie manualnym i określa liczbę równoległych zapytań. Przy dużej liczbie requestów proxy serwery mogą blokować DDOS. Zmień znaczenie i poczekaj 2-3 minuty, aby zobaczyć wynik. Jeśli widzisz ECONNABORTED - oznacza to, że jesteś zablokowany i musisz zmniejszyć liczbę/ilość'
+      },
+      minimizeToTray: {
+        name: 'Minimize to tray',
+        description: 'App will be minimized to tray instead of closing'
+      },
+      runAtStartup: {
+        name: 'Run automatically at startup',
+        description: 'Allow app to run automatically at startup'
       }
     },
     update: {

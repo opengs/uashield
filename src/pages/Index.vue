@@ -82,6 +82,26 @@
           <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.masDosersCount.description') }}</q-item-label>
         </q-card-section>
 
+        <q-item tag="label" v-ripple>
+          <q-item-section>
+            <q-item-label>{{ $t('ddos.advanced.minimizeToTray.name') }}</q-item-label>
+            <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.minimizeToTray.description') }}</q-item-label>
+          </q-item-section>
+          <q-item-section avatar>
+            <q-toggle color="blue" v-model="minimizeToTray" val="picture" />
+          </q-item-section>
+        </q-item>
+
+        <q-item tag="label" v-ripple disable>
+          <q-item-section>
+            <q-item-label>{{ $t('ddos.advanced.runAtStartup.name') }}</q-item-label>
+            <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.runAtStartup.description') }}</q-item-label>
+          </q-item-section>
+          <q-item-section avatar>
+            <q-toggle color="blue" v-model="runAtStartup" val="picture" disable />
+          </q-item-section>
+        </q-item>
+
         <q-card-actions align="right">
           <q-btn flat label="OK" color="primary" class="fit" v-close-popup />
         </q-card-actions>
@@ -169,6 +189,12 @@ export default defineComponent({
       if (newVal !== undefined) {
         window.require('electron').ipcRenderer.send('updateMaxDosersCount', { newVal })
       }
+    },
+    minimizeToTray (newVal: boolean) {
+      window.require('electron').ipcRenderer.send('updateMinimizeToTray', { newVal })
+    },
+    runAtStartup (newVal: boolean) {
+      window.require('electron').ipcRenderer.send('updateRunAtStartup', { newVal })
     }
   },
 
@@ -176,6 +202,10 @@ export default defineComponent({
     window.require('electron').ipcRenderer.on('atack', this.serveAttack.bind(this))
 
     window.require('electron').ipcRenderer.on('update', this.askForInstallUpdate.bind(this))
+
+    // update main process with initial value
+    window.require('electron').ipcRenderer.send('updateMinimizeToTray', { newVal: this.minimizeToTray })
+    window.require('electron').ipcRenderer.send('updateRunAtStartup', { newVal: this.runAtStartup })
   },
 
   setup () {
@@ -188,10 +218,12 @@ export default defineComponent({
 
     const advancedSettingsDialog = ref(false)
     const maxDosersCount = ref(32)
+    const minimizeToTray = ref(true)
+    const runAtStartup = ref(false)
     const updateDialog = ref(false)
     const updateMessage = ref('message')
 
-    return { ddosEnabled, forceProxy, attackCounter, currentAttack, lastAttackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
+    return { ddosEnabled, forceProxy, attackCounter, currentAttack, lastAttackChange, log, advancedSettingsDialog, maxDosersCount, minimizeToTray, runAtStartup, updateDialog, updateMessage }
   }
 })
 </script>

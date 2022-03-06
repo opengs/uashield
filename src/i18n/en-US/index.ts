@@ -26,6 +26,14 @@ export default {
       masDosersCount: {
         name: 'Level of parallelism',
         description: 'Defines the amount of dosers. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of the dosers according to new settings.'
+      },
+      minimizeToTray: {
+        name: 'Minimize to tray',
+        description: 'App will be minimized to tray instead of closing'
+      },
+      runAtStartup: {
+        name: 'Run automatically at startup',
+        description: 'Allow app to run automatically at startup'
       }
     }
   }
