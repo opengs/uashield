@@ -15,6 +15,8 @@ export class Doser {
   private workers: Runner[] = []
   private numberOfWorkers = 0
   private eventSource: EventEmitter
+  private prioritizedPairs: any = []
+
   private ddosConfiguration: GetSitesAndProxiesResponse | null = null
 
   private verboseError: boolean
@@ -30,6 +32,32 @@ export class Doser {
     this.verboseError = verboseError
     console.log(`Init doser. Capacity: ${this.capacity}`)
     this.initialize(Timeout.zero())
+  }
+
+  getPrioritizedTargets() {
+    return this.prioritizedPairs
+  }
+
+  removePrioritizedTarget(what, proxy){
+    for (let index = 0; index < this.prioritizedPairs.length; index++) {
+      const element = this.prioritizedPairs[index];
+      if(element.page == what && JSON.stringify(proxy) === JSON.stringify(element.proxyObj))  {
+        this.prioritizedPairs.splice(index, 1)
+        return
+      }
+      
+    }
+  }
+
+  addPrioritizedTarget(what, proxyObj) {
+    if(this.prioritizedPairs.length < 100) {
+      this.prioritizedPairs.push({
+          page: what,
+          proxyObj: proxyObj
+        }
+      )
+
+    }
   }
 
   private logError (message: string, cause: unknown) {
@@ -69,11 +97,6 @@ export class Doser {
     } catch (err) {
       console.log(err)
     }
-  }
-
-  async loadHostsFile () {
-    // const response = await axios.get('http://rockstarbloggers.ru/hosts.json')
-    // this.hosts = response.data as Array<string>
   }
 
   private updateConfiguration (configuration: GetSitesAndProxiesResponse) {
@@ -163,7 +186,8 @@ export class Doser {
     const worker = new Runner({
       sites: this.ddosConfiguration.sites,
       proxies: this.ddosConfiguration.proxies,
-      onlyProxy: this.onlyProxy
+      onlyProxy: this.onlyProxy,
+      doserInstance: this
     })
     worker.eventSource.on('attack', event => {
       this.eventSource.emit('atack', {
