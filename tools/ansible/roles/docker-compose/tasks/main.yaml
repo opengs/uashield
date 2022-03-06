@@ -1,0 +1,13 @@
+- name: Check if docker-compose is already present.
+  command: which docker-compose
+  failed_when: false
+  changed_when: false
+  register: docker_install_compose
+
+- name: Install docker-compose using shell
+  shell: "sudo curl -L \"https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose"
+  when: docker_install_compose.rc == 1
+
+- name: Chmod docker-compose
+  shell: "sudo chmod +x /usr/local/bin/docker-compose"
+  when: docker_install_compose.rc == 1

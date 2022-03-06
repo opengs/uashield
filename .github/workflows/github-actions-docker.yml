@@ -1,6 +1,9 @@
 name: dockerci
 
-on: [push]
+on: 
+  push:
+    branches:
+      - '*'
 
 jobs:
   docker:

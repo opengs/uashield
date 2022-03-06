@@ -10,6 +10,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const { version } = require('./package.json')
 
 module.exports = configure(function (ctx) {
   return {
@@ -138,6 +139,10 @@ module.exports = configure(function (ctx) {
       ]
     },
 
+    htmlVariables: {
+      version
+    },
+
     // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
     pwa: {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
@@ -217,7 +222,13 @@ module.exports = configure(function (ctx) {
         // https://www.electron.build/configuration/configuration
 
         win: {
-          target: 'nsis'
+          target: [ {
+              target: 'nsis',
+              arch: [
+                "x64", "ia32"
+              ]
+            }
+          ]
         },
         mac: {
           target: 'dmg'

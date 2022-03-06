@@ -24,18 +24,6 @@
     state: started
     enabled: true
 
-- name: Check if docker-compose is already present.
-  command: which docker-compose
-  failed_when: false
-  changed_when: false
-  register: docker_install_compose
-
-- name: Install docker-compose using shell
-  shell: "sudo curl -L \"https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose"
-
-- name: Chmod docker-compose
-  shell: "sudo chmod +x /usr/local/bin/docker-compose"
-
 - name: Ensure docker users are added to the docker group.
   user:
     name: "{{ item }}"

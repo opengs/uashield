@@ -1,5 +1,7 @@
 # UA Cyber SHIELD
 
+*ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this prlatform on your own website!*
+
 *Дивись цю сторінку [українською](README.md)*
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
