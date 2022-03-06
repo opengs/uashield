@@ -4,7 +4,7 @@ import { NameserverData } from './types'
 import { Resolver } from 'dns'
 import { Random } from './utils/random'
 
-const EXPECTED_ERR_CODES = ['ETIMEOUT', 'ENOTFOUND', 'ENODATA']
+const EXPECTED_ERR_CODES = ['ENOTFOUND', 'ENODATA']
 
 export class DnsBattalion {
   private readonly eventSource: EventEmitter
