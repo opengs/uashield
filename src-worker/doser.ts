@@ -120,6 +120,9 @@ export class Doser {
     this.workers.forEach(worker => {
       worker.updateConfiguration(configuration)
     })
+    this.dnsBattalions.forEach(worker => {
+      worker.updateConfiguration(configuration.nameservers)
+    })
   }
 
   private listenForConfigurationUpdates (timeout: Timeout) {

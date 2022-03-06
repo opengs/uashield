@@ -3,7 +3,7 @@ WORKDIR /code
 
 COPY yarn.lock .
 COPY packageheadless.json ./package.json
-RUN yarn --frozen-lockfile
+RUN yarn install --frozen-lockfile
 
 COPY . .
 COPY tsconfig.headless.json ./tsconfig.json

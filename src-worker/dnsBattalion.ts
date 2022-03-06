@@ -4,7 +4,7 @@ import { NameserverData } from './types'
 import { Resolver } from 'dns'
 import { Random } from './utils/random'
 
-const EXPECTED_ERR_CODES = ['ETIMEOUT', 'ENOTFOUND']
+const EXPECTED_ERR_CODES = ['ETIMEOUT', 'ENOTFOUND', 'ENODATA']
 
 export class DnsBattalion {
   private readonly eventSource: EventEmitter
@@ -79,5 +79,9 @@ export class DnsBattalion {
 
   private static isSuccessful (code: string): boolean {
     return EXPECTED_ERR_CODES.indexOf(code) !== -1
+  }
+
+  updateConfiguration (nameservers: NameserverData[]) {
+    this.nameservers = nameservers
   }
 }
