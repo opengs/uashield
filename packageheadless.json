@@ -13,19 +13,20 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.7",
     "@types/node-fetch": "^2.6.1",
     "@types/superagent": "^4.1.15",
-    "axios": "^0.21.1",
+    "axios": "^0.26.0",
     "axios-https-proxy-fix": "^0.17.1",
     "core-js": "^3.6.5",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",
     "simple-ddos": "^2.0.4",
     "superagent": "^7.1.1",
+    "user-agents": "^1.0.943",
     "vue": "^3.0.0",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0",
-    "user-agents": "^1.0.943",
     "vuex": "^4.0.1"
   },
   "devDependencies": {
