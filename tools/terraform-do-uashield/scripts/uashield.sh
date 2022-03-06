@@ -24,6 +24,7 @@ version: \"3.3\"
 services:
   worker:
     image: ghcr.io/opengs/uashield:latest
+    restart: always
     command:
       - \"7500\"
       - \"true\"" >> /home/docker-compose.yaml
@@ -34,5 +35,5 @@ cd /home/
 
 sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)
 
-sudo echo "*/30 * * * * cd /home/ && sudo docker-compose down && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
+sudo echo "*/30 * * * * cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
 crontab /home/cronjob
