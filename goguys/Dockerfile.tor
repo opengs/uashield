@@ -4,20 +4,24 @@ COPY main.go /app
 COPY go.mod /app
 RUN go build -o /repeater && chmod +x /repeater
 
-FROM golang:1.17.8-alpine3.15 as runner
+FROM dperson/torproxy
+COPY tor/config /etc/privoxy/config 
+RUN chown -R privoxy:privoxy /etc/privoxy
 COPY --from=builder /repeater /usr/bin/repeater
+RUN chmod +x /usr/bin/repeater
 COPY resources /resources
-WORKDIR /
 
 ENV ONLYOK=true
-ENV USEPROXY=false
-ENV TIMEOUT=5000
-ENV WORKERS=128
+ENV USEPROXY=true
+ENV TIMEOUT=7000
+ENV WORKERS=32
 ENV REPEATTARGET=true
 ENV DISGUISEASBOTPERCENTAGE=1
 ENV REPEATERSPAWNNEWWORKERS=true
-ENV REPEATERSPAWNNEWWORKERSCOUNT=512
+ENV REPEATERSPAWNNEWWORKERSCOUNT=256
 ENV REPEATSLEEPBEFORE=50
 ENV MAXREPEATING=10240
 ENV TARGETONLY200=false
-ENTRYPOINT ["repeater"]
+ENV LOCATION=RU
+
+COPY torproxy.sh /usr/bin/torproxy.sh

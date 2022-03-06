@@ -44,3 +44,13 @@ jobs:
           push: true
           tags: |
             ghcr.io/opengs/uashield:go-${{ steps.extract_branch.outputs.branch }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./goguys
+          file: ./goguys/Dockerfile.tor
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/opengs/uashield:gotor-${{ steps.extract_branch.outputs.branch }}

