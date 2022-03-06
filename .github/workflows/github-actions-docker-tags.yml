@@ -2,7 +2,7 @@ name: dockerci
 
 on: 
   push:
-    branches:
+    tags:
       - '*'
 
 jobs:
@@ -25,10 +25,14 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Extract branch name
+      - name: Extract tag name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
+        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
+        id: extract_tag
+      - name: Extract tag name without v
+        shell: bash
+        run: echo "##[set-output name=tagv;]$(echo ${GITHUB_REF#refs/tags/v})"
+        id: extract_tag_v
       -
         name: Build and push
         uses: docker/build-push-action@v2
@@ -37,4 +41,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/opengs/uashield:${{ steps.extract_branch.outputs.branch }}
+            ghcr.io/opengs/uashield:${{ steps.extract_tag.outputs.tag }}
+            ghcr.io/opengs/uashield:${{ steps.extract_tag.outputs.tagv }}

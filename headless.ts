@@ -18,8 +18,4 @@ const doser = new Doser(false, 0, 512);
 
 doser.listen('atack', (data: any) => console.log(data.log))
 
-doser.loadHostsFile().then(() => {
-  doser.start()
-}).catch(() => {
-  process.exit(1);
-})
+doser.start()
