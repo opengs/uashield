@@ -28,7 +28,6 @@ export class Runner {
     while (this.active) {
       try {
         let pTargets = this.doserInstance.getPrioritizedTargets()
-        console.log(pTargets.length)
         let pTarget = undefined
         if(pTargets.length > 0) {
           pTarget = pTargets[Math.floor(Math.random() * pTargets.length)]
