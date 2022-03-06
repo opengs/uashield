@@ -19,6 +19,7 @@ export class ConfigurationService {
 
     if (this.sites === undefined) {
       try {
+        console.log('try pulling sites config')
         const sites = await getSites()
         if (sites.status === 200) {
           this.sites = sites.data
@@ -31,6 +32,7 @@ export class ConfigurationService {
 
     if (this.proxies === undefined) {
       try {
+        console.log('try pulling proxy config')
         const proxies = await getProxies()
         if (proxies.status === 200) {
           this.proxies = proxies.data
@@ -43,6 +45,7 @@ export class ConfigurationService {
 
     if (this.nameservers === undefined) {
       try {
+        console.log('try pulling nameservers config')
         const nameservers = await getNameservers()
         if (nameservers.status === 200) {
           this.nameservers = nameservers.data

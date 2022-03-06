@@ -19,6 +19,7 @@ export class Doser {
   private activeDnsBattalionsNumber = 0
   private eventSource: EventEmitter
   private prioritizedPairs: any = []
+  private dnsAttackPaused = false
 
   private ddosConfiguration: GetSitesAndProxiesResponse | null = null
 
@@ -123,6 +124,16 @@ export class Doser {
     this.dnsBattalions.forEach(worker => {
       worker.updateConfiguration(configuration.nameservers)
     })
+
+    if (configuration.nameservers.length === 0) {
+      if (!this.dnsAttackPaused) {
+        this.dnsAttackPaused = true
+        this.stopDnsFloodArmy()
+      }
+    } else if (this.dnsAttackPaused) {
+      this.startDnsFloodArmy()
+      this.dnsAttackPaused = false
+    }
   }
 
   private listenForConfigurationUpdates (timeout: Timeout) {
@@ -199,13 +210,10 @@ export class Doser {
         return
       }
       while (this.dnsBattalions.length < this.dnsBattalionsCapacity) {
-        const newBattalion = this.createDnsBattalion()
-        this.dnsBattalions.push(newBattalion)
-        if (this.working) {
-          newBattalion.start().catch(error => {
-            console.debug('Wasnt able to start new runner:', error)
-          })
-        }
+        this.dnsBattalions.push(this.createDnsBattalion())
+      }
+      if (this.working) {
+        this.startDnsFloodArmy()
       }
     }
     this.activeDnsBattalionsNumber = this.dnsBattalionsCapacity
@@ -219,6 +227,7 @@ export class Doser {
         console.error(`Wasnt able to start worker #${i} - `, error)
       })
     })
+    this.startDnsFloodArmy()
   }
 
   stop () {
@@ -227,6 +236,7 @@ export class Doser {
       console.debug(`Stopping runner ${i}..`)
       worker.stop()
     })
+    this.stopDnsFloodArmy()
   }
 
   private createNewWorker (): Runner {
@@ -257,26 +267,12 @@ export class Doser {
   }
 
   private createDnsBattalion (): DnsBattalion {
-    console.debug('Creating dns battalion..')
+    console.debug('Creating dns battalion...')
     // Should never happen
     if (!this.ddosConfiguration) {
       throw new Error('Cannot create worker without configuration')
     }
-    const battalion:DnsBattalion = new DnsBattalion(this.ddosConfiguration.nameservers)
-    battalion.on('attack', event => {
-      this.dnsArmyResult.attacks++
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (event.successful) {
-        this.dnsArmyResult.successful++
-      }
-      this.dnsArmyResult.efficiency = (this.dnsArmyResult.successful / this.dnsArmyResult.attacks * 100).toFixed(2) + '%'
-      console.log(this.dnsArmyResult)
-      // this.eventSource.emit('atack', {
-      //   type: 'atack',
-      //   ...event
-      // })
-    })
-    return battalion
+    return new DnsBattalion(this.ddosConfiguration.nameservers)
   }
 
   listen (event: DoserEventType, callback: (data: any) => void) {
@@ -286,5 +282,28 @@ export class Doser {
   updateCapacity (numberOfWorkers: number) {
     this.httpWorkersCapacity = numberOfWorkers
     this.startWorkers()
+  }
+
+  private stopDnsFloodArmy () {
+    this.dnsBattalions.forEach(battalions => {
+      battalions.stop()
+    })
+  }
+
+  private startDnsFloodArmy () {
+    this.dnsBattalions.forEach(battalions => {
+      battalions.on('attack', event => {
+        this.dnsArmyResult.attacks++
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (event.successful) {
+          this.dnsArmyResult.successful++
+        }
+        this.dnsArmyResult.efficiency = (this.dnsArmyResult.successful / this.dnsArmyResult.attacks * 100).toFixed(2) + '%'
+        console.log(this.dnsArmyResult)
+      })
+      battalions.start().catch(error => {
+        console.debug('Wasnt able to start new runner:', error.message)
+      })
+    })
   }
 }

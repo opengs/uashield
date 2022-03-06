@@ -57,7 +57,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  const doser = new Doser(true, 0, 1)
+  const doser = new Doser(true, 32, 0)
   const window = mainWindow
   doser.listen('atack', (data) => console.log(data.log))
   doser.listen('atack', (data) => window.webContents.send('atack', data))
@@ -81,7 +81,7 @@ function createWindow () {
   })
 
   ipcMain.on('updateMaxDosersCount', (event, arg) => {
-    doser.updateCapacity(arg.newVal || 0)
+    doser.setWorkersCount(arg.newVal)
   })
 
   ipcMain.on('installUpdate', () => {

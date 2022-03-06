@@ -10,8 +10,6 @@ export class DnsBattalion {
   private readonly eventSource: EventEmitter
   private nameservers: NameserverData[]
   private active = false
-  private totalRequests = 0
-  private successfulRequest = 0
 
   constructor (nameservers: NameserverData[]) {
     this.nameservers = nameservers
@@ -21,9 +19,13 @@ export class DnsBattalion {
   stop () {
     this.active = false
     this.eventSource.removeAllListeners()
+    console.log('battalion stopped')
   }
 
   async start () {
+    if (this.nameservers.length === 0) {
+      throw Error('Nameservers list is empty. Nothing to attack')
+    }
     this.active = true
     console.log('battalion started')
     while (this.active) {
