@@ -7,6 +7,8 @@ sudo apt-get install -y \
     lsb-release \
     wget
 
+curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
+
 wget -O - https://get.docker.com/ | bash
 
 sudo systemctl enable docker.service
@@ -34,7 +36,4 @@ cd /home/
 sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)
 
 sudo echo "*/30 * * * * cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
-
-# restart:always should do the job to run container on startup, but the hard restart is good here to avoid problems
-sudo echo "@reboot cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
 crontab /home/cronjob

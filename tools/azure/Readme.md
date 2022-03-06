@@ -30,7 +30,7 @@ PLEASE SHARE WITH YOUR FRIENDS AND ANYONE WHO WANTS TO HELP BUT DOESN&#39;T KNOW
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/7.jpg)
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/8.jpg)
 
-8. Go to &quot;Advanced&quot; tab (above) and paste the script [https://github.com/opengs/uashield/blob/0.0.x/tools/azure/azure-custom-data-script.sh](https://github.com/opengs/uashield/blob/0.0.x/tools/azure/azure-custom-data-script.sh) (just copy it as a text) to &quot;Custom data&quot;.
+8. Go to &quot;Advanced&quot; tab (above) and paste the script [https://github.com/opengs/uashield/blob/master/tools/azure/azure-custom-data-script.sh](https://github.com/opengs/uashield/blob/master/tools/azure/azure-custom-data-script.sh) (just copy it as a text) to &quot;Custom data&quot;.
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/9.jpg)
 9. Go to &quot;Disk&quot; tab and change &quot;OS disk type&quot; from &quot;Premium SSD&quot; to &quot;Standart SSD&quot;.
 ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/10.jpg)
