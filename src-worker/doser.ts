@@ -171,11 +171,6 @@ export class Doser {
     }, timeout.interval)
   }
 
-  updateSitesAndProxies (sites:SiteData[], proxies:ProxyData[]) {
-    this.sites = sites
-    this.proxies = proxies
-  }
-
   private startWorkers () {
     this.startHttpWorkers()
     this.startDnsWorkers()
