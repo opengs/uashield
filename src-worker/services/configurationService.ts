@@ -41,30 +41,17 @@ export class ConfigurationService {
       }
     }
 
-    this.nameservers = [
-      {
-        host: 'ria.ru',
-        nameserverHost: 'ns9.rian.ru.',
-        nameserverIp: '178.248.236.20'
-      },
-      {
-        host: 'ria.ru',
-        nameserverHost: 'ns10.rian.ru.',
-        nameserverIp: '178.248.233.32'
+    if (this.nameservers === undefined) {
+      try {
+        const nameservers = await getNameservers()
+        if (nameservers.status === 200) {
+          this.nameservers = nameservers.data
+          this.updateExpirationDate()
+        }
+      } catch (e) {
+        console.log('can not pull the nameservers. Error: ', (e as Error).message)
       }
-    ]
-
-    // if (this.nameservers === undefined) {
-    //   try {
-    //     const nameservers = await getNameservers()
-    //     if (nameservers.status === 200) {
-    //       this.nameservers = nameservers.data
-    //       this.updateExpirationDate()
-    //     }
-    //   } catch (e) {
-    //     console.log('can not pull the nameservers. Error: ', (e as Error).message)
-    //   }
-    // }
+    }
 
     if (!this.sites || !this.proxies || !this.nameservers) {
       throw Error('Can not pull configuration')
