@@ -165,7 +165,7 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 	} else {
 		myClient = &http.Client{Timeout: timeout}
 	}
-	req, err := http.NewRequest("GET", "http://pandemia.network", nil)
+	req, err := http.NewRequest("GET", target, nil)
 	if err != nil {
 		if ebus != nil {
 			ebus <- id
