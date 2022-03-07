@@ -8,7 +8,7 @@
 
 **The voluntary Ukrainian cyber defense system**
 
-- Community: [Discord](https://discord.gg/7BfJ9JKQ98)
+- Community: [Discord](https://discord.gg/7BfJ9JKQ98) [Telegram](https://t.me/uashield)
 - Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
 
 ## For cyber defenders

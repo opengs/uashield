@@ -8,7 +8,7 @@
 
 **Система волонтерської кібероборони України**
 
-- Ком'юніті: [Discord](https://discord.gg/7BfJ9JKQ98)
+- Ком'юніті: [Discord](https://discord.gg/7BfJ9JKQ98) [Telegram](https://t.me/uashield)
 - Відео інструкція [українською](https://youtu.be/snTzpRt7a5k)
 
 ## Для кіберзахисників
