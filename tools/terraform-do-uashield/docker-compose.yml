@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  terraform:
+    image: hashicorp/terraform:1.1.7
+    volumes:
+      - .:/infra
+      - ${SSH_KEY_PATH}:/root/.ssh/id_ed25519:ro
+
+    working_dir: /infra
+    environment:
+      - TF_VAR_do_token=${DO_PAT}
+      - TF_VAR_pvt_key=/root/.ssh/id_ed25519
+      - TF_LOG=${TF_LOG}
