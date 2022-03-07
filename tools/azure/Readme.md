@@ -34,7 +34,7 @@
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/7.jpg)
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/8.jpg)
 
-8. Go to &quot;Advanced&quot; tab (above) and paste the script [https://github.com/opengs/uashield/blob/0.0.x/tools/azure/azure-custom-data-script.sh](https://github.com/opengs/uashield/blob/0.0.x/tools/azure/azure-custom-data-script.sh) (just copy it as a text) to &quot;Custom data&quot;.
+8. Go to &quot;Advanced&quot; tab (above) and paste the script [https://github.com/opengs/uashield/blob/master/tools/azure/azure-custom-data-script.sh](https://github.com/opengs/uashield/blob/master/tools/azure/azure-custom-data-script.sh) (just copy it as a text) to &quot;Custom data&quot;.
 
  ![](https://github.com/opengs/uashield/blob/master/tools/azure/images/9.jpg)
 
@@ -56,3 +56,4 @@
 You have successfully created one server. You can repeat steps 5-11 until you exceed the limit of vCPUs available for your free account (Azure won&#39;t let you create one more server).
 
 ### IMPORTANT If you exceed the limit in one region, you can try another one and you will be able to launch servers there
+### WARNING Don`t use Australia region. Network traffic is every expensive from there. 

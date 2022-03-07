@@ -17,7 +17,7 @@
 2. Вибираємо [найновший реліз](https://github.com/opengs/uashield/releases/latest) і свою платформу
 3. Скачуємо і запускаємо
 
-**В користувачів на Linux можливо треба буде додати аргумент `--no-sandbox`. Windows повинен працювати без всяких додаткових речей**
+**У користувачів на Linux можливо треба буде додати аргумент `--no-sandbox`. Windows повинен працювати без всяких додаткових речей**
 
 ## Як це працює
 
@@ -45,7 +45,7 @@
 Або за допомогою вже [зібраного імежду](https://github.com/opengs/uashield/pkgs/container/uashield):
 
 ```bash
-docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
+docker run -d ghcr.io/opengs/uashield:master 512 true
 ```
 
 ## Docker-compose версія
@@ -67,7 +67,7 @@ docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
 
 ## Деплой на Play With Docker - безкоштовний інстанс на 4 години
 
-[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/0.0.x/pwd-docker-compose.yml)
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/master/pwd-docker-compose.yml)
 
 ## Пожертвування
 Пожертвування будуть використовуватися виключно для цілей програми:

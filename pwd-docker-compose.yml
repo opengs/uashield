@@ -1,11 +1,11 @@
 version: '3'
 services:
     uashield:
-      image: ghcr.io/opengs/uashield:0.0.x
+      image: ghcr.io/opengs/uashield:master
       restart: always
       environment:
-        WORKERS: '512'
-        USEPROXY: 'true'
+        WORKERS: '256'
+        USEPROXY: 'false'
       deploy:
-        replicas: 6
+        replicas: 3
 
