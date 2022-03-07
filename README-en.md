@@ -1,12 +1,12 @@
 # UA Cyber SHIELD
 
-*ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this prlatform on your own website!*
+*ALERT!!! We not supporting unlawful active attacks or malware campaigns that are causing technical harm. Use only for educational purposes. You can only try this platform on your own website!*
 
 *Дивись цю сторінку [українською](README.md)*
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-**The voluntary Ukrainian cyber defense system**
+**The volunteer cyber defense system of Ukraine**
 
 - Community: [Discord](https://discord.gg/7BfJ9JKQ98)
 - Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
@@ -21,7 +21,7 @@
 
 ## How it works
 
-Our voluntary defense center works are doing all the hard work: monitoring the targets, running the technical infrastructure, coordinating the attack targets, coordinating with the client applications, etc.
+Our volunteer defense center does all the hard work: monitoring the targets, running the technical infrastructure, coordinating the attack targets, coordinating with the client applications, etc.
 When the attack is performed, the application gets the data that it needs automatically.
 The only thing you need to do is to install it.
 Targets being attacked are changed automatically and are downloaded from the control center/server.
@@ -70,16 +70,16 @@ docker run -d ghcr.io/opengs/uashield:master 512 true
 [![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/master/pwd-docker-compose.yml)
 
 ## Donations
-Donations will be used to fund our operations:
+Donations will be used exclusively to fund our operations:
 1. Expenses on constantly buying new proxy servers
 2. From time to time buying servers for new infastructure
 
-When we will win the war and will be peace in Ukraine, funds will be transfered to voluntary associations to help victims of this war.
+When we win the war and there is peace in Ukraine, funds will be transfered to voluntary associations to help victims of this war.
 
 You can help us using:
 - BTC: 11wxDarouPfY6P3misLvFuJ8k8oWhd4qb
 
-Also, here are some variants if you want to help developers with some cofee. So we can continue to skip work and keep invest time in project all nights:
+Also, here are some variants if you want to help developers with some coffee, so we can continue to skip work and keep investing time in the project all nights:
 - BTC: 12CcLYn6zrBcnmvK5fRSAQcJre5jknyTxH
 
 We will add more variants in future :)
