@@ -92,13 +92,13 @@
           </q-item-section>
         </q-item>
 
-        <q-item tag="label" v-ripple disable>
+        <q-item tag="label" v-ripple>
           <q-item-section>
             <q-item-label>{{ $t('ddos.advanced.runAtStartup.name') }}</q-item-label>
             <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.runAtStartup.description') }}</q-item-label>
           </q-item-section>
           <q-item-section avatar>
-            <q-toggle color="blue" v-model="runAtStartup" val="picture" disable />
+            <q-toggle color="blue" v-model="runAtStartup" val="picture" />
           </q-item-section>
         </q-item>
 
@@ -137,7 +137,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import LanguageSelect from '../components/LanguageSelect.vue'
-// import { ipcRenderer, IpcRendererEvent } from 'electron'
 
 export default defineComponent({
   name: 'PageIndex',
@@ -205,10 +204,14 @@ export default defineComponent({
 
     // update main process with initial value
     window.require('electron').ipcRenderer.send('updateMinimizeToTray', { newVal: this.minimizeToTray })
-    window.require('electron').ipcRenderer.send('updateRunAtStartup', { newVal: this.runAtStartup })
   },
 
   setup () {
+    // update value from system register
+    window.require('electron').ipcRenderer.on('systemRunAtStartup', (_, systemRunAtStartup: boolean) => {
+      runAtStartup.value = systemRunAtStartup
+    })
+
     const ddosEnabled = ref(true)
     const forceProxy = ref(true)
     const attackCounter = ref(0)

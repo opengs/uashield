@@ -8,6 +8,7 @@ const { autoUpdater } = require('electron-updater')
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform()
 const appIcon = nativeImage.createFromPath(path.resolve(__dirname, 'icons/icon.png'))
+const appName = 'UA Cyber SHIELD'
 
 try {
   if (platform === 'win32' && nativeTheme.shouldUseDarkColors === true) {
@@ -47,7 +48,7 @@ function createWindow () {
 
   // Tray constructor requires image as a param, icon is going to be changed later
   tray = new Tray(nativeImage.createEmpty())
-  tray.setToolTip('UA Cyber SHIELD')
+  tray.setToolTip(appName)
   tray.setImage(appIcon.resize({ width: 16, height: 16 }))
   // For win platform, open context with click on tray icon
   tray.on('click', () => {
@@ -56,7 +57,7 @@ function createWindow () {
 
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Show app',
+      label: `Show ${appName}`,
       click: () => {
         // restore from minimized state
         mainWindow.restore()
@@ -66,7 +67,7 @@ function createWindow () {
     },
     { type: 'separator' },
     {
-      label: 'Quite UA Cyber SHIELD',
+      label: 'Quite',
       click: () => {
         isQuite = true
         mainWindow.close()
@@ -89,6 +90,10 @@ function createWindow () {
       mainWindow.webContents.closeDevTools()
     })
   }
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.send('systemRunAtStartup', app.getLoginItemSettings().openAtLogin)
+  })
 
   mainWindow.on('close', (event) => {
     if (minimizeToTray && !isQuite) {
@@ -128,6 +133,13 @@ function createWindow () {
 
   ipcMain.on('updateMinimizeToTray', (event, arg) => {
     minimizeToTray = !!arg.newVal
+  })
+
+  ipcMain.on('updateRunAtStartup', (event, arg) => {
+    app.setLoginItemSettings({
+      openAtLogin: arg.newVal,
+      name: appName
+    })
   })
 
   ipcMain.on('installUpdate', () => {
