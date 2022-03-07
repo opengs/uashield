@@ -25,4 +25,4 @@ jobs:
           rm -rf dist/
           npm install -g @quasar/cli yarn --force
           yarn install
-          EP_GH_IGNORE_TIME=true quasar build --mode electron --publish always -T darwin
+          quasar build --mode electron --publish always -T darwin
