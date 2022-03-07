@@ -155,7 +155,6 @@ func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, 
 				Host:   proxyUrl,
 			})}, Timeout: timeout}
 		} else {
-			proxyUrl = "127.0.0.1:8118"
 			myClient = &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(&url.URL{
 				Scheme: "http",
 				Host:   proxyUrl,
