@@ -19,8 +19,8 @@ tf-plan:
 
 .PHONY: tf-apply
 tf-apply:
-	docker-compose -f docker-compose.yml run terraform apply -auto-approve
+	docker-compose -f docker-compose.yml run terraform apply -auto-approve -auto-approv
 
 .PHONY: tf-destroy
 tf-destroy:
-	docker-compose -f docker-compose.yml run terraform destroy -auto-approve
+	docker-compose -f docker-compose.yml run terraform destroy -auto-approve -auto-approv

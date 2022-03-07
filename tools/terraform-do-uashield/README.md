@@ -4,8 +4,10 @@
 
 
 ## Requirements
-- [Instal terraform](https://www.terraform.io/downloads)
-- [Add SSH key](https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys/to-account/) to DO with name `ssh`
+- docker
+- docker-compose
+- [DO PAT](https://docs.digitalocean.com/reference/api/create-personal-access-token/)
+- [Add SSH key](https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys/to-account/) to DO with name `ssh` (TODO: hardcoded)
 
 ## Export environment vars
 ```
@@ -17,10 +19,12 @@ export DO_PAT="<your_pat>"
 export SSH_KEY_PATH="$HOME/.ssh/id_ed25519"
 
 # Logs level
-export TF_LOG="DEINFOBUG"
+export TF_LOG="INFO"
 ```
-
-## Option 1: docker-compose
+Use DROPLET_INSTANCE_NUMBER and DROPLET_INSTANCE_SIZE environment variables to change droplet number and size.
+```
+export DROPLET_INSTANCE_NUMBER=5
+```
 ### Deploy the uashields infrastructure to DO
 ```
 make tf-deploy
@@ -37,20 +41,4 @@ make tf-destroy
 
 # To destroy
 > docker-compose -f docker-compose.yml run terraform destroy
-```
-## Option 2: terraform
-```
-terraform init
-```
-
-```
-terraform apply \
-  -var "do_token=${DO_PAT}" \
-  -var "pvt_key=$HOME/.ssh/id_ed25519"
-```
-
-```
-terraform destroy \
-  -var "do_token=${DO_PAT}" \
-  -var "pvt_key=$HOME/.ssh/id_ed25519"
 ```

@@ -12,3 +12,5 @@ services:
       - TF_VAR_do_token=${DO_PAT}
       - TF_VAR_pvt_key=/root/.ssh/id_ed25519
       - TF_LOG=${TF_LOG}
+      - TF_VAR_droplet_instance_number=$(DROPLET_INSTANCE_NUMBER)
+      - TF_VAR_droplet_instance_size=$(DROPLET_INSTANCE_SIZE)
