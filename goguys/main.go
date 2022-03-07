@@ -146,7 +146,6 @@ func getProxies() ProxyStruct {
 func requestMe(target string, proxyUrl string, proxyAuth string, ebus chan int, id int, repeatingbus chan int) {
 	var myClient *http.Client
 	if useProxy {
-		proxyAuth = ""
 		if len(proxyAuth) > 0 {
 			split := strings.Split(proxyAuth, ":")
 			myClient = &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(&url.URL{
