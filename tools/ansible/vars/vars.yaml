@@ -4,9 +4,7 @@
 #Docker
 
 docker_version: 5.0.3
-docker_install_compose: true
 docker_users: []
-docker_pip_executable: pip3
 
 #Uashield
 
