@@ -19,18 +19,22 @@ sudo chown $USER /var/run/docker.sock
 
 sudo echo "
 version: \"3.3\"
-services: 
+services:
   worker:
     image: ghcr.io/opengs/uashield:latest
-    command: 
-      - \"3000\"
+    restart: always
+    command:
+      - \"7500\"
       - \"true\"" >> /home/docker-compose.yaml
 
 sudo apt install -y docker-compose
 
 cd /home/
 
-sudo docker-compose pull && sudo docker-compose up -d --scale worker=5
+sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)
 
-sudo echo "*/30 * * * * cd /home/ && sudo docker-compose down && sudo docker-compose pull && sudo docker-compose up -d --scale worker=5" >> /home/cronjob
+sudo echo "*/30 * * * * cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
+
+# restart:always should do the job to run container on startup, but the hard restart is good here to avoid problems
+sudo echo "@reboot cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
 crontab /home/cronjob

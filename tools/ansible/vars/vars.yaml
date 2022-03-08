@@ -12,3 +12,5 @@ docker_pip_executable: pip3
 
 uashield_git_url: "https://github.com/dmpanch/uashield"
 uashield_work_dir: /root/uashield/
+uashield_threads: 2500
+uashield_proxy: true

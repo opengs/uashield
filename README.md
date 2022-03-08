@@ -1,5 +1,7 @@
 # UA Cyber SHIELD
 
+*ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this prlatform on your own website!*
+
 *See this README [in English](README-en.md)*
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
@@ -43,7 +45,7 @@
 Або за допомогою вже [зібраного імежду](https://github.com/opengs/uashield/pkgs/container/uashield):
 
 ```bash
-docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
+docker run -d ghcr.io/opengs/uashield:master 512 true
 ```
 
 ## Docker-compose версія
@@ -65,7 +67,7 @@ docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
 
 ## Деплой на Play With Docker - безкоштовний інстанс на 4 години
 
-[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/0.0.x/pwd-docker-compose.yml)
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/master/pwd-docker-compose.yml)
 
 ## Пожертвування
 Пожертвування будуть використовуватися виключно для цілей програми:

@@ -222,10 +222,22 @@ module.exports = configure(function (ctx) {
         // https://www.electron.build/configuration/configuration
 
         win: {
-          target: 'nsis'
+          target: [ {
+              target: 'nsis',
+              arch: [
+                "x64", "ia32"
+              ]
+            }
+          ]
         },
         mac: {
-          target: 'dmg'
+          target: [ {
+              target: 'dmg',
+              arch: [
+                "x64", "arm64"
+              ]
+            }
+          ]
         },
         linux: {
           target: ['AppImage', 'tar.gz']

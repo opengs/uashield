@@ -1,7 +1,14 @@
+import { AxiosProxyConfig } from "axios";
+
 export interface ProxyData {
   auth: string;
   id: number;
   ip: string;
+}
+
+export interface PrioritizedTarget {
+  page: SiteData,
+  proxyObj: AxiosProxyConfig  | undefined
 }
 
 export interface SiteData {
@@ -15,10 +22,6 @@ export interface SiteData {
   url: string;
 }
 
-export interface TargetData {
-  site: SiteData;
-  proxy: Array<ProxyData>;
-}
 
 export type DoserEventType = 'atack' | 'error';
 
