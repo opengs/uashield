@@ -32,6 +32,7 @@
 <script lang="ts">
 
 import { defineComponent, ref, onMounted } from 'vue'
+import { setSavedLanguage, getSavedLanguage } from '../utils/persistence'
 
 interface LanguageInterface {
   name: string,
@@ -93,18 +94,24 @@ export default defineComponent({
   watch: {
     language () {
       this.$i18n.locale = this.language.symbol
+      setSavedLanguage(this.language.symbol)
     }
   },
 
   setup () {
     const getDefaultLanguage = () => {
-      const userLanguage = navigator.language
-      const defaultLanguage = languages.find(({ symbol }) => symbol.includes(userLanguage))
-      return defaultLanguage || languages[0]
+      return navigator.language
+    }
+
+    const resolveLanguage = (langSymbol: string) => {
+      const resolvedLanguage = languages.find(({ symbol }) => symbol.includes(langSymbol))
+      return resolvedLanguage || languages[0]
     }
 
     const language = ref<LanguageInterface>(languages[0])
-    onMounted(() => (language.value = getDefaultLanguage()))
+    onMounted(() => {
+      language.value = resolveLanguage(getSavedLanguage(getDefaultLanguage()))
+    })
 
     return { languages, language }
   }
