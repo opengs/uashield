@@ -39,11 +39,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           quasar build --mode electron --publish always -T win
-      - name: MacOS 64bit
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          quasar build --mode electron --publish always -T darwin
       - name: Linux armv7l
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
