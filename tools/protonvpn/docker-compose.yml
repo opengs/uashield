@@ -1,19 +1,5 @@
-version: '2'
+version: '2.1'
 services:
-
-    uashield:
-      depends_on:
-        - protonvpn
-      build:
-        context: ../../
-        dockerfile: ./Dockerfile
-      restart: always
-      container_name: uashield
-      image: uashield:latest
-      environment:
-        WORKERS: '256'
-        USEPROXY: 'true'
-      network_mode: service:protonvpn
 
     protonvpn:
       container_name: protonvpn
@@ -23,7 +9,7 @@ services:
         PROTONVPN_PASSWORD: zkM7hplVGpOrFx0rHHnWW708QBDQoALn
         # Override these where applicable
         PROTONVPN_SERVER: NL
-        PROTONVPN_TIER: ${PROTONVPN_TIER:-0}
+        PROTONVPN_TIER: 0
       # Always use semver tags, avoid using tag latest!
       image: ghcr.io/tprasadtp/protonvpn:latest
       restart: unless-stopped
@@ -33,6 +19,27 @@ services:
         - NET_ADMIN
       devices:
         - /dev/net/tun:/dev/net/tun
+      healthcheck:
+        test: ["CMD", "curl", "-f", "https://google.com"]
+        interval: 10s
+        timeout: 10s
+        retries: 3
+        start_period: 15s
+
+    uashield:
+      depends_on:
+        protonvpn:
+           condition: service_healthy
+      build:
+        context: ../../
+        dockerfile: ./Dockerfile
+      restart: always
+      container_name: uashield-protonvpn
+      image: uashield:latest
+      environment:
+        WORKERS: '256'
+        USEPROXY: 'false'
+      network_mode: service:protonvpn
 
 networks:
   internet:
