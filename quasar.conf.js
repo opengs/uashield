@@ -231,7 +231,13 @@ module.exports = configure(function (ctx) {
           ]
         },
         mac: {
-          target: 'dmg'
+          target: [ {
+              target: 'dmg',
+              arch: [
+                "x64", "arm64"
+              ]
+            }
+          ]
         },
         linux: {
           target: ['AppImage', 'tar.gz']
