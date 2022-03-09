@@ -3,7 +3,7 @@ Run uashield under ProtonVPN.
 [Original docs for ProtonVPN in docker](https://tprasadtp.github.io/protonvpn-docker/#/README).
 
 ## 1. Change settings in docker-compose.yml 
-- `PROTONVPN_USERNAME: - set username from OpenVPN/IKEv2 username account settings in ProtonVPN web interface
+- `PROTONVPN_USERNAME` - set username from OpenVPN/IKEv2 username account settings in ProtonVPN web interface
 - `PROTONVPN_PASSWORD` - set password from OpenVPN/IKEv2 username account settings in ProtonVPN web interface
 - `PROTONVPN_SERVER` - set server connect to. You can set `RANDOM` for random server from your plan
 - `PROTONVPN_TIER` - Proton VPN Tier (0=Free, 1=Basic, 2=Pro, 3=Visionary)
