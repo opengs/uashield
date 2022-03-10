@@ -7,8 +7,6 @@ sudo apt-get install -y \
     lsb-release \
     wget
 
-curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
-
 wget -O - https://get.docker.com/ | bash
 
 sudo systemctl enable docker.service
