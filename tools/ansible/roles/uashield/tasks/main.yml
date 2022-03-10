@@ -1,52 +1,43 @@
 ---
-- name: Check if repo is exist
-  stat:
-    path: "{{uashield_work_dir}}"
-  failed_when: false
-  changed_when: false
-  register: check_uashield_repo
-
-- name: Clone repo
+- name: Clone uashield repo
   git:
     repo: "{{uashield_git_url}}"
     dest: "{{uashield_work_dir}}"
     accept_hostkey: true
     force: true
     version: "master"
-  when: not check_uashield_repo.stat.exists
 
-- name: Pull Latest Changes
-  shell: "git pull"
+- name: Stop all containers
+  shell: "docker-compose down"
   args:
     chdir: "{{uashield_work_dir}}"
-  when: check_uashield_repo.stat.exists
 
-- name: Get Running Docker Containers
-  shell: "docker ps -aq"
-  register: docker_info
-
-- name: Stop Running Docker Containers
-  shell: "docker stop $(docker ps -aq)"
-  when: docker_info.stdout
-
-- name: Remove Docker Containers
-  shell: "docker rm $(docker ps -aq)"
-  when: docker_info.stdout
-
-- name: Remove Old Docker Image
+- name: Remove old uashield images
   shell: "docker rmi -f uashield"
 
-- name: Build Docker Image
-  shell: "docker build . -t uashield"
+- name: Run uashield
+  shell: "docker-compose up -d"
   args:
     chdir: "{{uashield_work_dir}}"
 
-- name: Run Instance
-  shell: "docker run -d uashield {{ uashield_threads }} {{ uashield_proxy }}"
-
-- name: Check Docker is started
-  command: "docker ps"
+- name: Check docker started
+  shell: "docker ps"
+  args:
+    chdir: "{{uashield_work_dir}}"
   register: output
 
 - ansible.builtin.debug:
-    var: output.stdout_lines
+        var: output
+
+- name: Chmod bash script for image update
+  shell: "chmod +x /root/uashield/tools/ansible/update-build.sh"
+
+- name: Remove /root/cronjob file if exists
+  shell: "rm /root/cronjob"
+  ignore_errors: yes
+
+- name: Add every 30 minutes image update as a cronjob
+  shell: "sudo echo '*/3 * * * * /root/uashield/tools/ansible/update-build.sh' >> /root/cronjob"
+
+- name: Add every reboot image update as a cronjob
+  shell: "sudo echo '@reboot /root/uashield/tools/ansible/update-build.sh' >> /root/cronjob && crontab /root/cronjob"
