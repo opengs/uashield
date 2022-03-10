@@ -2,6 +2,7 @@ FROM node:16.9.0-alpine AS builder
 WORKDIR /code
 
 COPY yarn.lock ./yarn.lock
+COPY .yarnrc ./.yarnrc
 COPY packageheadless.json ./package.json
 # no need to --frozen-lockfile
 # from docs - If yarn.lock is present and is enough to satisfy all the dependencies listed in package.json, 
