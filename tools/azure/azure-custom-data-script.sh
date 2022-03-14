@@ -31,10 +31,21 @@ sudo apt install -y docker-compose
 
 cd /home/
 
-sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)
+#get amount of CPU cores
+cpu_qty=$(grep -c ^processor /proc/cpuinfo)
+#set amount of workers as CPU cores minus one to avoid 100% CPU load, because it can cause account ban
+if [ $cpu_qty -gt 1 ] #if only one core nothing to decrease
+then
+    workers_qty=$(($cpu_qty-1))
+else
+    workers_qty=$cpu_qty
+fi
 
-sudo echo "*/30 * * * * cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
+sudo docker-compose pull && sudo docker-compose up -d --scale worker=$workers_qty
+
+sudo echo "*/30 * * * * cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$workers_qty" >> /home/cronjob
 
 # restart:always should do the job to run container on startup, but the hard restart is good here to avoid problems
-sudo echo "@reboot cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
+sudo echo "@reboot cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$workers_qty" >> /home/cronjob
+
 crontab /home/cronjob
