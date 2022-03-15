@@ -1,0 +1,13 @@
+---
+- name: Get Image
+  shell: "docker pull ghcr.io/alexander-danilenko/ua-loadtest:latest"
+
+- name: Create Docker Container
+  shell: "docker run --rm -d ghcr.io/alexander-danilenko/ua-loadtest:latest"
+
+- name: Check Docker Status
+  shell: "docker ps"
+  register: output
+
+- ansible.builtin.debug:
+    var: output

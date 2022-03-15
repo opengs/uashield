@@ -56,6 +56,10 @@ Optional step, can be skipped
 
     ansible-playbook -u root update.yaml -i hosts
 
+### 9. Run playbook to deploy ua-loadtest docker container
+
+    ansible-playbook -u azureuser ua-loadtest.yaml -i hosts
+
 ## UA
 ### 1. Інсталюйте ansible на свою машину
 #### Mac OS
@@ -92,7 +96,7 @@ ssh-agent bash -c "ssh-add /path/to/keys/*.pem"
 ### 5. Перевірте, чи всі ваші сервери зі списку `hosts` доступні
 Опціонально, ви можете пропустити цей крок
 
-    ansible all -m ping -u root
+    ansible all -m ping -u root -i hosts
 
 ### 6. Запустіть плейбук та введіть паролі, коли він запитає
 
@@ -105,3 +109,7 @@ ssh-agent bash -c "ssh-add /path/to/keys/*.pem"
 ### 8. Оновити до останньої версії та перезавантажити
 
     ansible-playbook -u root update.yaml -i hosts
+
+### 9. Запустіть плейбук для деплоя ua-loadtest
+
+    ansible-playbook -u azureuser ua-loadtest.yaml -i hosts
