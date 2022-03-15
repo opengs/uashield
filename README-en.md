@@ -77,9 +77,13 @@ Donations will be used exclusively to fund our operations:
 When we win the war and there is peace in Ukraine, funds will be transfered to voluntary associations to help victims of this war.
 
 You can help us using:
-- BTC: 11wxDarouPfY6P3misLvFuJ8k8oWhd4qb
+- BTC: bc1q7e6ew74x56vdpsev5ycqq8ke3tk4yv5452l25g
+- ETH: 0x9472538607eE28F69FE7dAcD6C4cC17B9A20664F
+- USDT (ETH): 0x9472538607eE28F69FE7dAcD6C4cC17B9A20664F **this is address on ETH network**
 
 Also, here are some variants if you want to help developers with some coffee, so we can continue to skip work and keep investing time in the project all nights:
-- BTC: 12CcLYn6zrBcnmvK5fRSAQcJre5jknyTxH
+- BTC: bc1q7g5s3c89lymc9vtrf0y8tqyx4mg0hefeyr6zsv
+- ETH: 0x75A291AB6795f747177975bac250B47A33ee54Ed
+- USDT (ETH): 0x75A291AB6795f747177975bac250B47A33ee54Ed **this is address on ETH network**
 
 We will add more variants in future :)
