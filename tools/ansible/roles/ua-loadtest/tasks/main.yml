@@ -1,13 +1,21 @@
 ---
-- name: Get Image
+- name: Get Docker Image
   shell: "docker pull ghcr.io/alexander-danilenko/ua-loadtest:latest"
 
-- name: Create Docker Container
-  shell: "docker run --rm -d ghcr.io/alexander-danilenko/ua-loadtest:latest"
+- name: Get Running Docker Containers
+  shell: "docker ps -aq"
+  register: docker_info
+
+- name: Stop Running Docker Containers
+  shell: "docker stop $(docker ps -aq)"
+  when: docker_info.stdout
+
+- name: Run Docker Container
+  shell: "docker run --rm -d --name ua-loadtest -e 'REQUESTS_CONCURRENCY=1000' -e 'LOG_SUMMARY_TABLE=false' ghcr.io/alexander-danilenko/ua-loadtest:latest"
 
 - name: Check Docker Status
   shell: "docker ps"
   register: output
 
 - ansible.builtin.debug:
-    var: output
+    var: output.stdout_lines
