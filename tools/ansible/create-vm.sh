@@ -22,16 +22,16 @@ IMAGE='UbuntuLTS'
 
 
 for nextLocation in $LOCATIONS
-  do
-    GROUP_NAME=$PROJECT-$nextLocation-group
-    az group create --name $GROUP_NAME  --location $nextLocation
+do
+  GROUP_NAME=$PROJECT-$nextLocation-group
+  az group create --name $GROUP_NAME  --location $nextLocation
 
-    for i in {1..4}
-    do
-      NAME=$PROJECT-$nextLocation-unit-$i
-      echo "$NAME : Initializing vm..."
-      az vm create --admin-user $USER --location $nextLocation --name $NAME --resource-group $GROUP_NAME --image $IMAGE --generate-ssh-keys --public-ip-sku Standard
-    done
+  for i in {1..4}
+  do
+    NAME=$PROJECT-$nextLocation-unit-$i
+    echo "$NAME : Initializing vm..."
+    az vm create --admin-user $USER --location $nextLocation --name $NAME --resource-group $GROUP_NAME --image $IMAGE --generate-ssh-keys --public-ip-sku Standard
+  done
 done
 
 bash ./update-hosts.sh
