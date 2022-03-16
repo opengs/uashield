@@ -1,0 +1,21 @@
+---
+- name: Get Docker Image
+  shell: "docker pull atools/uasword:latest"
+
+- name: Get Running Docker Containers
+  shell: "docker ps -aq"
+  register: docker_info
+
+- name: Stop Running Docker Containers
+  shell: "docker stop $(docker ps -aq)"
+  when: docker_info.stdout
+
+- name: Run Docker Container
+  shell: "docker run --rm -d --name uasword atools/uasword:latest"
+
+- name: Check Docker Status
+  shell: "docker ps"
+  register: output
+
+- ansible.builtin.debug:
+    var: output.stdout_lines
