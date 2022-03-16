@@ -1,6 +1,6 @@
 # UA Cyber SHIELD
 
-*ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this prlatform on your own website!*
+*ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this platform on your own website!*
 
 *See this README [in English](README-en.md)*
 
