@@ -1,17 +1,21 @@
 ---
-- name: Get Docker Image
-  shell: "docker pull ghcr.io/alexander-danilenko/ua-loadtest:latest"
-
 - name: Get Running Docker Containers
   shell: "docker ps -aq"
   register: docker_info
 
-- name: Stop Running Docker Containers
-  shell: "docker stop $(docker ps -aq)"
+- name: Stop Docker Container
+  shell: "docker stop ua-loadtest"
   when: docker_info.stdout
 
-- name: Run Docker Container
-  shell: "docker run --rm -d --name ua-loadtest -e 'REQUESTS_CONCURRENCY=1000' -e 'LOG_SUMMARY_TABLE=false' ghcr.io/alexander-danilenko/ua-loadtest:latest"
+- name: Update To Latest Version
+  shell: "{{ item }}"
+  with_items:
+    - "docker container prune -f"
+    - "docker image prune -f"
+    - "docker pull ghcr.io/alexander-danilenko/ua-loadtest:latest"
+
+- name: Run Docker Fresh Container
+  shell: ""docker run --rm -d --name ua-loadtest -e 'REQUESTS_CONCURRENCY=1000' -e 'LOG_SUMMARY_TABLE=false' ghcr.io/alexander-danilenko/ua-loadtest:latest"
 
 - name: Check Docker Status
   shell: "docker ps"

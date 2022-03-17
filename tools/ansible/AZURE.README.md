@@ -21,15 +21,30 @@ This script will add Public IP of created VMs to `hosts` file.
     ./update-hosts.sh
 
 ### Run ansible-playbook to deploy to all instances
+Choose your fighter.
 
-If you want to deploy `uashield` project:
+To deploy `uashield` project:
 
     ansible-playbook -u azureuser deploy.yaml -i hosts
 
-If you want to deploy `uasword` project:
+To deploy `uasword` project:
 
     ansible-playbook -u azureuser uasword-deploy.yaml -i hosts
 
-If you want to deploy `ua-loadtest` project:
+To deploy `ua-loadtest` project:
 
     ansible-playbook -u azureuser ua-loadtest-deploy.yaml -i hosts
+
+### Run ansible-playbook to update all instances to the latest version
+
+To update `uashield` project:
+
+    ansible-playbook -u azureuser update.yaml -i hosts
+
+To update `uasword` project:
+
+    ansible-playbook -u azureuser uasword-update.yaml -i hosts
+
+To update `ua-loadtest` project:
+
+    ansible-playbook -u azureuser ua-loadtest-update.yaml -i hosts

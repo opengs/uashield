@@ -15,7 +15,7 @@
 # Variables
 INPUT=$1
 PROJECT="${INPUT:-uashield}"
-AVAILABLE_LOCATIONS='southindia; eastasia; centralindia; koreacentral; australiacentral; uaenorth;'
+AVAILABLE_LOCATIONS='southindia; eastasia; centralindia; koreacentral;'
 LOCATIONS=$(echo $AVAILABLE_LOCATIONS | tr ";" "\n")
 USER='azureuser'
 IMAGE='UbuntuLTS'
