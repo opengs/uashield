@@ -1,3 +1,5 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine)
+
 # UA Cyber SHIELD
 
 *ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this prlatform on your own website!*
@@ -87,3 +89,5 @@ docker run -d ghcr.io/opengs/uashield:master 512 true
 - USDT (ETH): 0x75A291AB6795f747177975bac250B47A33ee54Ed **ця адреса в мережі ETH**
 
 В майбутньому ми додамо їх ще більше :)
+
+[![Russian Warship Go Fuck Yourself](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/RussianWarship.svg)](https://vshymanskyy.github.io/StandWithUkraine)
