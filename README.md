@@ -1,6 +1,6 @@
 # UA Cyber SHIELD
 
-*ALERT!!! We are not supporting unlawful active attacks or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this platform on your own website!*
+*ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this platform on your own website!*
 
 *See this README [in English](README-en.md)*
 
@@ -77,9 +77,13 @@ docker run -d ghcr.io/opengs/uashield:master 512 true
 Коли ми переможемо в цій війні і настане мирний час, гроші що залишаться будуть передані благодійним організаціям на допомогу жертвам цієї війни.
 
 Рахунки для переказу коштів:
-- BTC: 11wxDarouPfY6P3misLvFuJ8k8oWhd4qb
+- BTC: bc1q7e6ew74x56vdpsev5ycqq8ke3tk4yv5452l25g
+- ETH: 0x9472538607eE28F69FE7dAcD6C4cC17B9A20664F
+- USDT (ETH): 0x9472538607eE28F69FE7dAcD6C4cC17B9A20664F **ця адреса в мережі ETH**
 
 Якшо ви хочете почастувати розробників кавою щоб вони могли прогулювати роботу і не спати ночами:
-- BTC: 12CcLYn6zrBcnmvK5fRSAQcJre5jknyTxH
+- BTC: bc1q7g5s3c89lymc9vtrf0y8tqyx4mg0hefeyr6zsv
+- ETH: 0x75A291AB6795f747177975bac250B47A33ee54Ed
+- USDT (ETH): 0x75A291AB6795f747177975bac250B47A33ee54Ed **ця адреса в мережі ETH**
 
 В майбутньому ми додамо їх ще більше :)
