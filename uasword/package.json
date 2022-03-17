@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "uasword": "github:mgrybyk/uasword"
+  }
+}

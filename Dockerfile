@@ -1,28 +1,9 @@
-FROM node:16.9.0-alpine AS builder
+FROM mcr.microsoft.com/playwright:v1.20.0-focal
 WORKDIR /code
 
-COPY yarn.lock ./yarn.lock
-COPY .yarnrc ./.yarnrc
-COPY packageheadless.json ./package.json
-# no need to --frozen-lockfile
-# from docs - If yarn.lock is present and is enough to satisfy all the dependencies listed in package.json, 
-# the exact versions recorded in yarn.lock are installed, and yarn.lock will be unchanged. 
-# Yarn will not check for newer versions.
-RUN yarn install 
+COPY uasword/* .
+RUN npm install
 
-COPY . .
-COPY tsconfig.headless.json ./tsconfig.json
+ENV SKIP_DDOSER_LISTS=true
 
-RUN yarn build:headless
-
-
-# Optimizes the build, so no NODE_MODULES included in image. Don't remove this
-FROM node:16.9.0-alpine
-
-WORKDIR /code
-
-COPY packageheadless.json ./package.json
-COPY --from=builder /code/build/headless/ ./build/headless/
-
-ENTRYPOINT ["yarn", "start:headless"]
-
+ENTRYPOINT ["node", "node_modules/uasword"]
