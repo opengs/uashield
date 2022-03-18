@@ -34,7 +34,7 @@ do
   if [ "${#GROUP_EXIST}" == 2 ];
   then
     echo "Creating resource group... $GROUP_NAME"
-    # az group create --name $GROUP_NAME  --location $NEXT_LOCATION
+    az group create --name $GROUP_NAME  --location $NEXT_LOCATION
   else
     echo "Resource group already exist. $GROUP_NAME"
   fi
@@ -43,7 +43,7 @@ do
   do
     NAME=$PROJECT-$NEXT_LOCATION-unit-$i
     echo "Creating vm... $NAME"
-    # az vm create --admin-user $USER --location $NEXT_LOCATION --name $NAME --resource-group $GROUP_NAME --image $IMAGE --generate-ssh-keys --public-ip-sku Standard
+    az vm create --admin-user $USER --location $NEXT_LOCATION --name $NAME --resource-group $GROUP_NAME --image $IMAGE --generate-ssh-keys --public-ip-sku Standard
   done
 done
 
