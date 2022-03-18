@@ -11,9 +11,9 @@
     az login
 
 ### Run script to create VMs
-This script will create resource group per region and create 4 vm instances. Optional. You can change prefix name of VMs `./create-vm.sh test`
+This script will create resource group per region and create 4 vm instances. Optional. You can change prefix name of VMs `./init.sh test`
 
-    ./create-vm.sh
+    ./init.sh
 
 ### Run script to update `hosts`
 This script will add Public IP of created VMs to `hosts` file.
