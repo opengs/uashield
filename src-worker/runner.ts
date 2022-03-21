@@ -99,7 +99,8 @@ export class Runner {
       } else {
         const proxyConfig = {
           host: proxyObj.host,
-          port: proxyObj.port
+          port: proxyObj.port,
+          protocol: proxyObj.scheme
         } as AxiosProxyConfig
         if (proxyObj.username !== undefined && proxyObj.password !== undefined) {
           proxyConfig.auth = {
