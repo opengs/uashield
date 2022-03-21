@@ -1,19 +1,19 @@
 <template>
   <q-page class="row items-center justify-evenly bg-grey-10 text-white">
-    <q-card class="bg-grey-10 full-card">
-      <q-card-section>
+    <q-card class="bg-grey-10 full-card wrapper">
+      <q-card-section class="header">
         <div class="text-h4 text-center">{{ $t('ddos.counter.attackedTimes') }}</div>
         <div class="text-h1 text-center">{{ attackCounter }}</div>
         <div class="text-h5 text-center">{{ $t('ddos.counter.currentTarget') }}</div>
         <div class="text-h5 text-center">{{ currentAttack }}</div>
       </q-card-section>
-      <q-card-section>
+      <q-card-section class="description">
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.description') }}</div>
       </q-card-section>
-      <q-card-section>
+      <q-card-section class="language">
         <LanguageSelect />
       </q-card-section>
-      <q-card-section>
+      <q-card-section class="runner">
         <q-list>
           <q-item tag="label" v-ripple>
             <q-item-section>
@@ -36,14 +36,14 @@
           </q-item>
         </q-list>
       </q-card-section>
-      <q-card-section>
-        <q-scroll-area style="height: 200px;">
+      <q-card-section class="log">
+        <q-scroll-area class="log-scrollable">
           <div v-for="n in log.length" :key="n" class="">
             {{ log[n] }}
           </div>
         </q-scroll-area>
       </q-card-section>
-      <q-card-section>
+      <q-card-section class="footer">
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.coordinators') }}</div>
       </q-card-section>
     </q-card>
@@ -200,4 +200,25 @@ export default defineComponent({
 .full-card
   width: 80%
   max-width: 700px
+.header
+  grid-area: header
+.description
+  grid-area: description
+.language
+  grid-area: language
+.log
+  grid-area: log
+.log-scrollable
+  height: 200px
+.footer
+  grid-area: footer
+@media screen and (max-height &: 850px)
+  .full-card
+    max-width: none
+.wrapper
+  display: grid
+  grid-template-columns: 50% 50%
+  grid-template-areas: "header header" "description description" "log language" "log runner" "footer footer"
+.log-scrollable
+  height: 100%
 </style>
