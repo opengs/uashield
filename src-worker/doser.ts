@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios-https-proxy-fix'
 import { EventEmitter } from 'events'
-import { DoserEventType, ProxyData, SiteData, GetSitesAndProxiesResponse, PrioritizedTarget } from './types'
+import { DoserEventType, ProxyData, SiteData, GetSitesAndProxiesResponse, PrioritizedTarget, ProxyRequestData } from './types'
 import { Runner } from './runner'
 import { getSites, getProxies } from './requests'
 import { AxiosProxyConfig } from 'axios'
@@ -45,12 +45,12 @@ export class Doser {
         this.prioritizedPairs.splice(index, 1)
         return
       }
-      
+
     }
   }
 
-  addPrioritizedTarget(what: SiteData, proxyObj: AxiosProxyConfig | undefined) {
-    if(this.prioritizedPairs.length < this.maxPrioritizedWorkers) { 
+  addPrioritizedTarget(what: SiteData, proxyObj?: ProxyRequestData) {
+    if(this.prioritizedPairs.length < this.maxPrioritizedWorkers) {
       this.prioritizedPairs.push({
           page: what,
           proxyObj: proxyObj
@@ -121,7 +121,7 @@ export class Doser {
     let obj = await this.getSitesAndProxies()
     if(obj) {
       this.sites = obj.sites
-      this.proxies = obj.proxies      
+      this.proxies = obj.proxies
     }
   }
 

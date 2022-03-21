@@ -1,14 +1,24 @@
 import { AxiosProxyConfig } from "axios";
 
+export type ProxyScheme = 'socks4' | 'socks5' | 'http' | 'https'
+
 export interface ProxyData {
-  auth: string;
-  id: number;
+  auth?: string;
+  scheme: ProxyScheme
   ip: string;
+}
+
+export interface ProxyRequestData {
+  host: string
+  port: number
+  scheme: ProxyScheme
+  username?: string
+  password?: string
 }
 
 export interface PrioritizedTarget {
   page: SiteData,
-  proxyObj: AxiosProxyConfig  | undefined
+  proxyObj?: ProxyRequestData
 }
 
 export interface SiteData {
