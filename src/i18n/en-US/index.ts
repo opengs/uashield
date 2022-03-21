@@ -13,7 +13,7 @@ export default {
     },
     proxy: {
       name: 'Attack only using proxy',
-      description: 'Without this option, program will be allowed to use your IP. You will make more efficient attack, but attacks will not be anonymous.'
+      description: 'Without this option, the program will use the actual IP address of your computer. This allows to make the attack much more efficient, but attacks will not be anonymous and your IP address will be visible to the enemy.'
     },
     update: {
       title: 'Update available',
@@ -22,10 +22,10 @@ export default {
     },
     advanced: {
       header: 'Extended settings',
-      description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effect and decrease effectiveness of the application',
+      description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effects and decrease the effectiveness of the application.',
       masDosersCount: {
         name: 'Level of parallelism',
-        description: 'Defines the amount of dosers. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of the dosers according to new settings.'
+        description: 'Defines the number of attack processes. The application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust the amount of the attack processes according to new settings.'
       }
     }
   }
