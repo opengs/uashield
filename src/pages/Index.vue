@@ -150,7 +150,7 @@ export default defineComponent({
     },
     realtimeSuccessAtackRate (): number {
       if (this.realtimeAttackCounter < 1) return 1
-      return Math.max(this.realtimeSuccessfullAtackCounter / this.realtimeAttackCounter, 0.1)
+      return Math.max(this.realtimeSuccessfullAtackCounter / this.realtimeAttackCounter * 1.2, 0.1)
     }
   },
 
