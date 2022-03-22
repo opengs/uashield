@@ -24,7 +24,7 @@ services:
     image: ghcr.io/opengs/uashield:latest
     restart: always
     command:
-      - \"7500\"
+      - \"750\"
       - \"true\"" >> /home/docker-compose.yaml
 
 sudo apt install -y docker-compose

@@ -50,7 +50,7 @@ export abstract class SimpleHTTP extends Algorithm {
 
   protected async makeRequest (url: string, config: AxiosRequestConfig) {
     try {
-      await axios.request({
+      const response = await axios.request({
         ...config,
         method: this.method,
         url,
@@ -58,8 +58,10 @@ export abstract class SimpleHTTP extends Algorithm {
         headers: HttpHeadersUtils.generateRequestHeaders(),
         validateStatus: () => true
       })
+      console.log(`${url} | ${response.status}`)
       return true
-    } catch {
+    } catch (e) {
+      console.log(`${url} | DOWN OR BLOCKED`)
       return false
     }
   }

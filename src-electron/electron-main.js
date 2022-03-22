@@ -4,6 +4,8 @@ import os from 'os'
 
 import { Engine } from '../src-worker/engine'
 
+import { trackEvent, usr } from './analytics'
+
 const { autoUpdater } = require('electron-updater')
 
 // needed in case process is undefined under Linux
@@ -43,19 +45,28 @@ function createWindow () {
 
   mainWindow.setMenu(null)
   mainWindow.loadURL(process.env.APP_URL)
-  if (process.env.DEBUGGING) {
-    // if on DEV or Production with debug enabled
-    mainWindow.webContents.openDevTools()
-  } else {
+  // if (process.env.DEBUGGING) {
+  // if on DEV or Production with debug enabled
+  mainWindow.webContents.openDevTools()
+  /* } else {
     // we're on production; no access to devtools pls
     mainWindow.webContents.on('devtools-opened', () => {
       mainWindow.webContents.closeDevTools()
     })
-  }
+  } */
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  usr.pageview('/', function (err) {
+    console.log('pageview')
+    console.log(err)
+  })
+  setInterval(() => usr.pageview('/', function (err) {
+    console.log('pageview')
+    console.log(err)
+  }), 90000)
 
   const engine = new Engine()
 
