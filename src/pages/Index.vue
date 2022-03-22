@@ -8,6 +8,18 @@
         <div class="text-h5 text-center">{{ currentAttack }}</div>
       </q-card-section>
       <q-card-section>
+        <q-linear-progress stripe size="18px" :value="realtimeSuccessAtackRate" track-color="red" color="green">
+          <div class="absolute-full flex flex-center">
+            <q-badge color="grey-10" text-color="white" label="Current efficiency" />
+          </div>
+        </q-linear-progress>
+        <q-linear-progress stripe size="18px" :value="successfullAtackRate" track-color="red" color="green" class="q-mt-sm" >
+          <div class="absolute-full flex flex-center">
+            <q-badge color="grey-10" text-color="white" label="Success rate" />
+          </div>
+        </q-linear-progress>
+      </q-card-section>
+      <q-card-section>
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.description') }}</div>
       </q-card-section>
       <q-card-section>
@@ -36,6 +48,7 @@
           </q-item>
         </q-list>
       </q-card-section>
+      <!--
       <q-card-section>
         <q-scroll-area style="height: 200px;">
           <div v-for="n in log.length" :key="n" class="">
@@ -43,6 +56,7 @@
           </div>
         </q-scroll-area>
       </q-card-section>
+      -->
       <q-card-section>
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.coordinators') }}</div>
       </q-card-section>
@@ -127,6 +141,14 @@ export default defineComponent({
   computed: {
     maxNumberOfWorkers (): number {
       return Math.max(this.maxDosersCount, 256)
+    },
+    successfullAtackRate (): number {
+      if (this.attackCounter === 0) return 1
+      return Math.max(this.successfullAtacks / this.attackCounter, 0.1)
+    },
+    realtimeSuccessAtackRate (): number {
+      if (this.realtimeAttackCounter < 1) return 1
+      return Math.max(this.realtimeSuccessfullAtackCounter / this.realtimeAttackCounter, 0.1)
     }
   },
 
@@ -138,14 +160,23 @@ export default defineComponent({
       }
     },
 
-    serveAttack (_event: unknown, data: { url: string, log: string }) {
+    serveAttack (_event: unknown, data: { target: { page: string }, packetsSend: number, packetsSuccess: number }) {
       if ((new Date()).getTime() - this.lastAttackChange.getTime() > 1000) {
-        this.currentAttack = data.url
+        this.currentAttack = data.target.page
         this.lastAttackChange = new Date()
       }
-      this.attackCounter += 1
+      this.attackCounter += data.packetsSend
+      this.successfullAtacks += data.packetsSuccess
+
+      this.realtimeAttackCounter += data.packetsSend
+      this.realtimeSuccessfullAtackCounter += data.packetsSuccess
+      if (this.realtimeAttackCounter > 200) {
+        this.realtimeAttackCounter /= 2
+        this.realtimeSuccessfullAtackCounter /= 2
+      }
+
       if (this.log.length > 100) this.log.pop()
-      this.log.unshift(data.log)
+      this.log.unshift(data.target.page)
     },
 
     askForInstallUpdate (_event: unknown, data: { message: string }) {
@@ -182,6 +213,10 @@ export default defineComponent({
     const ddosEnabled = ref(true)
     const forceProxy = ref(true)
     const attackCounter = ref(0)
+    const successfullAtacks = ref(0)
+    const realtimeAttackCounter = ref(0)
+    const realtimeSuccessfullAtackCounter = ref(0)
+
     const currentAttack = ref('')
     const lastAttackChange = ref(new Date())
     const log = ref([] as Array<string>)
@@ -191,7 +226,7 @@ export default defineComponent({
     const updateDialog = ref(false)
     const updateMessage = ref('message')
 
-    return { ddosEnabled, forceProxy, attackCounter, currentAttack, lastAttackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
+    return { ddosEnabled, forceProxy, attackCounter, successfullAtacks, realtimeAttackCounter, realtimeSuccessfullAtackCounter, currentAttack, lastAttackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
   }
 })
 </script>
