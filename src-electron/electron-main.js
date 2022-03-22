@@ -69,10 +69,12 @@ function createWindow () {
   }), 90000)
 
   const engine = new Engine()
+  engine.setExecutorStartegy('automatic')
 
   const window = mainWindow
   engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
   engine.executionStartegy.on('error', (data) => window.webContents.send('error', data))
+  engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
 
   // const doser = new Doser(true, 32)
   // const window = mainWindow

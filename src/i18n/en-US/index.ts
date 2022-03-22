@@ -7,6 +7,7 @@ export default {
       attackedTimes: 'Times attacked:',
       currentTarget: 'Current target: '
     },
+    efficiency: 'Efficiency',
     enable: {
       name: 'DDoS attack',
       description: 'Enable DDoS attack on critical enemy servers: government, banking systems, propaganda webpages, etc'
@@ -23,6 +24,10 @@ export default {
     advanced: {
       header: 'Extended settings',
       description: 'If some terminology is not clear for you, please do not change extended settings. It can lead to negative effect and decrease effectiveness of the application',
+      automaticMode: {
+        name: 'Automatic mode',
+        description: 'When enabled, program analizes efficiency and automatically selects level of parallelism'
+      },
       masDosersCount: {
         name: 'Level of parallelism',
         description: 'Defines the amount of dosers. Application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust amount of the dosers according to new settings.'

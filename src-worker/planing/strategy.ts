@@ -6,7 +6,7 @@ import { ExecutorFactory } from './executorFactory'
 import { ExecutionResult } from '../algorithms/algorithm'
 
 export type PlaningStrategyType = 'manual' | 'automatic'
-export type StrategyPlaningEventType = 'atack' | 'error'
+export type StrategyPlaningEventType = 'atack' | 'error' | 'automatic_executorsCountUpdate'
 
 export abstract class PlaningStrategy {
   protected executorFactory: ExecutorFactory

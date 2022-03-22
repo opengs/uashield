@@ -5,7 +5,8 @@ import { ExecutionResult } from '../algorithms/algorithm'
 
 const MIN_EXECUTORS_COUNT = 16
 const MAX_EXECUTORS_COUNT = 2048
-const ADJUSTING_SLOPE = 32
+const UP_ADJUSTING_SLOPE = 64
+const DOWN_ADJUSTING_SLOPE = 16
 
 /**
  * Automatically controls count of executors
@@ -36,14 +37,14 @@ export class AutomaticStrategy extends PlaningStrategy {
     let newExecutorsCount = this.executors.length
 
     // increase executors count if everything is ok
-    while (this.adjustedValue > ADJUSTING_SLOPE) {
-      this.adjustedValue -= ADJUSTING_SLOPE
+    while (this.adjustedValue > UP_ADJUSTING_SLOPE) {
+      this.adjustedValue -= UP_ADJUSTING_SLOPE
       newExecutorsCount += 1
     }
 
     // reduce executors count if everything is bad
-    while (this.adjustedValue < -ADJUSTING_SLOPE) {
-      this.adjustedValue += ADJUSTING_SLOPE
+    while (this.adjustedValue < -DOWN_ADJUSTING_SLOPE) {
+      this.adjustedValue += DOWN_ADJUSTING_SLOPE
       newExecutorsCount -= 1
     }
 
@@ -53,6 +54,7 @@ export class AutomaticStrategy extends PlaningStrategy {
     if (newExecutorsCount !== this.executors.length) {
       console.log(`Automatic planer changed workers count from [${this.executors.length}] to [${newExecutorsCount}]`)
       this.resizeExecutors(newExecutorsCount)
+      this.emit('automatic_executorsCountUpdate', newExecutorsCount)
     }
   }
 

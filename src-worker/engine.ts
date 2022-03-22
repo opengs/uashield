@@ -30,7 +30,7 @@ export class Engine {
     this.targetsPool = new TargetsPool()
 
     this.algorithmsConfig = {
-      useRealIP: false,
+      useRealIP: true,
       timeout: 10000
     }
     this.algorithmGroup = new AlgorithmGroup(this.algorithmsConfig, this.proxyPool)
