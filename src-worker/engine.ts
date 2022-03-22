@@ -6,6 +6,7 @@ import { Config as AlgorithmsConfig } from './algorithms/algorithm'
 import { PlaningStrategy, PlaningStrategyType } from './planing/strategy'
 import { ExecutorFactory } from './planing/executorFactory'
 import { ManualStrategy } from './planing/manualStrategy'
+import { AutomaticStrategy } from './planing/automaticStrategy'
 
 /**
  * Core of the appliccation backend. Entrypoint.
@@ -42,8 +43,10 @@ export class Engine {
 
   setExecutorStartegy (planingStrategyType: PlaningStrategyType) {
     this.executorPlaningStrategy.stop()
-    if (planingStrategyType === 'manual') {
-      this.executorPlaningStrategy = new ManualStrategy(this.executorFactory)
+    console.log('Changing strategy to ' + planingStrategyType)
+    switch (planingStrategyType) {
+      case 'manual': this.executorPlaningStrategy = new ManualStrategy(this.executorFactory); break
+      case 'automatic': this.executorPlaningStrategy = new AutomaticStrategy(this.executorFactory); break
     }
     this.executorPlaningStrategy.start()
   }

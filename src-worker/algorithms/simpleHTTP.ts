@@ -58,10 +58,10 @@ export abstract class SimpleHTTP extends Algorithm {
         headers: HttpHeadersUtils.generateRequestHeaders(),
         validateStatus: () => true
       })
-      console.log(`${url} | ${response.status}`)
+      console.log(`${new Date().toISOString()} | ${url} | ${response.status}`)
       return true
     } catch (e) {
-      console.log(`${url} | DOWN OR BLOCKED`)
+      console.log(`${new Date().toISOString()} | ${url} | DOWN OR BLOCKED`)
       return false
     }
   }
