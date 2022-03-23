@@ -1,20 +1,12 @@
 # UA Cyber SHIELD
 
-<<<<<<< HEAD
-*ALERT!!! We not supporting unlawful active attacks or malware campaigns that are causing technical harm. Use only for educational purposes. You can only try this platform on your own website!*
-=======
 *ALERT!!! We are not supporting unlawful active attacks or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this platform on your own website!*
->>>>>>> master
 
 *Дивись цю сторінку [українською](README.md)*
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-<<<<<<< HEAD
-**The volunteer cyber defense system of Ukraine**
-=======
 **Volunteer cyber defense system of Ukraine**
->>>>>>> master
 
 - Community: [Discord](https://discord.gg/7BfJ9JKQ98) [Telegram](https://t.me/uashield)
 - Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
@@ -29,15 +21,9 @@
 
 ## How it works
 
-<<<<<<< HEAD
-Our volunteer defense center does all the hard work: monitoring the targets, running the technical infrastructure, coordinating the attack targets, coordinating with the client applications, etc.
-When the attack is performed, the application gets the data that it needs automatically.
-The only thing you need to do is to install it.
-=======
 Our volunteer defense center does all the hard work: monitoring targets, running technical infrastructure, coordinating attack targets, syncronizing it with client applications, etc.
 When an attack is performed, the application gets the data it needs automatically.
 The only thing you need to do is to install and run it.
->>>>>>> master
 Targets being attacked are changed automatically and are downloaded from the control center/server.
 
 ## Program interface
