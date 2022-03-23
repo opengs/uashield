@@ -97,6 +97,13 @@ function createWindow () {
     engine.config.useRealIP = arg.newVal
   })
 
+  ipcMain.on('updateStrategy', (event, arg) => {
+    engine.setExecutorStartegy(arg.newVal)
+    engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
+    engine.executionStartegy.on('error', (data) => window.webContents.send('error', data))
+    engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
+  })
+
   ipcMain.on('updateMaxDosersCount', (event, arg) => {
     engine.executionStartegy.setExecutorsCount(arg.newVal)
   })

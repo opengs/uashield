@@ -203,6 +203,10 @@ export default defineComponent({
       if (newVal !== undefined) {
         window.require('electron').ipcRenderer.send('updateMaxDosersCount', { newVal })
       }
+    },
+    automaticMode (newVal: boolean) {
+      window.require('electron').ipcRenderer.send('updateStrategy', { newVal: newVal ? 'automatic' : 'manual' })
+      this.maxDosersCount = 32
     }
   },
 

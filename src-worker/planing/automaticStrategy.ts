@@ -29,7 +29,7 @@ export class AutomaticStrategy extends PlaningStrategy {
   }
 
   protected adjustExecutorsCount () {
-    if (this.maxExecutorsCount === 0) {
+    if (this.executors.length === 0) {
       // Stopped. return
       return
     }
