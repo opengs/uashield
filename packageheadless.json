@@ -17,6 +17,7 @@
     "@types/superagent": "^4.1.15",
     "axios": "^0.21.1",
     "axios-https-proxy-fix": "^0.17.1",
+    "socks-proxy-agent": "^6.2.0-beta.0",
     "core-js": "^3.6.5",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",
@@ -26,13 +27,17 @@
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0",
     "user-agents": "^1.0.943",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.1",
+    "uuid4": "^2.0.2",
+    "universal-analytics": "^0.5.3"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@types/user-agents": "^1.0.2",
     "@quasar/app": "^3.0.0",
     "@types/node": "^12.20.21",
+    "@types/uuid4": "^2.0.0",
+    "@types/universal-analytics": "^0.4.5",
     "esbuild": "0.14.23",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",

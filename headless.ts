@@ -1,21 +1,31 @@
 // import { Doser } from './doser';
-const {Doser} = require('./src-worker/doser')
+import ua from 'universal-analytics'
+import uuid4 from 'uuid4'
 
-let workers = process.argv[2] ? Number(process.argv[2]):  32;
-let useProxy = process.argv[3] === 'false' ? false : true;
+import { Engine } from './src-worker/engine'
 
+let workers = process.argv[2] ? Number(process.argv[2]) : 32
+let useProxy = process.argv[3] !== 'false'
 
-if(process.env.WORKERS) {
+if (process.env.WORKERS) {
   workers = Number(process.env.WORKERS)
 }
-if(process.env.USEPROXY) {
-  useProxy = process.env.USEPROXY == "true"
+if (process.env.USEPROXY) {
+  useProxy = process.env.USEPROXY === 'true'
 }
 
-console.log(`Using ${workers} workers, proxy - ${useProxy}`);
+console.log(`Using ${workers} workers, proxy - ${String(useProxy)}`)
 
-const doser = new Doser(useProxy, workers, false);
+const engine = new Engine()
+engine.setExecutorStartegy('automatic')
+engine.config.useRealIP = !useProxy
+engine.start()
 
-doser.listen('atack', (data: any) => console.log(data.log))
+engine.executionStartegy.setExecutorsCount(workers)
 
-doser.start()
+const usr = ua('UA-222593827-1', uuid4())
+
+usr.pageview('/headless', function (err) { console.log(err) })
+setInterval(() => usr.pageview('/headless', function (err) {
+  console.log(err)
+}), 90000)

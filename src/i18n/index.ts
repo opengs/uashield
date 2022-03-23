@@ -8,6 +8,7 @@ import nlNL from './nl-NL'
 import skSK from './sk-SK'
 import esES from './es-ES'
 import koKR from './ko-KR'
+import ptPT from './pt-PT'
 
 export default {
   'en-US': enUS,
@@ -19,5 +20,6 @@ export default {
   'nl-NL': nlNL,
   'sk-SK': skSK,
   'es-ES': esES,
-  'ko-KR': koKR
+  'ko-KR': koKR,
+  'pt-PT': ptPT
 }

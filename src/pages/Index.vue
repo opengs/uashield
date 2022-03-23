@@ -8,6 +8,13 @@
         <div class="text-h5 text-center">{{ currentAttack }}</div>
       </q-card-section>
       <q-card-section>
+        <q-linear-progress stripe size="18px" :value="realtimeSuccessAtackRate" track-color="green" color="green">
+          <div class="absolute-full flex flex-center">
+            <q-badge color="grey-10" text-color="white" :label="$t('ddos.efficiency')" />
+          </div>
+        </q-linear-progress>
+      </q-card-section>
+      <q-card-section>
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.description') }}</div>
       </q-card-section>
       <q-card-section>
@@ -37,13 +44,6 @@
         </q-list>
       </q-card-section>
       <q-card-section>
-        <q-scroll-area style="height: 200px;">
-          <div v-for="n in log.length" :key="n" class="">
-            {{ log[n] }}
-          </div>
-        </q-scroll-area>
-      </q-card-section>
-      <q-card-section>
         <div class="text-subtitle2 text-grey-7">{{ $t('ddos.coordinators') }}</div>
       </q-card-section>
     </q-card>
@@ -59,7 +59,16 @@
           <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.description') }}</q-item-label>
         </q-card-section>
 
-        <q-card-section class="q-pt-none">
+        <q-item tag="label" v-ripple>
+          <q-item-section>
+            <q-item-label>{{ $t('ddos.advanced.automaticMode.name') }}</q-item-label>
+            <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.automaticMode.description') }}</q-item-label>
+          </q-item-section>
+          <q-item-section avatar>
+            <q-toggle color="blue" v-model="automaticMode" val="picture" />
+          </q-item-section>
+        </q-item>
+        <q-card-section class="q-pt-none" :disable="automaticMode">
           <div class="text-h7">{{ $t('ddos.advanced.masDosersCount.name') }}</div>
           <q-slider
             v-model="maxDosersCount"
@@ -67,6 +76,7 @@
             :max="maxNumberOfWorkers"
             :step="16"
             color="light-green"
+            :disable="automaticMode"
           />
           <div class="custom-max-dosers-count-wrapper">
             <q-input
@@ -77,9 +87,15 @@
               square
               required
               @update:modelValue="updateNumberOfWorkers"
+              :disable="automaticMode"
             />
           </div>
           <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.masDosersCount.description') }}</q-item-label>
+          <q-linear-progress stripe size="18px" :value="successfullAtackRate" track-color="green" color="green" class="q-mt-sm" >
+            <div class="absolute-full flex flex-center">
+              <q-badge color="grey-10" text-color="white" label="Success rate" />
+            </div>
+          </q-linear-progress>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -127,6 +143,14 @@ export default defineComponent({
   computed: {
     maxNumberOfWorkers (): number {
       return Math.max(this.maxDosersCount, 256)
+    },
+    successfullAtackRate (): number {
+      if (this.attackCounter === 0) return 1
+      return Math.max(this.successfullAtacks / this.attackCounter, 0.1)
+    },
+    realtimeSuccessAtackRate (): number {
+      if (this.realtimeAttackCounter < 1) return 1
+      return Math.max(this.realtimeSuccessfullAtackCounter / this.realtimeAttackCounter * 1.2, 0.1)
     }
   },
 
@@ -138,14 +162,24 @@ export default defineComponent({
       }
     },
 
-    serveAttack (_event: unknown, data: { url: string, log: string }) {
+    serveAttack (_event: unknown, data: { target: { page: string }, packetsSend: number, packetsSuccess: number }) {
       if ((new Date()).getTime() - this.lastAttackChange.getTime() > 1000) {
-        this.currentAttack = data.url
+        this.currentAttack = data.target.page
         this.lastAttackChange = new Date()
       }
-      this.attackCounter += 1
-      if (this.log.length > 100) this.log.pop()
-      this.log.unshift(data.log)
+      this.attackCounter += data.packetsSend
+      this.successfullAtacks += data.packetsSuccess
+
+      this.realtimeAttackCounter += data.packetsSend
+      this.realtimeSuccessfullAtackCounter += data.packetsSuccess
+      if (this.realtimeAttackCounter > 1000) {
+        this.realtimeAttackCounter /= 2
+        this.realtimeSuccessfullAtackCounter /= 2
+      }
+    },
+
+    serverExecutorsCountUpdate (_event: unknown, newCount: number) {
+      this.maxDosersCount = newCount
     },
 
     askForInstallUpdate (_event: unknown, data: { message: string }) {
@@ -169,29 +203,37 @@ export default defineComponent({
       if (newVal !== undefined) {
         window.require('electron').ipcRenderer.send('updateMaxDosersCount', { newVal })
       }
+    },
+    automaticMode (newVal: boolean) {
+      window.require('electron').ipcRenderer.send('updateStrategy', { newVal: newVal ? 'automatic' : 'manual' })
+      this.maxDosersCount = 32
     }
   },
 
   mounted () {
     window.require('electron').ipcRenderer.on('atack', this.serveAttack.bind(this))
-
+    window.require('electron').ipcRenderer.on('executorsCountUpdate', this.serverExecutorsCountUpdate.bind(this))
     window.require('electron').ipcRenderer.on('update', this.askForInstallUpdate.bind(this))
   },
 
   setup () {
     const ddosEnabled = ref(true)
-    const forceProxy = ref(true)
+    const forceProxy = ref(false)
     const attackCounter = ref(0)
+    const successfullAtacks = ref(0)
+    const realtimeAttackCounter = ref(0)
+    const realtimeSuccessfullAtackCounter = ref(0)
+
     const currentAttack = ref('')
     const lastAttackChange = ref(new Date())
-    const log = ref([] as Array<string>)
 
     const advancedSettingsDialog = ref(false)
+    const automaticMode = ref(true)
     const maxDosersCount = ref(32)
     const updateDialog = ref(false)
     const updateMessage = ref('message')
 
-    return { ddosEnabled, forceProxy, attackCounter, currentAttack, lastAttackChange, log, advancedSettingsDialog, maxDosersCount, updateDialog, updateMessage }
+    return { ddosEnabled, forceProxy, attackCounter, successfullAtacks, realtimeAttackCounter, realtimeSuccessfullAtackCounter, currentAttack, lastAttackChange, advancedSettingsDialog, automaticMode, maxDosersCount, updateDialog, updateMessage }
   }
 })
 </script>
