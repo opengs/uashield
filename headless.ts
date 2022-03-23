@@ -1,4 +1,7 @@
 // import { Doser } from './doser';
+import ua from 'universal-analytics'
+import uuid4 from 'uuid4'
+
 import { Engine } from './src-worker/engine'
 
 let workers = process.argv[2] ? Number(process.argv[2]) : 32
@@ -19,3 +22,10 @@ engine.config.useRealIP = !useProxy
 engine.start()
 
 engine.executionStartegy.setExecutorsCount(workers)
+
+const usr = ua('UA-222593827-1', uuid4())
+
+usr.pageview('/headless', function (err) { console.log(err) })
+setInterval(() => usr.pageview('/headless', function (err) {
+  console.log(err)
+}), 90000)

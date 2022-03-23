@@ -1530,10 +1530,20 @@
     "@types/cookiejar" "*"
     "@types/node" "*"
 
+"@types/universal-analytics@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@types/universal-analytics/-/universal-analytics-0.4.5.tgz#6a4a88477a70f7ca1ce19caede561ca728149810"
+  integrity sha512-Opb+Un786PS3te24VtJR/QPmX00P/pXaJQtLQYJklQefP4xP0Ic3mPc2z6SDz97OrITzR+RHTBEwjtNRjZ/nLQ==
+
 "@types/user-agents@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/user-agents/-/user-agents-1.0.2.tgz#3499d4aaf01a004ae9cab4e52b8d8c8b32637733"
   integrity sha512-WOoL2UJTI6RxV8RB2kS3ZhxjjijI5G1i7mgU7mtlm4LsC1XGCfiV56h+GV4VZnAUkkkLQ4gbFGR/dggT01n0RA==
+
+"@types/uuid4@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/uuid4/-/uuid4-2.0.0.tgz#40a5376b7cbfde4f905403ab0e10d32b81aff341"
+  integrity sha512-lIeYnpveYni+lqo9X10IuFI11n/3l6RjxQvlVXVcijLp/w3jj+1CGX/dRIRJVtbO5ta6xYA9Xd3QqWGwUMvvng==
 
 "@types/verror@^1.10.3":
   version "1.10.5"

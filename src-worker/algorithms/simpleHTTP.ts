@@ -70,6 +70,7 @@ export abstract class SimpleHTTP extends Algorithm {
     if (proxy.scheme === 'socks4' || proxy.scheme === 'socks5') {
       const agent = new SocksProxyAgent({
         host: proxy.host,
+        hostname: proxy.host,
         port: proxy.port,
         username: proxy.username,
         password: proxy.password

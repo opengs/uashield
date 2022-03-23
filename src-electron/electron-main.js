@@ -94,7 +94,8 @@ function createWindow () {
   })
 
   ipcMain.on('updateForceProxy', (event, arg) => {
-    engine.config.useRealIP = arg.newVal
+    console.log('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPpp')
+    engine.config.useRealIP = !arg.newVal
   })
 
   ipcMain.on('updateStrategy', (event, arg) => {
