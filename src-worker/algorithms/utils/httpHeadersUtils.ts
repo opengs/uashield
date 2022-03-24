@@ -54,13 +54,13 @@ export class HttpHeadersUtils {
 
   private static secHeaders () {
     return {
-      "sec-fetch-mode": "navigate",
-      "sec-fetch-site": "none",
-      "sec-fetch-dest": "document",
-      "sec-fetch-user": "?1",
-      "sec-ch-ua-platform": "Windows",
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua": '" Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"'
+      'sec-fetch-mode': 'navigate',
+      'sec-fetch-site': 'none',
+      'sec-fetch-dest': 'document',
+      'sec-fetch-user': '?1',
+      'sec-ch-ua-platform': 'Windows',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"'
     }
   }
 

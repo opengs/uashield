@@ -6,15 +6,18 @@ import { ProxyPool, Proxy } from '../external/proxyPool'
 import { Algorithm, Config, ExecutionResult } from './algorithm'
 
 import { HttpHeadersUtils } from './utils/httpHeadersUtils'
+import { sleep } from '../helpers'
 
 export abstract class SimpleHTTP extends Algorithm {
   protected proxyPool: ProxyPool
+  private validateStatusFn: () => boolean
 
   abstract get method(): Method
 
   constructor (config: Config, proxyPool: ProxyPool) {
     super(config)
     this.proxyPool = proxyPool
+    this.validateStatusFn = () => true
   }
 
   async execute (target: GetTarget): Promise<ExecutionResult> {
@@ -27,8 +30,8 @@ export abstract class SimpleHTTP extends Algorithm {
     if (!this.config.useRealIP) {
       const proxy = this.proxyPool.getRandomProxy()
       if (proxy === null) {
-        console.warn('Proxy request failed, because proxy wasnt founded.')
-        await new Promise(resolve => setTimeout(resolve, 100))
+        console.warn('Proxy request failed because proxy wasnt found.')
+        await sleep(100)
         return { packetsSend, packetsSuccess, target }
       }
       proxyConfig = this.generateProxyAxiosConfig(proxy)
@@ -36,12 +39,13 @@ export abstract class SimpleHTTP extends Algorithm {
     }
 
     let success = true
-    while (success) {
+    while (success && repeats > 0) {
       success = await this.makeRequest(target.page, proxyConfig)
       packetsSend += 1
-      packetsSuccess += (success) ? 1 : 0
-      repeats = repeats - 1
-      success = success && (repeats > 0)
+      repeats -= 1
+      if (success) {
+        packetsSuccess++
+      }
     }
 
     return { packetsSend, packetsSuccess, target }
@@ -55,7 +59,7 @@ export abstract class SimpleHTTP extends Algorithm {
         url,
         timeout: this.config.timeout,
         headers: HttpHeadersUtils.generateRequestHeaders(),
-        validateStatus: () => true
+        validateStatus: this.validateStatusFn
       })
       console.log(`${new Date().toISOString()} | ${url} | ${response.status}`)
       return true

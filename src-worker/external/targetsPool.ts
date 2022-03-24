@@ -1,6 +1,6 @@
 import { Axios, AxiosResponse, AxiosError } from 'axios'
 
-export type TergetMethod = 'get' | 'post' | 'udp_flood'
+const targetMethods = ['get', 'post', 'udp_flood', 'slowloris']
 
 export interface UDPFloodTarget {
   method: 'udp_flood'
@@ -74,17 +74,16 @@ export class TargetsPool {
     }
 
     // Load proxyes from each resource
-    let loadedTargetsList = [] as Target[]
+    const loadedTargetsList = [] as Target[]
     for (const url of this.sources) {
       const targets = await this.loadFromURL(url)
       if (typeof targets === 'string') {
         console.warn(targets)
       } else {
-        loadedTargetsList = [...loadedTargetsList, ...targets]
+        loadedTargetsList.push(...targets.filter((t) => targetMethods.includes(t.method)))
       }
     }
 
-    console.log('Loaded targets list')
     this.targets = loadedTargetsList
   }
 
