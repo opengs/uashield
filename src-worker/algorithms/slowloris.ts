@@ -95,6 +95,13 @@ class SlowSocket {
 }
 
 export class SlowLoris extends Algorithm {
+  isValid (target: SlowLorisTarget): boolean {
+    if (typeof target.page !== 'string' || !target.page.startsWith('http')) {
+      return false
+    }
+    return true
+  }
+
   async execute (target: SlowLorisTarget): Promise<ExecutionResult> {
     const slowSockets = []
     for (let i = 0; i < SOCKETS_PER_ALGORITHM; i += 1) {

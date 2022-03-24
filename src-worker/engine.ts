@@ -7,9 +7,10 @@ import { PlaningStrategy, PlaningStrategyType } from './planing/strategy'
 import { ExecutorFactory } from './planing/executorFactory'
 import { ManualStrategy } from './planing/manualStrategy'
 import { AutomaticStrategy } from './planing/automaticStrategy'
+import { sleep } from './helpers'
 
 /**
- * Core of the appliccation backend. Entrypoint.
+ * Core of the application backend. Entrypoint.
  */
 export class Engine {
   protected proxyPool: ProxyPool
@@ -21,6 +22,8 @@ export class Engine {
   protected executorPlaningStrategy: PlaningStrategy
 
   private working: boolean
+
+  private updateWorkerInterval: number
 
   get executionStartegy () { return this.executorPlaningStrategy }
   get config () { return this.algorithmsConfig }
@@ -39,6 +42,7 @@ export class Engine {
     this.executorPlaningStrategy = new ManualStrategy(this.executorFactory)
 
     this.working = false
+    this.updateWorkerInterval = 10 * 60 * 1000 // 10 minutes
   }
 
   setExecutorStartegy (planingStrategyType: PlaningStrategyType) {
@@ -63,23 +67,21 @@ export class Engine {
   }
 
   async updateWorker () {
-    let lastUpdateTime = new Date(1999, 1, 10)
+    let lastUpdateTime = Date.now() - this.updateWorkerInterval * 2
 
     while (this.working) {
       try {
-        const seconds = Math.round(((new Date()).getTime() - lastUpdateTime.getTime()) / 1000)
-        if (seconds > 60000) {
-          lastUpdateTime = new Date()
+        if (Date.now() - lastUpdateTime > this.updateWorkerInterval) {
+          lastUpdateTime = Date.now()
           await Promise.all([
             this.proxyPool.update(),
             this.targetsPool.update()
           ])
         }
-        await new Promise(resolve => setTimeout(resolve, 50))
       } catch (e) {
         console.error(e)
-        await new Promise(resolve => setTimeout(resolve, 100))
       }
+      await sleep(1000)
     }
   }
 }

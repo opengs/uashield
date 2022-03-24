@@ -56,6 +56,8 @@ module.exports = {
 
   ],
 
+  ignorePatterns: ['*.js'],
+
   globals: {
     ga: 'readonly', // Google Analytics
     cordova: 'readonly',

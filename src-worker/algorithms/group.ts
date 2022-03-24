@@ -17,9 +17,7 @@ export class AlgorithmGroup {
     this.algorithmMap.set('slowloris', new SlowLoris(config))
   }
 
-  getByType (algorithmType: AlgorithmType) : Algorithm | null {
-    const alg = this.algorithmMap.get(algorithmType)
-    if (alg === undefined) return null
-    return alg
+  getByType (algorithmType: AlgorithmType) : Algorithm {
+    return this.algorithmMap.get(algorithmType) as Algorithm
   }
 }
