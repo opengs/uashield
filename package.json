@@ -28,6 +28,7 @@
     "fs": "^0.0.1-security",
     "node-localstorage": "^2.2.1",
     "path": "^0.12.7",
+    "playwright-core": "^1.20.1",
     "quasar": "^2.0.0",
     "simple-ddos": "^2.0.4",
     "socks-proxy-agent": "^6.2.0-beta.0",
