@@ -22,6 +22,8 @@ export abstract class Algorithm {
     this.config = config
   }
 
+  abstract isValid (target: Target): boolean
+
   /**
    * Run one iteration of the algorithm
    */
