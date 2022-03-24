@@ -15,7 +15,7 @@
     - "docker pull ghcr.io/alexander-danilenko/ua-loadtest:latest"
 
 - name: Run Docker Fresh Container
-  shell: ""docker run --rm -d --name ua-loadtest -e 'REQUESTS_CONCURRENCY=1000' -e 'LOG_SUMMARY_TABLE=false' ghcr.io/alexander-danilenko/ua-loadtest:latest"
+  shell: "docker run --rm -d --name ua-loadtest -e 'REQUESTS_CONCURRENCY=1000' -e 'LOG_SUMMARY_TABLE=false' ghcr.io/alexander-danilenko/ua-loadtest:latest"
 
 - name: Check Docker Status
   shell: "docker ps"
