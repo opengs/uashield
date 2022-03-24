@@ -218,7 +218,7 @@ export default defineComponent({
 
   setup () {
     const ddosEnabled = ref(true)
-    const forceProxy = ref(false)
+    const forceProxy = ref(true)
     const attackCounter = ref(0)
     const successfullAtacks = ref(0)
     const realtimeAttackCounter = ref(0)
