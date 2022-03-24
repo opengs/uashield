@@ -5,16 +5,18 @@ import os from 'os'
 
 import { chromium, Browser, BrowserContext, Dialog } from 'playwright-core'
 
-import {} from '../util'
-
-const { sleep } = require('./helpers')
+import { sleep } from '../../helpers'
 
 let browser = null as Browser | null
 const freemem = os.freemem() / (1024 * 1024 * 1024)
 const MAX_BROWSER_CONTEXTS = Math.floor(freemem * 4)
 let activeContexts = 0
 
-const runBrowser = async () => {
+export const runBrowser = async () => {
+  if (browser !== null) {
+    return
+  }
+
   try {
     // try install browser to make update easier for existing users. Safe to remove in 2 weeks.
     /* if (!process.env.IS_DOCKER) {
@@ -39,11 +41,16 @@ const runBrowser = async () => {
   }
 }
 
-const pw = async (baseURL: string) => {
+export const isAvailable = () => {
+  return browser !== null
+}
+
+export const pw = async (baseURL: string) => {
   if (!browser) {
     return null
   }
 
+  // eslint-disable-next-line no-unmodified-loop-condition
   while (activeContexts >= MAX_BROWSER_CONTEXTS || os.freemem() < 524288000) {
     await sleep(1000)
   }
@@ -61,7 +68,7 @@ const pw = async (baseURL: string) => {
     const storageState = await page.context().storageState()
     await page.close()
     return storageState.cookies
-      .reduce((prev, { name, value }) => {
+      .reduce<string[]>((prev, { name, value }) => {
         prev.push(`${name}=${value};`)
         return prev
       }, [])
@@ -110,5 +117,3 @@ const abortBlocked = async (ctx: BrowserContext) => {
     await ctx.route(url, (r) => void r.abort())
   }
 }
-
-module.exports = { runBrowser, pw }
