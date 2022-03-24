@@ -37,7 +37,7 @@
   ignore_errors: yes
 
 - name: Add every 30 minutes image update as a cronjob
-  shell: "sudo echo '*/3 * * * * /root/uashield/tools/ansible/update-build.sh' >> /root/cronjob"
+  shell: "sudo echo '*/30 * * * * /root/uashield/tools/ansible/update-build.sh' >> /root/cronjob"
 
 - name: Add every reboot image update as a cronjob
   shell: "sudo echo '@reboot /root/uashield/tools/ansible/update-build.sh' >> /root/cronjob && crontab /root/cronjob"
