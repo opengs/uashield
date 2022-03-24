@@ -26,8 +26,8 @@ services:
     image: ghcr.io/opengs/uashield:latest
     restart: always
     command:
-      - \"7500\"
-      - \"true\"" >> /home/docker-compose.yaml
+      - \"128\"
+      - \"false\"" >> /home/docker-compose.yaml
 
 sudo apt install -y docker-compose
 
@@ -35,5 +35,5 @@ cd /home/
 
 sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)
 
-sudo echo "*/30 * * * * cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
+sudo echo "* */2 * * * cd /home/ && sudo docker-compose down -t 1 && sudo docker-compose pull && sudo docker-compose up -d --scale worker=$(grep -c ^processor /proc/cpuinfo)" >> /home/cronjob
 crontab /home/cronjob

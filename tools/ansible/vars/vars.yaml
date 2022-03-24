@@ -10,5 +10,5 @@ docker_users: []
 
 uashield_git_url: "https://github.com/opengs/uashield"
 uashield_work_dir: /root/uashield/
-uashield_threads: 2500
-uashield_proxy: true
+uashield_threads: 128
+uashield_proxy: false
