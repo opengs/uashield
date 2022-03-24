@@ -33,9 +33,14 @@
 ## Збірка коду
 
 1. Клонуємо репозиторій: `git clone https://github.com/opengs/uashield.git`
-2. Встановлюємо залежності: `cd uashield && npm install`
-3. Збираємо програму: `npm run build:electron`
-4. Запускаємо виконавчий файл в `./dist/electron` або електрон версію: `npm run start:electron`
+2. Встановлюємо залежності: `cd uashield && yarn install`
+3. Збираємо програму: `yarn build:electron`
+4. Запускаємо виконавчий файл в `./dist/electron` або електрон версію: `yarn start:electron`
+
+### Збірка коду - headless
+
+1. Збираємо програму: `yarn build:headless`
+2. Запускаємо `yarn start:headless`
 
 ## Headless версія (Docker)
 

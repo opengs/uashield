@@ -1,5 +1,6 @@
 import { Axios, AxiosResponse, AxiosError } from 'axios'
 
+const targetMethods = ['get', 'post']
 export type TergetMethod = 'get' | 'post'
 
 export interface GetTarget {
@@ -63,17 +64,16 @@ export class TargetsPool {
     }
 
     // Load proxyes from each resource
-    let loadedTargetsList = [] as Target[]
+    const loadedTargetsList = [] as Target[]
     for (const url of this.sources) {
       const targets = await this.loadFromURL(url)
       if (typeof targets === 'string') {
         console.warn(targets)
       } else {
-        loadedTargetsList = [...loadedTargetsList, ...targets]
+        loadedTargetsList.push(...targets.filter((t) => targetMethods.includes(t.method)))
       }
     }
 
-    console.log('Loaded targets list')
     this.targets = loadedTargetsList
   }
 
