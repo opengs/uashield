@@ -13,7 +13,7 @@ export interface ExecutionResult {
   target: Target
 }
 
-export type AlgorithmType = 'get' | 'post'
+export type AlgorithmType = 'get' | 'post' | 'udp_flood' | 'slowloris'
 
 export abstract class Algorithm {
   protected config: Config

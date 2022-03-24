@@ -1,6 +1,17 @@
 import { Axios, AxiosResponse, AxiosError } from 'axios'
 
-export type TergetMethod = 'get' | 'post'
+export type TergetMethod = 'get' | 'post' | 'udp_flood'
+
+export interface UDPFloodTarget {
+  method: 'udp_flood'
+  ip: string
+  port: number
+}
+
+export interface SlowLorisTarget {
+  method: 'slowloris'
+  page: string
+}
 
 export interface GetTarget {
   method: 'get'
@@ -12,7 +23,7 @@ export interface PostTarget {
   page: string
 }
 
-export type Target = GetTarget | PostTarget
+export type Target = GetTarget | PostTarget | UDPFloodTarget | SlowLorisTarget
 
 const SOURCES_URL = 'https://raw.githubusercontent.com/opengs/uashieldtargets/master/target_sources.json'
 interface Source {
