@@ -20,6 +20,13 @@ export abstract class SimpleHTTP extends Algorithm {
     this.validateStatusFn = () => true
   }
 
+  isValid (target: GetTarget): boolean {
+    if (typeof target.page !== 'string' || !target.page.startsWith('http')) {
+      return false
+    }
+    return true
+  }
+
   async execute (target: GetTarget): Promise<ExecutionResult> {
     // Setting up proxy config
     let packetsSend = 0, packetsSuccess = 0

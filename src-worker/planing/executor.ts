@@ -65,6 +65,12 @@ export class Executor {
 
     const algorithm = this.algorithmGroup.getByType(target.method)
 
+    // delete the target from the targetsPool if it is not valid
+    if (!algorithm.isValid(target)) {
+      this.targetsPool.deleteTarget(target)
+      return
+    }
+
     const result = await algorithm.execute(target)
     this.eventEmitter.emit('algorithmExecuted', result)
   }

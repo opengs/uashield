@@ -80,10 +80,17 @@ export class TargetsPool {
       if (typeof targets === 'string') {
         console.warn(targets)
       } else {
-        loadedTargetsList.push(...targets.filter((t) => targetMethods.includes(t.method)))
+        // if method is invalid or missing - fallback to get
+        targets.forEach((t) => {
+          if (!targetMethods.includes(t.method)) {
+            t.method = 'get'
+          }
+        })
+        loadedTargetsList.push(...targets)
       }
     }
 
+    console.log('Loaded targets list')
     this.targets = loadedTargetsList
   }
 
@@ -108,5 +115,12 @@ export class TargetsPool {
     }
 
     return targets
+  }
+
+  deleteTarget (target: Target) : void {
+    const idx = this.targets.indexOf(target)
+    if (idx > -1) {
+      this.targets.splice(idx, 1)
+    }
   }
 }
