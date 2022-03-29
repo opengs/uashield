@@ -39,7 +39,7 @@ export abstract class SimpleHTTP extends Algorithm {
       if (proxy === null) {
         console.warn('Proxy request failed because proxy wasnt found.')
         await sleep(100)
-        return { packetsSend, packetsSuccess, target }
+        return { packetsSend, packetsSuccess, target, packetsNeutral: 0 }
       }
       proxyConfig = this.generateProxyAxiosConfig(proxy)
       repeats += Math.floor(Math.random() * 32)
@@ -55,7 +55,7 @@ export abstract class SimpleHTTP extends Algorithm {
       }
     }
 
-    return { packetsSend, packetsSuccess, target }
+    return { packetsSend, packetsSuccess, target, packetsNeutral: 0 }
   }
 
   protected async makeRequest (url: string, config: AxiosRequestConfig) {

@@ -162,15 +162,15 @@ export default defineComponent({
       }
     },
 
-    serveAttack (_event: unknown, data: { target: { page: string }, packetsSend: number, packetsSuccess: number }) {
+    serveAttack (_event: unknown, data: { target: { page: string }, packetsSend: number, packetsSuccess: number, packetsNeutral: number }) {
       if ((new Date()).getTime() - this.lastAttackChange.getTime() > 1000) {
         this.currentAttack = data.target.page
         this.lastAttackChange = new Date()
       }
       this.attackCounter += data.packetsSend
-      this.successfullAtacks += data.packetsSuccess
+      this.successfullAtacks += data.packetsSuccess + data.packetsNeutral
 
-      this.realtimeAttackCounter += data.packetsSend
+      this.realtimeAttackCounter += data.packetsSend - data.packetsNeutral
       this.realtimeSuccessfullAtackCounter += data.packetsSuccess
       if (this.realtimeAttackCounter > 1000) {
         this.realtimeAttackCounter /= 2

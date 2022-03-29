@@ -61,8 +61,10 @@ export class AutomaticStrategy extends PlaningStrategy {
   protected onNewExecutor (executor: Executor) {
     super.onNewExecutor(executor)
     executor.on('algorithmExecuted', (data: ExecutionResult) => {
-      this.adjustedValue += data.packetsSuccess
-      this.adjustedValue -= (data.packetsSend - data.packetsSuccess) // remove failed packets
+      if (data.target.method !== 'udp_flood') {
+        this.adjustedValue += data.packetsSuccess
+        this.adjustedValue -= (data.packetsSend - data.packetsSuccess) // remove failed packets
+      }
       this.adjustExecutorsCount()
     })
   }

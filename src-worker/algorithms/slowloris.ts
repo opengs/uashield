@@ -117,6 +117,6 @@ export class SlowLoris extends Algorithm {
       packetsSuccess += slowSockets[i].successfullPackets
     }
 
-    return { packetsSend, packetsSuccess, target }
+    return { packetsSend, packetsSuccess, target, packetsNeutral: 0 }
   }
 }

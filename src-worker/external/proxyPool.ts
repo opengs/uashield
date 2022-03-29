@@ -9,7 +9,7 @@ export interface Proxy {
   password?: string
 }
 
-const SOURCES_URL = 'https://raw.githubusercontent.com/opengs/uashieldtargets/master/proxy_sources.json'
+const SOURCES_URL = 'https://raw.githubusercontent.com/opengs/uashieldtargets/test/proxy_sources.json'
 interface Source {
   url: string
 }

@@ -9,6 +9,7 @@ export interface Config {
 export interface ExecutionResult {
   packetsSend: number
   packetsSuccess: number
+  packetsNeutral: number
 
   target: Target
 }
