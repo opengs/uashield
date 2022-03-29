@@ -1,9 +1,10 @@
 ---
 - hosts: servers
-  gather_facts: no
   become: yes
   become_user: root
   vars_files:
     - vars/vars.yaml
   roles:
-    - stats
+    - ua-loadtest
+  handlers:
+    - include: handlers/main.yml

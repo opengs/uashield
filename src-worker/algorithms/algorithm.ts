@@ -9,11 +9,12 @@ export interface Config {
 export interface ExecutionResult {
   packetsSend: number
   packetsSuccess: number
+  packetsNeutral: number
 
   target: Target
 }
 
-export type AlgorithmType = 'get' | 'post'
+export type AlgorithmType = 'get' | 'post' | 'udp_flood' | 'slowloris'
 
 export abstract class Algorithm {
   protected config: Config
@@ -21,6 +22,8 @@ export abstract class Algorithm {
   constructor (config: Config) {
     this.config = config
   }
+
+  abstract isValid (target: Target): boolean
 
   /**
    * Run one iteration of the algorithm

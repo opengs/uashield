@@ -3,6 +3,7 @@ import { EventEmitter } from 'events'
 import { AlgorithmGroup } from '../algorithms/group'
 
 import { TargetsPool } from '../external/targetsPool'
+import { sleep } from '../helpers'
 
 export type ExecutorEventType = 'algorithmExecuted'
 
@@ -48,7 +49,7 @@ export class Executor {
         await this.runIteration()
       } catch (e) {
         console.error(e)
-        await new Promise(resolve => setTimeout(resolve, 100))
+        await sleep(100)
       }
     }
   }
@@ -58,14 +59,15 @@ export class Executor {
 
     if (target === null) {
       // Wait for targets
-      await new Promise(resolve => setTimeout(resolve, 5000))
+      await sleep(5000)
       return
     }
 
     const algorithm = this.algorithmGroup.getByType(target.method)
 
-    if (algorithm === null) {
-      await new Promise(resolve => setTimeout(resolve, 50))
+    // delete the target from the targetsPool if it is not valid
+    if (!algorithm.isValid(target)) {
+      this.targetsPool.deleteTarget(target)
       return
     }
 
