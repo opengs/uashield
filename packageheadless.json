@@ -14,6 +14,9 @@
     "axios": "^0.26.1",
     "axios-https-proxy-fix": "^0.17.1",
     "socks-proxy-agent": "^6.2.0-beta.0",
+    "http-proxy-agent": "^5.0.0",
+    "https-proxy-agent": "^5.0.0",
+    "superagent": "^7.1.2",
     "universal-analytics": "^0.5.3",
     "user-agents": "^1.0.965",
     "uuid4": "^2.0.2"
