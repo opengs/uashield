@@ -1,0 +1,42 @@
+# Made by Alexandor84
+
+stages:
+  - build
+
+init_version:
+  stage: .pre
+  tags:
+    - gitlab-org-docker
+  image: node:latest
+  script:
+    - node -p "require('./package.json').version" > version.txt
+  artifacts:
+    paths:
+      - version.txt
+  only:
+    - master
+
+build:docker:
+  stage: build
+  image: docker:latest
+  variables:
+    DOCKER_BUILDKIT: 1
+  tags:
+    - gitlab-org-docker
+  services:
+    - name: docker:dind
+      command: [ "--experimental" ]
+  before_script:
+    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
+    - apk add curl
+    - mkdir -vp ~/.docker/cli-plugins/
+    - curl --silent -L "https://github.com/docker/buildx/releases/download/v0.8.1/buildx-v0.8.1.linux-amd64" > ~/.docker/cli-plugins/docker-buildx
+    - chmod a+x ~/.docker/cli-plugins/docker-buildx
+    - export APP_VERSION=$(cat version.txt)
+  script:
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --use
+    - docker buildx inspect --bootstrap
+    - docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -t $CI_REGISTRY_IMAGE:$APP_VERSION -t $CI_REGISTRY_IMAGE:latest .
+  only:
+    - master
