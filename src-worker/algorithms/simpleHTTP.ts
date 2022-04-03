@@ -71,7 +71,7 @@ export abstract class SimpleHTTP extends Algorithm {
       if (httpAgent !== null) {
         request = request.agent(httpAgent)
       }
-      request = request.ok(() => true)
+      request = request.ok(this.validateStatusFn)
       request = request.set('Accept', headers.Accept)
       request = request.set('Accept-Language', headers['Accept-Language'])
       request = request.set('User-Agent', headers['User-Agent'])
