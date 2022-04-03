@@ -31,7 +31,7 @@ export abstract class SimpleHTTP extends Algorithm {
     // Setting up proxy config
     let packetsSend = 0, packetsSuccess = 0
 
-    let proxyConfig = {}
+    let proxyConfig = {} as AxiosRequestConfig
     let repeats = 16 + Math.floor(Math.random() * 32)
 
     if (!this.config.useRealIP) {
@@ -54,6 +54,8 @@ export abstract class SimpleHTTP extends Algorithm {
         packetsSuccess++
       }
     }
+
+    (proxyConfig.httpAgent as SocksProxyAgent | undefined)?.destroy()
 
     return { packetsSend, packetsSuccess, target, packetsNeutral: 0 }
   }
@@ -88,6 +90,8 @@ export abstract class SimpleHTTP extends Algorithm {
       }, {
         timeout: 10000
       })
+
+      agent.destroy()
 
       axiosConfig.httpAgent = agent
       axiosConfig.httpsAgent = agent
