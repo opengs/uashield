@@ -63,10 +63,14 @@ function createWindow () {
     console.log('pageview')
     console.log(err)
   })
-  setInterval(() => usr.pageview('/', function (err) {
+  setInterval(() => {
+    try {
+    usr.pageview('/', function (err) {
     console.log('pageview')
     console.log(err)
-  }), 90000)
+    })
+  } catch (e) { console.log(e) }}
+  , 90000)
 
   const engine = new Engine()
   engine.setExecutorStartegy('automatic')

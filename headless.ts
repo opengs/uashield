@@ -24,10 +24,14 @@ engine.executionStartegy.setExecutorsCount(workers)
 
 const usr = ua('UA-222593827-1', uuid4())
 
-const pageviewFn = () => usr.pageview('/headless', (err) => {
-  if (err) {
-    console.log(err)
-  }
-})
+const pageviewFn = () => {
+  try {
+    usr.pageview('/headless', (err) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+  } catch (e) { console.log(e) }
+}
 pageviewFn()
 setInterval(pageviewFn, 90000)
