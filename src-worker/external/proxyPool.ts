@@ -87,17 +87,21 @@ export class ProxyPool {
       }
     }
 
-    console.log('Loaded proxy list')
-    this.proxyes = loadedProxyList
+    if (loadedProxyList.length > 0) {
+      console.log('Loaded proxy list')
+      this.proxyes = loadedProxyList
 
-    this.proxyesByScheme = new Map()
-    this.proxyesByScheme.set('http', [])
-    this.proxyesByScheme.set('https', [])
-    this.proxyesByScheme.set('socks4', [])
-    this.proxyesByScheme.set('socks5', [])
+      this.proxyesByScheme = new Map()
+      this.proxyesByScheme.set('http', [])
+      this.proxyesByScheme.set('https', [])
+      this.proxyesByScheme.set('socks4', [])
+      this.proxyesByScheme.set('socks5', [])
 
-    for (const proxy of this.proxyes) {
-      this.proxyesByScheme.get(proxy.scheme)?.push(proxy)
+      for (const proxy of this.proxyes) {
+        this.proxyesByScheme.get(proxy.scheme)?.push(proxy)
+      }
+    } else {
+      console.log('Failed to load proxy list. Loaded empty')
     }
   }
 

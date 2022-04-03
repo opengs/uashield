@@ -90,8 +90,12 @@ export class TargetsPool {
       }
     }
 
-    console.log('Loaded targets list')
-    this.targets = loadedTargetsList
+    if (loadedTargetsList.length > 0) {
+      console.log('Loaded targets list')
+      this.targets = loadedTargetsList
+    } else {
+      console.log('Failed to load targets list. Received empty list')
+    }
   }
 
   /**
