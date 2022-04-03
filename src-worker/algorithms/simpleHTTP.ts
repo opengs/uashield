@@ -3,7 +3,7 @@ import sproxy from 'superagent-proxy'
 sproxy(agent)
 
 import { GetTarget } from '../external/targetsPool'
-import { ProxyPool } from '../external/proxyPool'
+import { ProxyPool, ProxyScheme } from '../external/proxyPool'
 import { Algorithm, Config, ExecutionResult } from './algorithm'
 
 import { HttpHeadersUtils } from './utils/httpHeadersUtils'
@@ -36,7 +36,11 @@ export abstract class SimpleHTTP extends Algorithm {
     let repeats = 16 + Math.floor(Math.random() * 32)
 
     if (!this.config.useRealIP) {
-      const proxy = this.proxyPool.getRandomProxy()
+      const schemes = ['https', 'socks4', 'socks5'] as Array<ProxyScheme>
+      if (target.page.startsWith('http://')) {
+        schemes.push('http')
+      }
+      const proxy = this.proxyPool.getRandomProxy(schemes)
       if (proxy === null) {
         console.warn('Proxy request failed because proxy wasnt found.')
         await sleep(100)
@@ -67,6 +71,7 @@ export abstract class SimpleHTTP extends Algorithm {
     try {
       const headers = HttpHeadersUtils.generateRequestHeaders()
       let request = agent(this.method, url)
+      request = request.ok(() => true)
       if (proxy !== null) {
         request = request.proxy(proxy)
       }
@@ -79,7 +84,6 @@ export abstract class SimpleHTTP extends Algorithm {
       console.log(`${new Date().toISOString()} | ${url} | ${response.status}`)
       return true
     } catch (e) {
-      // console.log(e)
       console.log(`${new Date().toISOString()} | ${url} | DOWN OR BLOCKED`)
       return false
     }
