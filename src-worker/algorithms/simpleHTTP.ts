@@ -59,7 +59,9 @@ export abstract class SimpleHTTP extends Algorithm {
       }
     }
 
-    proxyAgent?.destroy()
+    try {
+      proxyAgent?.destroy()
+    } catch {}
 
     return { packetsSend, packetsSuccess, target, packetsNeutral: 0 }
   }
