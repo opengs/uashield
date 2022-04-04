@@ -6,11 +6,6 @@
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-**Система волонтерської кібероборони України**
-
-- Ком'юніті: [Discord](https://discord.gg/7BfJ9JKQ98) [Telegram](https://t.me/uashield)
-- Відео інструкція [українською](https://youtu.be/snTzpRt7a5k)
-
 ## Для кіберзахисників
 
 1. Програми знаходяться в [релізах](https://github.com/opengs/uashield/releases)

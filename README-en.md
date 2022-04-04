@@ -6,11 +6,6 @@
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-**Volunteer cyber defense system of Ukraine**
-
-- Community: [Discord](https://discord.gg/7BfJ9JKQ98) [Telegram](https://t.me/uashield)
-- Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
-
 ## For cyber defenders
 
 1. You can find binaries on [releases page](https://github.com/opengs/uashield/releases)

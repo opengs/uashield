@@ -6,11 +6,6 @@
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-**Dobrowoly system cyberobrony Ukrainy**
-
-- Społeczność: [Discord](https://discord.gg/7BfJ9JKQ98) [Telegram](https://t.me/uashield)
-- Instrukcja video - po ukraińsku [in Ukrainian](https://youtu.be/snTzpRt7a5k)
-
 ## Dla cyber-obrońców
 
 1. Binaria aplikacji dostępne są tutaj [wydania](https://github.com/opengs/uashield/releases)
