@@ -176,3 +176,8 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+process.on('uncaughtException', function (error) {
+  // Handle the error
+  console.error(error)
+})
