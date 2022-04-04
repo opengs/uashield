@@ -1,6 +1,6 @@
 # UA Cyber SHIELD
 
-*ALERT!!! We do not support unlawful attacks or malware campaigns that cause technical harm. We provide you with a tool which you can use, but we are not telling or advising you on what to do with it. YOU are responsible of what you choose to do with it !!!! We are just providing a tool JUST LIKE thousand others on Github. If we give you a hammer - YOU are responsible of what you choose to knock with it !*
+*CAUTION! We do not support unlawful attacks or malware campaigns that cause technical harm. We provide you with a tool which you can use, but we are not telling or advising you on what to do with it. YOU are responsible of what you choose to do with it !!!! We are just providing a tool JUST LIKE thousand others on Github. If we give you a hammer - YOU are responsible of what you choose to knock with it !*
 
 *Дивись цю сторінку [українською](README.md)*
 
