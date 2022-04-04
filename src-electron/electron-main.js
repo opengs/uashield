@@ -179,5 +179,5 @@ app.on('activate', () => {
 
 process.on('uncaughtException', function (error) {
   // Handle the error
-  console.error(error)
+  console.log(error)
 })
