@@ -38,7 +38,7 @@ export abstract class SimpleHTTP extends Algorithm {
     let repeats = 16 + Math.floor(Math.random() * 32)
 
     if (!this.config.useRealIP) {
-      const proxy = this.proxyPool.getRandomProxy()
+      const proxy = this.proxyPool.getRandomProxy(['http', 'https'])
       if (proxy === null) {
         console.warn('Proxy request failed because proxy wasnt found.')
         await sleep(100)
@@ -91,6 +91,8 @@ export abstract class SimpleHTTP extends Algorithm {
 
   protected makeRequestAgent (page: string, proxy: Proxy) {
     if (proxy.scheme === 'socks4' || proxy.scheme === 'socks5') {
+      throw new Error('Socks4 and socks5 are not implemented')
+      /*
       return new SocksProxyAgent({
         host: proxy.host,
         hostname: proxy.host,
@@ -100,6 +102,7 @@ export abstract class SimpleHTTP extends Algorithm {
       }, {
         timeout: 10000
       })
+      */
     }
 
     const options = {
