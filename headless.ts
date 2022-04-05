@@ -35,3 +35,7 @@ const pageviewFn = () => {
 }
 pageviewFn()
 setInterval(pageviewFn, 90000)
+
+process.on('uncaughtException', function (err) {
+  console.error(err)
+})
