@@ -16,11 +16,11 @@ if (process.env.USEPROXY) {
 console.log(`Using ${workers} workers, proxy - ${String(useProxy)}`)
 
 const engine = new Engine()
-engine.setExecutorStartegy('automatic')
+engine.setExecutorStrategy('automatic')
 engine.config.useRealIP = !useProxy
 engine.start()
 
-engine.executionStartegy.setExecutorsCount(workers)
+engine.executionStrategy.setExecutorsCount(workers)
 
 const usr = ua('UA-222593827-1', uuid4())
 

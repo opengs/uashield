@@ -46,7 +46,7 @@ function createWindow () {
   mainWindow.setMenu(null)
   mainWindow.loadURL(process.env.APP_URL)
   if (process.env.DEBUGGING) {
-  // if on DEV or Production with debug enabled
+    // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
   } else {
     // we're on production; no access to devtools pls
@@ -65,20 +65,20 @@ function createWindow () {
   })
   setInterval(() => {
     try {
-    usr.pageview('/', function (err) {
-    console.log('pageview')
-    console.log(err)
-    })
-  } catch (e) { console.log(e) }}
-  , 90000)
+      usr.pageview('/', function (err) {
+        console.log('pageview')
+        console.log(err)
+      })
+    } catch (e) { console.log(e) }
+  }, 90000)
 
   const engine = new Engine()
-  engine.setExecutorStartegy('automatic')
+  engine.setExecutorStrategy('automatic')
 
   const window = mainWindow
-  engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
-  engine.executionStartegy.on('error', (data) => window.webContents.send('error', data))
-  engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
+  engine.executionStrategy.on('atack', (data) => window.webContents.send('atack', data))
+  engine.executionStrategy.on('error', (data) => window.webContents.send('error', data))
+  engine.executionStrategy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
 
   // const doser = new Doser(true, 32)
   // const window = mainWindow
@@ -102,14 +102,14 @@ function createWindow () {
   })
 
   ipcMain.on('updateStrategy', (event, arg) => {
-    engine.setExecutorStartegy(arg.newVal)
-    engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
-    engine.executionStartegy.on('error', (data) => window.webContents.send('error', data))
-    engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
+    engine.setExecutorStrategy(arg.newVal)
+    engine.executionStrategy.on('atack', (data) => window.webContents.send('atack', data))
+    engine.executionStrategy.on('error', (data) => window.webContents.send('error', data))
+    engine.executionStrategy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
   })
 
   ipcMain.on('updateMaxDosersCount', (event, arg) => {
-    engine.executionStartegy.setExecutorsCount(arg.newVal)
+    engine.executionStrategy.setExecutorsCount(arg.newVal)
   })
 
   ipcMain.on('installUpdate', () => {
