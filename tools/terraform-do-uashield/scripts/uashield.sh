@@ -25,6 +25,9 @@ services:
   worker:
     image: ghcr.io/opengs/uashield:latest
     restart: always
+    environment:
+      WORKERS: '256'
+      USEPROXY: 'true'
     command:
       - \"128\"
       - \"false\"" >> /home/docker-compose.yaml
