@@ -25,7 +25,7 @@ export class Engine {
 
   private updateWorkerInterval: number
 
-  get executionStartegy () { return this.executorPlaningStrategy }
+  get executionStrategy () { return this.executorPlaningStrategy }
   get config () { return this.algorithmsConfig }
 
   constructor () {
@@ -45,7 +45,7 @@ export class Engine {
     this.updateWorkerInterval = 10 * 60 * 1000 // 10 minutes
   }
 
-  setExecutorStartegy (planingStrategyType: PlaningStrategyType) {
+  setExecutorStrategy (planingStrategyType: PlaningStrategyType) {
     this.executorPlaningStrategy.stop()
     console.log('Changing strategy to ' + planingStrategyType)
     switch (planingStrategyType) {
