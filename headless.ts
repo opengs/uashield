@@ -3,8 +3,13 @@ import uuid4 from 'uuid4'
 
 import { Engine } from './src-worker/engine'
 
-let workers = process.argv[2] ? Number(process.argv[2]) : 32
-let useProxy = process.argv[3] !== 'false'
+import { parseArguments } from './src-lib/context'
+import { AutomaticStrategy } from './src-worker/planing/automaticStrategy'
+
+const arg = parseArguments()
+
+let workers = arg.workers
+let useProxy = arg.withProxy
 
 if (process.env.WORKERS) {
   workers = Number(process.env.WORKERS)
@@ -16,11 +21,17 @@ if (process.env.USEPROXY) {
 console.log(`Using ${workers} workers, proxy - ${String(useProxy)}`)
 
 const engine = new Engine()
-engine.setExecutorStartegy('automatic')
+engine.setExecutorStartegy(arg.planer as 'manual' | 'automatic')
 engine.config.useRealIP = !useProxy
 engine.start()
 
+if (engine.executionStartegy.type === 'automatic') {
+  (engine.executionStartegy as AutomaticStrategy).setMaxExecutorsCount(arg.maxWorkers)
+}
 engine.executionStartegy.setExecutorsCount(workers)
+
+engine.config.logTimestamp = arg.logTimestamp
+engine.config.logRequests = arg.logRequests
 
 const usr = ua('UA-222593827-1', uuid4())
 

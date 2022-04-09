@@ -14,6 +14,9 @@ export abstract class PlaningStrategy {
 
   private eventEmitter: EventEmitter
 
+  abstract get type(): PlaningStrategyType
+  abstract get isRunning(): boolean
+
   constructor (executorFactory: ExecutorFactory) {
     this.executorFactory = executorFactory
     this.executors = []
@@ -44,7 +47,9 @@ export abstract class PlaningStrategy {
   protected resizeExecutors (newCount: number) {
     while (newCount < this.executors.length) {
       const executor = this.executors.pop()
-      executor?.stop()
+      executor?.stop().catch((err) => {
+        console.log(err)
+      })
     }
 
     while (newCount > this.executors.length) {

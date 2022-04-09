@@ -1,10 +1,10 @@
-import { PlaningStrategy } from './strategy'
+import { PlaningStrategy, PlaningStrategyType } from './strategy'
 import { Executor } from './executor'
 
 import { ExecutionResult } from '../algorithms/algorithm'
 
 const MIN_EXECUTORS_COUNT = 16
-const MAX_EXECUTORS_COUNT = 2048
+const MAX_EXECUTORS_COUNT = 128
 const UP_ADJUSTING_SLOPE = 64
 const DOWN_ADJUSTING_SLOPE = 16
 
@@ -12,8 +12,16 @@ const DOWN_ADJUSTING_SLOPE = 16
  * Automatically controls count of executors
  */
 export class AutomaticStrategy extends PlaningStrategy {
-  protected maxExecutorsCount = 2048
+  protected maxExecutorsCount = MAX_EXECUTORS_COUNT
   protected adjustedValue = 0
+
+  get type (): PlaningStrategyType {
+    return 'automatic'
+  }
+
+  get isRunning (): boolean {
+    return this.executors.length !== 0
+  }
 
   start (): void {
     this.adjustedValue = 0
@@ -26,6 +34,10 @@ export class AutomaticStrategy extends PlaningStrategy {
 
   setExecutorsCount (count: number): void {
     this.resizeExecutors(count)
+  }
+
+  setMaxExecutorsCount (count: number): void {
+    this.maxExecutorsCount = count
   }
 
   protected adjustExecutorsCount () {
@@ -48,7 +60,7 @@ export class AutomaticStrategy extends PlaningStrategy {
       newExecutorsCount -= 1
     }
 
-    newExecutorsCount = Math.min(newExecutorsCount, MAX_EXECUTORS_COUNT)
+    newExecutorsCount = Math.min(newExecutorsCount, this.maxExecutorsCount)
     newExecutorsCount = Math.max(newExecutorsCount, MIN_EXECUTORS_COUNT)
 
     if (newExecutorsCount !== this.executors.length) {

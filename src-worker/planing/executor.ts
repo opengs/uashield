@@ -16,12 +16,13 @@ export class Executor {
   protected algorithmGroup: AlgorithmGroup
 
   private eventEmitter: EventEmitter
+  private workPromise: Promise<void>
 
   constructor (targetsPool: TargetsPool, algorithmGroup: AlgorithmGroup) {
     this.running = true
     this.targetsPool = targetsPool
     this.algorithmGroup = algorithmGroup
-    setImmediate(() => void this.worker.bind(this)())
+    this.workPromise = this.worker.bind(this)()
 
     this.eventEmitter = new EventEmitter()
   }
@@ -39,8 +40,9 @@ export class Executor {
   /**
    * Stops executor
    */
-  stop () {
+  async stop () {
     this.running = false
+    await this.workPromise
   }
 
   protected async worker () {
@@ -71,7 +73,7 @@ export class Executor {
       return
     }
 
-    const result = await algorithm.execute(target)
+    const result = await algorithm.execute(target, () => this.running)
     this.eventEmitter.emit('algorithmExecuted', result)
   }
 }

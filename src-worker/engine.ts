@@ -33,6 +33,8 @@ export class Engine {
     this.targetsPool = new TargetsPool()
 
     this.algorithmsConfig = {
+      logRequests: true,
+      logTimestamp: true,
       useRealIP: false,
       timeout: 10000
     }

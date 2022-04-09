@@ -1,6 +1,9 @@
 import { Target } from '../external/targetsPool'
 
 export interface Config {
+  logRequests: boolean
+  logTimestamp: boolean
+
   useRealIP: boolean
 
   timeout: number
@@ -15,6 +18,7 @@ export interface ExecutionResult {
 }
 
 export type AlgorithmType = 'get' | 'post' | 'udp_flood' | 'slowloris'
+export type runningValidation = () => boolean
 
 export abstract class Algorithm {
   protected config: Config
@@ -28,5 +32,5 @@ export abstract class Algorithm {
   /**
    * Run one iteration of the algorithm
    */
-  abstract execute (target: Target): Promise<ExecutionResult>
+  abstract execute (target: Target, isRunning: runningValidation): Promise<ExecutionResult>
 }

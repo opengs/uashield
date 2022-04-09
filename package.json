@@ -1,6 +1,6 @@
 {
   "name": "shield",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "Cyber security shield",
   "productName": "UA Cyber SHIELD",
   "author": "Mykola Zhyhallo <mzhyhall@gmail.com>",
@@ -42,7 +42,8 @@
     "vue": "^3.0.0",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.1",
+    "yargs": "^17.4.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",

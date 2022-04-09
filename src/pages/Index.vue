@@ -69,27 +69,29 @@
           </q-item-section>
         </q-item>
         <q-card-section class="q-pt-none" :disable="automaticMode">
+          <q-input
+            :model-value="maxWorkersCount"
+            type="number"
+            :label="$t('ddos.advanced.maxWorkersCount.name')"
+            :hint="$t('ddos.advanced.maxWorkersCount.description')"
+            :min="16"
+            debounce="1000"
+            filled
+            square
+            required
+            @update:modelValue="updateMaxNumberOfWorkers"
+          />
           <div class="text-h7">{{ $t('ddos.advanced.masDosersCount.name') }}</div>
           <q-slider
-            v-model="maxDosersCount"
+            v-model="workersCount"
             :min="16"
-            :max="maxNumberOfWorkers"
-            :step="16"
+            :max="maxWorkersCount"
+            :step="1"
             color="light-green"
-            :disable="automaticMode"
+            label-always
+            switch-label-side
+            :marker-labels="workersSliderValues"
           />
-          <div class="custom-max-dosers-count-wrapper">
-            <q-input
-              :model-value="maxDosersCount"
-              type="number"
-              :min="1"
-              filled
-              square
-              required
-              @update:modelValue="updateNumberOfWorkers"
-              :disable="automaticMode"
-            />
-          </div>
           <q-item-label caption class="text-grey-7">{{ $t('ddos.advanced.masDosersCount.description') }}</q-item-label>
           <q-linear-progress stripe size="18px" :value="successfullAtackRate" track-color="green" color="green" class="q-mt-sm" >
             <div class="absolute-full flex flex-center">
@@ -141,9 +143,6 @@ export default defineComponent({
   components: { LanguageSelect },
 
   computed: {
-    maxNumberOfWorkers (): number {
-      return Math.max(this.maxDosersCount, 256)
-    },
     successfullAtackRate (): number {
       if (this.attackCounter === 0) return 1
       return Math.max(this.successfullAtacks / this.attackCounter, 0.1)
@@ -151,6 +150,13 @@ export default defineComponent({
     realtimeSuccessAtackRate (): number {
       if (this.realtimeAttackCounter < 1) return 1
       return Math.max(this.realtimeSuccessfullAtackCounter / this.realtimeAttackCounter * 1.2, 0.1)
+    },
+
+    workersSliderValues () {
+      const data = {} as {[key: number]: string}
+      data[16] = '16'
+      data[this.maxWorkersCount] = String(this.maxWorkersCount).toString()
+      return data
     }
   },
 
@@ -158,7 +164,14 @@ export default defineComponent({
     updateNumberOfWorkers (numberOfWorkers: number | undefined) {
       // When entering via input form it can be undefined
       if (numberOfWorkers !== undefined) {
-        this.maxDosersCount = numberOfWorkers
+        this.workersCount = numberOfWorkers
+      }
+    },
+
+    updateMaxNumberOfWorkers (maxWorkersCount: number | undefined) {
+      // When entering via input form it can be undefined
+      if (maxWorkersCount !== undefined) {
+        this.maxWorkersCount = maxWorkersCount
       }
     },
 
@@ -179,12 +192,21 @@ export default defineComponent({
     },
 
     serverExecutorsCountUpdate (_event: unknown, newCount: number) {
-      this.maxDosersCount = newCount
+      this.workersCount = newCount
     },
 
     askForInstallUpdate (_event: unknown, data: { message: string }) {
       this.updateDialog = true
       this.updateMessage = data.message
+    },
+
+    programArgsUpdate (_event: unknown, data: { startDDoS: boolean, withProxy: boolean, planer: 'manual' | 'automatic', maxWorkers: number, workers: number }) {
+      this.ddosEnabled = data.startDDoS
+      this.forceProxy = data.withProxy
+      this.automaticMode = data.planer === 'automatic'
+      this.maxWorkersCount = data.maxWorkers
+      this.workersCount = data.workers
+      this.stateLoaded = true
     },
 
     confirmInstallUpdate () {
@@ -194,19 +216,32 @@ export default defineComponent({
 
   watch: {
     ddosEnabled (newVal: boolean) {
+      if (!this.stateLoaded) return
       window.require('electron').ipcRenderer.send('updateDDOSEnable', { newVal })
+      this.workersCount = 32
     },
     forceProxy (newVal: boolean) {
+      if (!this.stateLoaded) return
       window.require('electron').ipcRenderer.send('updateForceProxy', { newVal })
+      this.maxWorkersCount = 128
     },
-    maxDosersCount (newVal: number | undefined) {
+    workersCount (newVal: number | undefined) {
+      if (!this.stateLoaded) return
       if (newVal !== undefined) {
-        window.require('electron').ipcRenderer.send('updateMaxDosersCount', { newVal })
+        window.require('electron').ipcRenderer.send('updateWorkersCount', { newVal })
+      }
+    },
+    maxWorkersCount (newVal: number | undefined) {
+      if (!this.stateLoaded) return
+      if (newVal !== undefined) {
+        window.require('electron').ipcRenderer.send('updateMaxWorkersCount', { newVal })
       }
     },
     automaticMode (newVal: boolean) {
+      if (!this.stateLoaded) return
       window.require('electron').ipcRenderer.send('updateStrategy', { newVal: newVal ? 'automatic' : 'manual' })
-      this.maxDosersCount = 32
+      this.workersCount = 32
+      this.maxWorkersCount = 128
     }
   },
 
@@ -214,9 +249,12 @@ export default defineComponent({
     window.require('electron').ipcRenderer.on('atack', this.serveAttack.bind(this))
     window.require('electron').ipcRenderer.on('executorsCountUpdate', this.serverExecutorsCountUpdate.bind(this))
     window.require('electron').ipcRenderer.on('update', this.askForInstallUpdate.bind(this))
+    window.require('electron').ipcRenderer.on('programArgs', this.programArgsUpdate.bind(this))
   },
 
   setup () {
+    const stateLoaded = ref(false)
+
     const ddosEnabled = ref(true)
     const forceProxy = ref(true)
     const attackCounter = ref(0)
@@ -229,11 +267,12 @@ export default defineComponent({
 
     const advancedSettingsDialog = ref(false)
     const automaticMode = ref(true)
-    const maxDosersCount = ref(32)
+    const workersCount = ref(32)
+    const maxWorkersCount = ref(128)
     const updateDialog = ref(false)
     const updateMessage = ref('message')
 
-    return { ddosEnabled, forceProxy, attackCounter, successfullAtacks, realtimeAttackCounter, realtimeSuccessfullAtackCounter, currentAttack, lastAttackChange, advancedSettingsDialog, automaticMode, maxDosersCount, updateDialog, updateMessage }
+    return { stateLoaded, ddosEnabled, forceProxy, attackCounter, successfullAtacks, realtimeAttackCounter, realtimeSuccessfullAtackCounter, currentAttack, lastAttackChange, advancedSettingsDialog, automaticMode, workersCount, updateDialog, updateMessage, maxWorkersCount }
   }
 })
 </script>

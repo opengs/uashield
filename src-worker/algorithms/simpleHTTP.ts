@@ -30,7 +30,7 @@ export abstract class SimpleHTTP extends Algorithm {
     return true
   }
 
-  async execute (target: GetTarget): Promise<ExecutionResult> {
+  async execute (target: GetTarget, isRunning: () => boolean): Promise<ExecutionResult> {
     // Setting up proxy config
     let packetsSend = 0, packetsSuccess = 0
 
@@ -46,11 +46,17 @@ export abstract class SimpleHTTP extends Algorithm {
       }
       proxyAgent = this.makeRequestAgent(target.page, proxy)
 
+      proxyAgent.on('error', () => {
+        try {
+          proxyAgent?.destroy()
+        } catch {}
+      })
+
       repeats += Math.floor(Math.random() * 32)
     }
 
     let success = true
-    while (success && repeats > 0) {
+    while (success && repeats > 0 && isRunning()) {
       success = await this.makeRequest(target.page, proxyAgent)
       packetsSend += 1
       repeats -= 1
@@ -80,19 +86,30 @@ export abstract class SimpleHTTP extends Algorithm {
 
       const response = await request.timeout(this.config.timeout)
 
-      console.log(`${new Date().toISOString()} | ${url} | ${response.status}`)
+      if (this.config.logRequests) {
+        if (this.config.logTimestamp) {
+          console.log(`${new Date().toISOString()} | ${url} | ${response.status}`)
+        } else {
+          console.log(`${url} | ${response.status}`)
+        }
+      }
 
       return true
     } catch (e) {
-      console.log(`${new Date().toISOString()} | ${url} | DOWN OR BLOCKED`)
+      if (this.config.logRequests) {
+        if (this.config.logTimestamp) {
+          console.log(`${new Date().toISOString()} | ${url} | DOWN OR BLOCKED`)
+        } else {
+          console.log(`${url} | DOWN OR BLOCKED`)
+        }
+      }
       return false
     }
   }
 
   protected makeRequestAgent (page: string, proxy: Proxy) {
     if (proxy.scheme === 'socks4' || proxy.scheme === 'socks5') {
-      throw new Error('Socks4 and socks5 are not implemented')
-      /*
+      // throw new Error('Socks4 and socks5 are not implemented')
       return new SocksProxyAgent({
         host: proxy.host,
         hostname: proxy.host,
@@ -102,7 +119,6 @@ export abstract class SimpleHTTP extends Algorithm {
       }, {
         timeout: 10000
       })
-      */
     }
 
     const options = {
