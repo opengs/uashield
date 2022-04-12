@@ -8,8 +8,8 @@ import { AutomaticStrategy } from './src-worker/planing/automaticStrategy'
 
 const arg = parseArguments()
 
-let workers = arg.workers
-let useProxy = arg.withProxy
+let workers = (arg.workers !== undefined) ? arg.workers : 32
+let useProxy = (arg.withProxy !== undefined) ? arg.withProxy : true
 
 if (process.env.WORKERS) {
   workers = Number(process.env.WORKERS)
@@ -21,17 +21,17 @@ if (process.env.USEPROXY) {
 console.log(`Using ${workers} workers, proxy - ${String(useProxy)}`)
 
 const engine = new Engine()
-engine.setExecutorStartegy(arg.planer as 'manual' | 'automatic')
+engine.setExecutorStartegy((arg.planer !== undefined ? arg.planer : 'automatic') as 'manual' | 'automatic')
 engine.config.useRealIP = !useProxy
 engine.start()
 
 if (engine.executionStartegy.type === 'automatic') {
-  (engine.executionStartegy as AutomaticStrategy).setMaxExecutorsCount(arg.maxWorkers)
+  (engine.executionStartegy as AutomaticStrategy).setMaxExecutorsCount(arg.maxWorkers !== undefined ? arg.maxWorkers : 128)
 }
 engine.executionStartegy.setExecutorsCount(workers)
 
-engine.config.logTimestamp = arg.logTimestamp
-engine.config.logRequests = arg.logRequests
+engine.config.logTimestamp = arg.logTimestamp !== undefined ? arg.logTimestamp : true
+engine.config.logRequests = arg.logRequests !== undefined ? arg.logRequests : true
 
 const usr = ua('UA-222593827-1', uuid4())
 

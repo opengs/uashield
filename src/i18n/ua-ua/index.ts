@@ -1,5 +1,59 @@
 export default {
   language: 'Мова',
+  layout: {
+    header: {
+      dashboard: 'Панель керування',
+      ddos: 'DDoS',
+      bruteforce: 'Brute force',
+      statistics: 'Статистика',
+      settings: 'Налаштування'
+    },
+    menu: {
+      dashboard: {
+        title: 'Панель керування',
+        caption: 'Загальний статус програми'
+      },
+      ddos: {
+        title: 'DDoS',
+        caption: 'Атака Denial of service'
+      },
+      bruteforce: {
+        title: 'Brute Force',
+        caption: 'Взлом паролів противника'
+      },
+      statistics: {
+        title: 'Статистика',
+        caption: 'Моя статистика'
+      },
+      settings: {
+        title: 'Налаштування',
+        caption: 'Глобальні налаштування'
+      }
+    }
+  },
+  dashboard: {
+    rank: {
+      header: 'Твій ранг'
+    },
+    totalDDoSAtacks: {
+      header: 'Загальна кількість DDoS атак'
+    },
+    currentWorkers: {
+      header: 'Актуальна кількість DDoS потоків'
+    },
+    efficiency: {
+      header: 'Ефективність DDoS',
+      allTimeEfficiency: 'Ефективність за весь час',
+      currentEfficiency: 'Актуальна ефективність',
+      workers: 'Потоки'
+    },
+    requestsPerMinute: {
+      header: 'Запитів в хвилину',
+      failedRequests: 'Невдачні',
+      successfullRequest: 'Вдачні',
+      neutralRequests: 'Нейтральні (невідомо)'
+    }
+  },
   ddos: {
     description: 'Атака DDoS робить величезну кількість запитів на ворожі сайти і спричиняє їх надмірну завантаженість. Як наслідок, сервери не встигають обробляти всі запити, тому не можуть працювати в штатному режимі, лагають або взагалі не працюють. Деталі тут: https://help-ukraine-win.com.ua/',
     coordinators: 'Для координацій цілей: https://discord.gg/7BfJ9JKQ98 ',
@@ -36,6 +90,23 @@ export default {
       title: 'Оновлення доступне',
       cancel: 'Відміна',
       confirm: 'Встановити оновлення'
-    }
+    },
+    settings: {
+      autoLaunch: {
+        title: 'Автоматичний запуск (Windows / MacOS)',
+        caption: 'Запускати програму при старті компютера'
+      },
+      logRequests: {
+        title: 'Логувати запити',
+        caption: 'Записувати статус кожного запиту до логу'
+      },
+      logTimestamps: {
+        title: 'Логувати час',
+        caption: 'Записувати час разом з кожним повідемленням в логу'
+      },
+      autoUpdate: {
+        title: 'Автоматичне оновлення',
+        caption: 'Не питати чи хочу я оновитися. Просто оновити і перезапустити програму!'
+      }
   }
 }

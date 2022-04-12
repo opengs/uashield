@@ -6,29 +6,38 @@ import {
   useStore as vuexUseStore
 } from 'vuex'
 
-// import example from './module-example'
-// import { ExampleStateInterface } from './module-example/state';
+import ddos from './ddos'
+import { DDoSState } from './ddos/state'
+import { DDoSGetters } from './ddos/getters'
 
-/*
- * If not building with SSR mode, you can
- * directly export the Store instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Store instance.
- */
+import statistics from './statistics'
+import { StatisticsState } from './statistics/state'
+import { StatisticsGetters } from './statistics/getters'
+
+import settings from './settings'
+import { SettingsState } from './settings/state'
+import { SettingsGetters } from './settings/getters'
 
 export interface StateInterface {
-  // Define your own store structure, using submodules if needed
-  // example: ExampleStateInterface;
-  // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  example: unknown
+  ddos: DDoSState
+  statistics: StatisticsState
+  settings: SettingsState
+}
+
+type Store = Omit<
+  VuexStore<StateInterface>,
+  'getters'
+> & {
+  getters:
+  DDoSGetters &
+  StatisticsGetters &
+  SettingsGetters
 }
 
 // provide typings for `this.$store`
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $store: VuexStore<StateInterface>
+    $store: Store
   }
 }
 
@@ -38,7 +47,9 @@ export const storeKey: InjectionKey<VuexStore<StateInterface>> = Symbol('vuex-ke
 export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
-      // example
+      ddos,
+      statistics,
+      settings
     },
 
     // enable strict mode (adds overhead!)

@@ -1,5 +1,59 @@
 export default {
   language: 'Language',
+  layout: {
+    header: {
+      dashboard: 'Dashboard',
+      ddos: 'DDoS',
+      bruteforce: 'Brute force',
+      statistics: 'Statistics',
+      settings: 'Settings'
+    },
+    menu: {
+      dashboard: {
+        title: 'Dashboard',
+        caption: 'General view'
+      },
+      ddos: {
+        title: 'DDoS',
+        caption: 'Denial of service atack'
+      },
+      bruteforce: {
+        title: 'Brute Force',
+        caption: 'Cracking enemy passwords'
+      },
+      statistics: {
+        title: 'Statistics',
+        caption: 'My statistics'
+      },
+      settings: {
+        title: 'Settings',
+        caption: 'Global settings'
+      }
+    }
+  },
+  dashboard: {
+    rank: {
+      header: 'Your rank in is'
+    },
+    totalDDoSAtacks: {
+      header: 'Total DDoS atacks count'
+    },
+    currentWorkers: {
+      header: 'Current threads'
+    },
+    efficiency: {
+      header: 'DDoS efficiency',
+      allTimeEfficiency: 'All time efficiency',
+      currentEfficiency: 'Current efficiency',
+      workers: 'Threads'
+    },
+    requestsPerMinute: {
+      header: 'Requests per minute',
+      failedRequests: 'Failed',
+      successfullRequest: 'Success',
+      neutralRequests: 'Neutral (unknown)'
+    }
+  },
   ddos: {
     description: 'DDoS attack generates a lot of requests to the target enemy server. Target server will start to lag and stop working properly.',
     coordinators: 'Coordinators https://discord.gg/7BfJ9JKQ98 ',
@@ -36,6 +90,24 @@ export default {
         name: 'Number of threads',
         description: 'Defines the number of attack processes. The application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust the amount of the attack processes according to new settings.'
       }
+    }
+  },
+  settings: {
+    autoLaunch: {
+      title: 'Auto launch (Windows / MacOS)',
+      caption: 'Launch application on start up'
+    },
+    logRequests: {
+      title: 'Log requests',
+      caption: 'Dump status of every request to the log'
+    },
+    logTimestamps: {
+      title: 'Log timestamp',
+      caption: 'Log timestamp with logger message'
+    },
+    autoUpdate: {
+      title: 'Auto update',
+      caption: 'Dont ask me if I want to update. Just do it and restart app!'
     }
   }
 }

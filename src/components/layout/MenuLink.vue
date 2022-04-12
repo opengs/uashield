@@ -3,7 +3,7 @@
     clickable
     tag="a"
     target="_blank"
-    :href="link"
+    @click="goToRoute"
   >
     <q-item-section
       v-if="icon"
@@ -14,7 +14,7 @@
 
     <q-item-section>
       <q-item-label>{{ title }}</q-item-label>
-      <q-item-label caption>
+      <q-item-label class="text-grey-7" caption>
         {{ caption }}
       </q-item-label>
     </q-item-section>
@@ -25,7 +25,7 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'EssentialLink',
+  name: 'MenuLink',
   props: {
     title: {
       type: String,
@@ -39,12 +39,17 @@ export default defineComponent({
 
     link: {
       type: String,
-      default: '#'
+      default: 'home'
     },
 
     icon: {
       type: String,
       default: ''
+    }
+  },
+  methods: {
+    async goToRoute () {
+      await this.$router.push({ name: this.link })
     }
   }
 })
