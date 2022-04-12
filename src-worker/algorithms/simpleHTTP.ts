@@ -117,7 +117,7 @@ export abstract class SimpleHTTP extends Algorithm {
         username: proxy.username,
         password: proxy.password
       }, {
-        timeout: 10000
+        timeout: 4000
       })
     }
 
@@ -125,7 +125,7 @@ export abstract class SimpleHTTP extends Algorithm {
       host: proxy.host,
       hostname: proxy.host,
       port: proxy.port,
-      timeout: 10000,
+      timeout: 4000,
       auth: undefined as undefined | string
     }
     if (proxy.username !== undefined && proxy.password !== undefined) {
