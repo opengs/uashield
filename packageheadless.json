@@ -20,7 +20,8 @@
     "universal-analytics": "^0.5.3",
     "user-agents": "^1.0.965",
     "uuid4": "^2.0.2",
-    "yargs": "^17.4.0"
+    "yargs": "^17.4.0",
+    "cacheable-lookup": "^6.0.4"
   },
   "devDependencies": {
     "@types/node": "^16.11.26",

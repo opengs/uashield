@@ -23,6 +23,7 @@
     "axios": "^0.26.1",
     "axios-https-proxy-fix": "^0.17.1",
     "axios-socks5-agent": "^1.0.5",
+    "cacheable-lookup": "^6.0.4",
     "core-js": "^3.21.1",
     "dayjs": "^1.11.0",
     "electron-google-analytics": "^1.0.2",

@@ -1,5 +1,8 @@
 import agent from 'superagent'
 
+import CacheableLookup, { CacheInstance } from 'cacheable-lookup'
+import QuickLRU from './utils/lru'
+
 import { HttpProxyAgent } from 'http-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { SocksProxyAgent } from 'socks-proxy-agent'
@@ -10,6 +13,7 @@ import { Algorithm, Config, ExecutionResult } from './algorithm'
 
 import { HttpHeadersUtils } from './utils/httpHeadersUtils'
 import { sleep } from '../helpers'
+import { LookupFunction } from 'net'
 
 export abstract class SimpleHTTP extends Algorithm {
   protected proxyPool: ProxyPool
@@ -17,10 +21,15 @@ export abstract class SimpleHTTP extends Algorithm {
 
   abstract get method(): 'POST' | 'GET'
 
+  private dnsLookup: CacheableLookup
+
   constructor (config: Config, proxyPool: ProxyPool) {
     super(config)
     this.proxyPool = proxyPool
     this.validateStatusFn = () => true
+    this.dnsLookup = new CacheableLookup({
+      cache: new QuickLRU({ maxSize: 1000 }) as CacheInstance
+    })
   }
 
   isValid (target: GetTarget): boolean {
@@ -38,7 +47,7 @@ export abstract class SimpleHTTP extends Algorithm {
     let repeats = 16 + Math.floor(Math.random() * 32)
 
     if (!this.config.useRealIP) {
-      const proxy = this.proxyPool.getRandomProxy(['http', 'https'])
+      const proxy = this.proxyPool.getRandomProxy()
       if (proxy === null) {
         console.warn('Proxy request failed because proxy wasnt found.')
         await sleep(100)
@@ -117,7 +126,8 @@ export abstract class SimpleHTTP extends Algorithm {
         username: proxy.username,
         password: proxy.password
       }, {
-        timeout: 4000
+        timeout: 4000,
+        dnsCache: this.dnsLookup
       })
     }
 
@@ -126,7 +136,8 @@ export abstract class SimpleHTTP extends Algorithm {
       hostname: proxy.host,
       port: proxy.port,
       timeout: 4000,
-      auth: undefined as undefined | string
+      auth: undefined as undefined | string,
+      lookup: this.dnsLookup.lookup.bind(this.dnsLookup) as LookupFunction
     }
     if (proxy.username !== undefined && proxy.password !== undefined) {
       options.auth = `${proxy.username}:${proxy.password}`
