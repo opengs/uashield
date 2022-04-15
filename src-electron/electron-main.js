@@ -54,38 +54,6 @@ function sendStatusToWindow (text) {
   }
 }
 function createWindow () {
-  /**
-   * Initial window options
-   */
-  mainWindow = new BrowserWindow({
-    icon: path.resolve(__dirname, 'icons/icon.png'), // tray icon
-    width: 600,
-    height: 900,
-    useContentSize: true,
-    webPreferences: {
-      contextIsolation: false,
-      // More info: /quasar-cli/developing-electron-apps/electron-preload-script
-      nodeIntegration: true,
-      nodeIntegrationInWorker: true
-    }
-  })
-
-  mainWindow.setMenu(null)
-  mainWindow.loadURL(process.env.APP_URL)
-  if (process.env.DEBUGGING) {
-  // if on DEV or Production with debug enabled
-    mainWindow.webContents.openDevTools()
-  } else {
-    // we're on production; no access to devtools pls
-    mainWindow.webContents.on('devtools-opened', () => {
-      mainWindow.webContents.closeDevTools()
-    })
-  }
-
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
-
   usr.pageview('/', function (err) {
     console.log('pageview')
     console.log(err)
@@ -124,8 +92,6 @@ function createWindow () {
 
   storage.set(USER_DATA_KEY, storageData)
 
-
-
   const engine = new Engine()
   engine.config.useRealIP = !storageData.ddos.withProxy
   engine.config.logRequests = storageData.settings.log.requests
@@ -135,6 +101,35 @@ function createWindow () {
   if (engine.executionStartegy.type === 'automatic') {
     engine.executionStartegy.setMaxExecutorsCount(storageData.ddos.maxWorkers)
   }
+
+  mainWindow = new BrowserWindow({
+    icon: path.resolve(__dirname, 'icons/icon.png'), // tray icon
+    width: 600,
+    height: 900,
+    useContentSize: true,
+    webPreferences: {
+      contextIsolation: false,
+      // More info: /quasar-cli/developing-electron-apps/electron-preload-script
+      nodeIntegration: true,
+      nodeIntegrationInWorker: true
+    }
+  })
+
+  mainWindow.setMenu(null)
+  mainWindow.loadURL(process.env.APP_URL)
+  if (process.env.DEBUGGING) {
+  // if on DEV or Production with debug enabled
+    mainWindow.webContents.openDevTools()
+  } else {
+    // we're on production; no access to devtools pls
+    mainWindow.webContents.on('devtools-opened', () => {
+      mainWindow.webContents.closeDevTools()
+    })
+  }
+
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 
   const window = mainWindow
   engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
