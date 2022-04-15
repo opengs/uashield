@@ -49,8 +49,8 @@ export default {
     },
     requestsPerMinute: {
       header: 'Запитів в хвилину',
-      failedRequests: 'Невдачні',
-      successfullRequest: 'Вдачні',
+      failedRequests: 'Невдалі',
+      successfullRequest: 'Вдалі',
       neutralRequests: 'Нейтральні (невідомо)'
     }
   },
@@ -90,24 +90,24 @@ export default {
       title: 'Оновлення доступне',
       cancel: 'Відміна',
       confirm: 'Встановити оновлення'
+    }
+  },
+  settings: {
+    autoLaunch: {
+      title: 'Автоматичний запуск (Windows / MacOS)',
+      caption: 'Запускати програму при старті компютера'
     },
-    settings: {
-      autoLaunch: {
-        title: 'Автоматичний запуск (Windows / MacOS)',
-        caption: 'Запускати програму при старті компютера'
-      },
-      logRequests: {
-        title: 'Логувати запити',
-        caption: 'Записувати статус кожного запиту до логу'
-      },
-      logTimestamps: {
-        title: 'Логувати час',
-        caption: 'Записувати час разом з кожним повідемленням в логу'
-      },
-      autoUpdate: {
-        title: 'Автоматичне оновлення',
-        caption: 'Не питати чи хочу я оновитися. Просто оновити і перезапустити програму!'
-      }
+    logRequests: {
+      title: 'Логувати запити',
+      caption: 'Записувати статус кожного запиту до логу'
+    },
+    logTimestamps: {
+      title: 'Логувати час',
+      caption: 'Записувати час разом з кожним повідемленням в логу'
+    },
+    autoUpdate: {
+      title: 'Автоматичне оновлення',
+      caption: 'Не питати чи хочу я оновитися. Просто оновити і перезапустити програму!'
     }
   }
 }
