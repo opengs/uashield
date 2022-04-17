@@ -1,0 +1,10 @@
+---
+- hosts: servers
+  become: yes
+  become_user: root
+  vars_files:
+    - vars/vars.yaml
+  roles:
+    - uasword
+  handlers:
+    - include: handlers/main.yml

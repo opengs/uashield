@@ -1,0 +1,28 @@
+name: Node CI MacOS
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: macos-11
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: dmg-license add
+        run: |
+          sudo npm install -g dmg-license
+      - name: MacOS 64bit
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          rm -rf dist/
+          npm install -g @quasar/cli yarn --force
+          yarn install
+          quasar build --mode electron --publish always -T darwin

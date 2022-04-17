@@ -1,0 +1,12 @@
+---
+- hosts: servers
+  become: yes
+  become_user: root
+  vars_files:
+    - vars/vars.yaml
+  roles:
+    - tools
+    - docker
+    - ua-loadtest
+  handlers:
+    - include: handlers/main.yml

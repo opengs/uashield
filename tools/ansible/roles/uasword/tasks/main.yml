@@ -1,0 +1,25 @@
+---
+- name: Get Running Docker Containers
+  shell: "docker ps -aq"
+  register: docker_info
+
+- name: Stop Docker Container
+  shell: "docker stop uasword"
+  when: docker_info.stdout
+
+- name: Update To Latest Version
+  shell: "{{ item }}"
+  with_items:
+    - "docker container prune -f"
+    - "docker image prune -f"
+    - "docker pull atools/uasword:latest"
+
+- name: Run Docker Fresh Container
+  shell: "docker run --rm -d --name uasword atools/uasword:latest"
+
+- name: Check Docker Status
+  shell: "docker ps"
+  register: output
+
+- ansible.builtin.debug:
+    var: output.stdout_lines

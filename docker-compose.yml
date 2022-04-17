@@ -7,7 +7,7 @@ services:
       image: uashield:latest
       environment:
         WORKERS: '256'
-        USEPROXY: 'true'
+        USEPROXY: 'false'
       networks:
         - shield
 

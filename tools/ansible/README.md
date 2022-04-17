@@ -52,6 +52,10 @@ Optional step, can be skipped
 
     ansible-playbook -u root stats.yaml -i hosts
 
+### 8. Update to the latest version and restart containers
+
+    ansible-playbook -u root update.yaml -i hosts
+
 ## UA
 ### 1. Інсталюйте ansible на свою машину
 #### Mac OS
@@ -88,7 +92,7 @@ ssh-agent bash -c "ssh-add /path/to/keys/*.pem"
 ### 5. Перевірте, чи всі ваші сервери зі списку `hosts` доступні
 Опціонально, ви можете пропустити цей крок
 
-    ansible all -m ping -u root
+    ansible all -m ping -u root -i hosts
 
 ### 6. Запустіть плейбук та введіть паролі, коли він запитає
 
@@ -97,3 +101,7 @@ ssh-agent bash -c "ssh-add /path/to/keys/*.pem"
 ### 7. Перевірка статистики успішних запитів
 
     ansible-playbook -u root stats.yaml -i hosts
+
+### 8. Оновити до останньої версії та перезавантажити
+
+    ansible-playbook -u root update.yaml -i hosts

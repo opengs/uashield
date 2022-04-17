@@ -8,56 +8,23 @@
   "repository": "github:opengs/uashield",
   "scripts": {
     "build:headless": "esbuild ./headless.ts --platform=node  --bundle --minify --sourcemap --sources-content=false --keep-names --target=node16 --outfile=./build/headless/headless.js",
-    "start:headless": "NODE_ENV=production node --enable-source-maps ./build/headless/headless.js",
-    "lint": "eslint --ext .js,.ts,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
+    "start:headless": "NODE_ENV=production node --enable-source-maps ./build/headless/headless.js"
   },
   "dependencies": {
-    "@types/node-fetch": "^2.6.1",
-    "@types/superagent": "^4.1.15",
-    "axios": "^0.21.1",
+    "axios": "^0.26.1",
     "axios-https-proxy-fix": "^0.17.1",
-    "core-js": "^3.6.5",
-    "fs": "^0.0.1-security",
-    "path": "^0.12.7",
-    "simple-ddos": "^2.0.4",
-    "superagent": "^7.1.1",
-    "vue": "^3.0.0",
-    "vue-i18n": "^9.0.0",
-    "vue-router": "^4.0.0",
-    "user-agents": "^1.0.943",
-    "vuex": "^4.0.1"
+    "socks-proxy-agent": "^6.2.0-beta.0",
+    "universal-analytics": "^0.5.3",
+    "user-agents": "^1.0.965",
+    "uuid4": "^2.0.2"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.13.14",
+    "@types/node": "^16.11.26",
     "@types/user-agents": "^1.0.2",
-    "@quasar/app": "^3.0.0",
-    "@types/node": "^12.20.21",
-    "esbuild": "0.14.23",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
-    "eslint": "^7.14.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-vue": "^7.0.0",
-    "node-polyfill-webpack-plugin": "^1.1.4"
+    "esbuild": "0.14.27"
   },
-  "browserslist": [
-    "last 10 Chrome versions",
-    "last 10 Firefox versions",
-    "last 4 Edge versions",
-    "last 7 Safari versions",
-    "last 8 Android versions",
-    "last 8 ChromeAndroid versions",
-    "last 8 FirefoxAndroid versions",
-    "last 10 iOS versions",
-    "last 5 Opera versions"
-  ],
   "engines": {
-    "node": ">= 12.22.1",
-    "npm": ">= 6.13.4",
-    "yarn": ">= 1.21.1"
+    "node": ">= 16",
+    "npm": ">= 8"
   }
 }

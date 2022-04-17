@@ -32,6 +32,7 @@
 <script lang="ts">
 
 import { defineComponent, ref, onMounted } from 'vue'
+import { setSavedLanguage, getSavedLanguage } from '../utils/persistence'
 
 interface LanguageInterface {
   name: string,
@@ -84,6 +85,16 @@ const languages : LanguageInterface[] = [
     name: 'Slovenský',
     symbol: 'sk-SK',
     icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAUCAYAAACaq43EAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBMkIxODFBMzE3ODcxMUUyQTcxNDlDNEFCRkNENzc2NiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBMkIxODFBNDE3ODcxMUUyQTcxNDlDNEFCRkNENzc2NiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjc3OTE4QjNFMTc4NzExRTJBNzE0OUM0QUJGQ0Q3NzY2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkEyQjE4MUEyMTc4NzExRTJBNzE0OUM0QUJGQ0Q3NzY2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+YhjhIwAAApRJREFUeNrclktME0EYgL9l221LW/oAIlWBg4oXUUPkZGLwhIpBIDFBjeFoOPg6GfXqTSPxqDdNDEZJwMDBgB5MTJQLCWoPBhrwwSNAC7TUdvvYcQoESuRiq2icZLL//+/MfjOz/2MUIcQEsF32CFvTnLJPmlYFsp5bAi/gL7V/CyySSURcX5b1wDj6yNiKXdpEIvnnwIHWCwy59zCo2JnuuM/Mg0fL8pC3ipGmtt8CNvW+mVxTYiYr5W6VYv8HEvpXbNv24Wk+gaJphDq7iU0MY3y0M/h+hs+6BZsezR3ceP7FuhYU1DeW0el1yNhyUHatHVvVbkQ6je/mRSauXsdX7ODGnXd0Pw+CV+QOprRwXTMXYHZrGKEg9gOHSIcixEcDoKokp+aw19RiTI1gdpnBJ6OvKJUHWFXWNVUQFQUkYgm0ihI8p+rRXE6UAgVT0zGS/k+kxvxyjCq9Q+42e+4vgze4WpovKTtL+2so6eskNtDFwu0OsFjRLrXLw5d+cLyFb4aUxFxmpfmAs1ZtVQjMqMzu2MuYdRcvi2vp6naiq2Zad56jbvot5fLdcNACtsy83HescKQ/vJYuM98JGTQ1eIkuCgZef5eAWbk7aY+XUHfYRqnPzLMe6VgeZcWeW4sotypPh7PzdCqeoFBT8LW1cGX6IMFXfjAMHEeruVfhZ/7hUyKxNJrNkgdXghcL3RvAqqKwFA1T5HEweuYyZ23NJKQzPU72Uv3kLguz8zjsLtJC5JM/IsqQpyr8U2WS4aOHI1Qm57A0nETIf5zq62FccaO5PZBO5Zu4IqZNzTJhWBx2Jg07Wl9/JkuTcFWgZUbnD90knDZUCoEMX1KestWkLo/W+A/Komn1yuPc4qtP5IcAAwBoBOOwBg9d5gAAAABJRU5ErkJggg=='
+  },
+  {
+    name: '한국어',
+    symbol: 'ko-KR',
+    icon: 'data:image/png;base64,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'
+  },
+  {
+    name: 'Portugal',
+    symbol: 'pt-PT',
+    icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAABOwAAATsBH99vcQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANfSURBVFiF7dh7aNVlHMfx1/mdXXIr79tIw2ZZXsqF90tXtYa1EgIp/0nFLA2iEC3o9k8EQRAEXf6w/8QRTokCE8qaly5MxFC0lZdYbBU4bWfpNmdn5/z645eGCbGz8xP3x3n/9/vx+z3P583zfJ/n4Ul4WihGwo1xttZ/gqvTbfwURAYbBZHBRkFksFGUbwPFSR6bydzxzKzGchzAt/gYffn20D/yGpFnF3DsdVbMo/0sv6XQipNYgyNYHUPKfjCgEQkCNq3k9jHV1m8LHGxj2BAqykOplpDtaEANNmSNmNPKU3HGvpycRYKAPeu5cSRVr1ZoKPlBclMpyNamSRK0FYPMuPMyW6azoZVtWBpr9ktz5frDp89w1wSGDiGoSklO7SGVIpUSTOoSTOy6+Jys6ZEc/QeNeATvxC9wgZxFpo0jDKMiT3wxKqqB5mbC0IHH2+1fejL64NAhVhE2VnIKH+GW2PNfJKepNXwIpUW8t4u19xJmLz04b9nZoq8vY9aUyn9fZrEBpaKFoAw9+ca+nJxEFk7i3F9UXEdrB+Nm/6lvEWe6+/x6vMPKh2+VzWYdPtFhTFfasNfI9nTyFn5GN+bhq6sssnxeVBv7WlhTz+miUFE5e493eeOz3e6bMUY6k9V0+JQXFo6w9Foy50MWiVatB0VT8WqL1O9j6tioTr6cTeKJkXxDbVOJsS/fbWh5sUyG5XV9JnX+wkrCB0ZFwVtwFvXxS5Bjse9sZug1rN3M7Dc5XTkKlDV9bdaUCh9sbfZ+wxEzJo9W3rQXZG8azmm8KKqTxpgN/iGnEek8x6E23l3GuTTd7cXSpSR7XxLsnmzVkpky2ZDGHbLpV2SWJfTWJZQsxh4cdEUKnQEsv3tPsGI+I8tZ8/sO7TfXCrp7WbDYHXVzTa+bw6I6QU+v7NSHlN25nQyq8X3s+S+SGMjlw+fPM7EqOl+VFZUZvW2Jyo0HJX78CYS3TdGzeprixZ8oCbq5Hh0imSvEgESCgPpVTKhkXUMkVFM1zOqayea3kdzcrOzYmSj426LT8JNxR7+UAYlc4LmFrLs/2lN2HaXmBh49imO4B2NFe8iHMaX9H/ISgZIils1iznjmVjP9JPbjO2xFOoaU/SBvkf9SuKDLk4LIYKMgMtgoiAw2/gbC1QpgMa98xgAAAABJRU5ErkJggg=='
   }
 ]
 
@@ -93,18 +104,24 @@ export default defineComponent({
   watch: {
     language () {
       this.$i18n.locale = this.language.symbol
+      setSavedLanguage(this.language.symbol)
     }
   },
 
   setup () {
     const getDefaultLanguage = () => {
-      const userLanguage = navigator.language
-      const defaultLanguage = languages.find(({ symbol }) => symbol.includes(userLanguage))
-      return defaultLanguage || languages[0]
+      return navigator.language
+    }
+
+    const resolveLanguage = (langSymbol: string) => {
+      const resolvedLanguage = languages.find(({ symbol }) => symbol.includes(langSymbol))
+      return resolvedLanguage || languages[0]
     }
 
     const language = ref<LanguageInterface>(languages[0])
-    onMounted(() => (language.value = getDefaultLanguage()))
+    onMounted(() => {
+      language.value = resolveLanguage(getSavedLanguage(getDefaultLanguage()))
+    })
 
     return { languages, language }
   }

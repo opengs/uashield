@@ -1,14 +1,22 @@
 # UA Cyber SHIELD
 
-*ALERT!!! We not supporting unlawful active attack or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this prlatform on your own website!*
+<<<<<<< HEAD
+*ALERT!!! We not supporting unlawful active attacks or malware campaigns that are causing technical harm. Use only for educational purposes. You can only try this platform on your own website!*
+=======
+*ALERT!!! We are not supporting unlawful active attacks or malware campaings that are causing technical harms. Use only for educational purposes. You can only try this platform on your own website!*
+>>>>>>> master
 
 *Дивись цю сторінку [українською](README.md)*
 
 [![Release](https://img.shields.io/badge/Release-latest-blue)](https://github.com/opengs/uashield/releases/latest)
 
-**The voluntary Ukrainian cyber defense system**
+<<<<<<< HEAD
+**The volunteer cyber defense system of Ukraine**
+=======
+**Volunteer cyber defense system of Ukraine**
+>>>>>>> master
 
-- Community: [Discord](https://discord.gg/7BfJ9JKQ98)
+- Community: [Discord](https://discord.gg/7BfJ9JKQ98) [Telegram](https://t.me/uashield)
 - Video Instruction [in Ukrainian](https://youtu.be/snTzpRt7a5k)
 
 ## For cyber defenders
@@ -17,20 +25,26 @@
 2. Find the [latest release](https://github.com/opengs/uashield/releases/latest) and your platform
 3. Download and run the binary file
 
-**Running on Linux may require an additional `--no-sandbox` argument. It doesn't affect Windows**
+**Running on Linux may require an additional `--no-sandbox` argument. Windows doesn't require any additional arguments to run.**
 
 ## How it works
 
-Our voluntary defense center works are doing all the hard work: monitoring the targets, running the technical infrastructure, coordinating the attack targets, coordinating with the client applications, etc.
+<<<<<<< HEAD
+Our volunteer defense center does all the hard work: monitoring the targets, running the technical infrastructure, coordinating the attack targets, coordinating with the client applications, etc.
 When the attack is performed, the application gets the data that it needs automatically.
 The only thing you need to do is to install it.
+=======
+Our volunteer defense center does all the hard work: monitoring targets, running technical infrastructure, coordinating attack targets, syncronizing it with client applications, etc.
+When an attack is performed, the application gets the data it needs automatically.
+The only thing you need to do is to install and run it.
+>>>>>>> master
 Targets being attacked are changed automatically and are downloaded from the control center/server.
 
 ## Program interface
 
 ![A working example](docs/working.png)
 
-## How to build from source code
+## Run from source code
 
 1. Clone the repo: `git clone https://github.com/opengs/uashield.git`
 2. Install dependencies: `cd uashield && npm install`
@@ -40,18 +54,18 @@ Targets being attacked are changed automatically and are downloaded from the con
 ## Headless version (Docker)
 
 1. Build an image: `docker build . -t uashield`
-2. Run: `docker run uashield 512 true` - where `512` - threads count, and `true` | `false` if you want to use a proxy or not
+2. Run: `docker run uashield 512 true` - where `512` - threads count, and `true` | `false` whether you want to use proxies
 
 Or use [pre-built image](https://github.com/opengs/uashield/pkgs/container/uashield):
 
 ```bash
-docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
+docker run -d ghcr.io/opengs/uashield:master 512 true
 ```
 
 ## Docker-compose version
 
 1. Run: `docker-compose up -d`
-2. Edit variables `WORKERS` and `USEPROXY` in file `docker-compose.yml` - where `256` - threads count, and `true` | `false` if you want to use a proxy or not
+2. Edit variables `WORKERS` and `USEPROXY` in file `docker-compose.yml` - where `256` - threads count, and `true` | `false` whether you want to use proxies
 
 ## Deploy on Raspberry Pi
 
@@ -61,25 +75,29 @@ docker run -d ghcr.io/opengs/uashield:0.0.x 512 true
 
 [tools/ansible/README.md](tools/ansible/README.md)
 
-## Deploy to Kubernetes
+## Deploy on Kubernetes
 
 [tools/helm/README.md](tools/helm/README.md)
 
 ## Deploy with Play With Docker - free instance for 4 hours
 
-[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/0.0.x/pwd-docker-compose.yml)
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/opengs/uashield/master/pwd-docker-compose.yml)
 
 ## Donations
-Donations will be used to fund our operations:
+Donations will be used exclusively to fund our operations:
 1. Expenses on constantly buying new proxy servers
-2. From time to time buying servers for new infastructure
+2. Occasionally buying servers for IT infastructure
 
-When we will win the war and will be peace in Ukraine, funds will be transfered to voluntary associations to help victims of this war.
+When we win the war and there is peace in Ukraine, funds left will be transferred to charity funds to help casualties of the war.
 
-You can help us using:
-- BTC: 11wxDarouPfY6P3misLvFuJ8k8oWhd4qb
+You can help us through:
+- BTC: bc1q7e6ew74x56vdpsev5ycqq8ke3tk4yv5452l25g
+- ETH: 0x9472538607eE28F69FE7dAcD6C4cC17B9A20664F
+- USDT (ETH): 0x9472538607eE28F69FE7dAcD6C4cC17B9A20664F **this is address on ETH network**
 
-Also, here are some variants if you want to help developers with some cofee. So we can continue to skip work and keep invest time in project all nights:
-- BTC: 12CcLYn6zrBcnmvK5fRSAQcJre5jknyTxH
+Also, you can treat developers with some coffee so they can continue to skip work and keep investing time in the project all night long:
+- BTC: bc1q7g5s3c89lymc9vtrf0y8tqyx4mg0hefeyr6zsv
+- ETH: 0x75A291AB6795f747177975bac250B47A33ee54Ed
+- USDT (ETH): 0x75A291AB6795f747177975bac250B47A33ee54Ed **this is address on ETH network**
 
-We will add more variants in future :)
+We will add more options in future :)

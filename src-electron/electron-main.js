@@ -2,7 +2,10 @@ import { app, BrowserWindow, nativeTheme, ipcMain, Tray, Menu, nativeImage } fro
 import path from 'path'
 import os from 'os'
 
-import { Doser } from '../src-worker/doser'
+import { Engine } from '../src-worker/engine'
+
+import { trackEvent, usr } from './analytics'
+
 const { autoUpdater } = require('electron-updater')
 
 // needed in case process is undefined under Linux
@@ -80,7 +83,7 @@ function createWindow () {
   mainWindow.setMenu(null)
   mainWindow.loadURL(process.env.APP_URL)
   if (process.env.DEBUGGING) {
-    // if on DEV or Production with debug enabled
+  // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
     // close window on reload
     isQuite = true
@@ -108,27 +111,47 @@ function createWindow () {
     mainWindow = null
   })
 
-  const doser = new Doser(true, 32)
+  usr.pageview('/', function (err) {
+    console.log('pageview')
+    console.log(err)
+  })
+  setInterval(() => usr.pageview('/', function (err) {
+    console.log('pageview')
+    console.log(err)
+  }), 90000)
+
+  const engine = new Engine()
+  engine.setExecutorStartegy('automatic')
+
   const window = mainWindow
-  doser.listen('atack', (data) => console.log(data.log))
-  doser.listen('atack', (data) => window.webContents.send('atack', data))
-  doser.listen('error', (data) => window.webContents.send('error', data))
-  doser.start()
+
+  engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
+  engine.executionStartegy.on('error', (data) => window.webContents.send('error', data))
+  engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
+
+  engine.start()
 
   ipcMain.on('updateDDOSEnable', (event, arg) => {
     if (arg.newVal) {
-      doser.start()
+      engine.start()
     } else {
-      doser.stop()
+      engine.stop()
     }
   })
 
   ipcMain.on('updateForceProxy', (event, arg) => {
-    doser.forceProxy(arg.newVal)
+    engine.config.useRealIP = !arg.newVal
+  })
+
+  ipcMain.on('updateStrategy', (event, arg) => {
+    engine.setExecutorStartegy(arg.newVal)
+    engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
+    engine.executionStartegy.on('error', (data) => window.webContents.send('error', data))
+    engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
   })
 
   ipcMain.on('updateMaxDosersCount', (event, arg) => {
-    doser.setWorkersCount(arg.newVal)
+    engine.executionStartegy.setExecutorsCount(arg.newVal)
   })
 
   ipcMain.on('updateMinimizeToTray', (event, arg) => {
@@ -182,11 +205,11 @@ app.whenReady().then(() => {
   createWindow()
 })
 
-function checkUpdates() {
+function checkUpdates () {
   try {
     autoUpdater.checkForUpdates()
-  } catch(err) {
-    console.log(err, "Error while checking update")
+  } catch (err) {
+    console.log(err, 'Error while checking update')
   }
 }
 

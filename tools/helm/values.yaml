@@ -15,7 +15,7 @@ image:
   repository: ghcr.io/opengs/uashield
   pullPolicy: IfNotPresent
   # We can find a tag here: https://github.com/opengs/uashield/pkgs/container/uashield
-  tag: "0.0.x"
+  tag: "master"
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
