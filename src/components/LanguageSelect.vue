@@ -31,8 +31,7 @@
 
 <script lang="ts">
 
-import { defineComponent, ref, onMounted } from 'vue'
-import { setSavedLanguage, getSavedLanguage } from '../utils/persistence'
+import { defineComponent } from 'vue'
 
 interface LanguageInterface {
   name: string,
@@ -101,15 +100,21 @@ const languages : LanguageInterface[] = [
 export default defineComponent({
   name: 'LanguageSelect',
 
-  watch: {
-    language () {
-      this.$i18n.locale = this.language.symbol
-      setSavedLanguage(this.language.symbol)
+  computed: {
+    language: {
+      get () {
+        const symbol = this.$store.getters['settings/language']
+        const retLng = this.languages.find((l) => l.symbol === symbol) as LanguageInterface
+        return retLng
+      },
+      async set (value: LanguageInterface) {
+        await this.$store.dispatch('settings/setLanguage', value.symbol)
+      }
     }
   },
 
   setup () {
-    const getDefaultLanguage = () => {
+    /* const getDefaultLanguage = () => {
       return navigator.language
     }
 
@@ -121,9 +126,9 @@ export default defineComponent({
     const language = ref<LanguageInterface>(languages[0])
     onMounted(() => {
       language.value = resolveLanguage(getSavedLanguage(getDefaultLanguage()))
-    })
+    }) */
 
-    return { languages, language }
+    return { languages /*, language */ }
   }
 })
 </script>

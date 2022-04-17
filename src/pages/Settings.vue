@@ -48,6 +48,17 @@
           </q-item-section>
         </q-item>
 
+        <!-- Write auto update -->
+        <q-item tag="label" v-ripple>
+          <q-item-section>
+            <q-item-label>{{ $t('settings.minimizeToTray.title') }}</q-item-label>
+            <q-item-label caption class="text-grey-7">{{ $t('settings.minimizeToTray.caption') }}</q-item-label>
+          </q-item-section>
+          <q-item-section avatar>
+            <q-toggle color="green" v-model="minimizeToTray" val="friend"/>
+          </q-item-section>
+        </q-item>
+
       </q-card-section>
     </q-card>
   </q-page>
@@ -70,6 +81,10 @@ export default defineComponent({
     autoUpdate: {
       get () { return this.$store.getters['settings/autoUpdate'] },
       async set (val) { await this.$store.dispatch('settings/setAutoUpdate', val) }
+    },
+    minimizeToTray: {
+      get () { return this.$store.getters['settings/minimizeToTray'] },
+      async set (val) { await this.$store.dispatch('settings/setMinimizeToTray', val) }
     },
     logRequests: {
       get () { return this.$store.getters['settings/logRequests'] },

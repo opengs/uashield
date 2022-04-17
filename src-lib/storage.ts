@@ -24,7 +24,8 @@ export interface UserData {
       requests: boolean
     },
     autoLaunch?: boolean,
-    autoUpdate: boolean
+    autoUpdate: boolean,
+    minimizeToTray: boolean
   }
 }
 
@@ -52,7 +53,8 @@ export const defaultData = {
       requests: true
     },
     autoLaunch: undefined,
-    autoUpdate: true
+    autoUpdate: true,
+    minimizeToTray: true
   }
 } as UserData
 

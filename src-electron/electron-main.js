@@ -12,7 +12,15 @@ Store.initRenderer()
 
 import { USER_DATA_KEY, defaultData } from '../src-lib/storage'
 
-const storage = new Store()
+const storage = new Store({
+  migrations: {
+    '1.0.1': store => {
+      const data = store.get(USER_DATA_KEY, defaultData)
+      data.settings.minimizeToTray = true
+      store.set(USER_DATA_KEY, data)
+    }
+  }
+})
 
 ipcMain.handle('loadUserData', (e) => {
   const data = storage.get(USER_DATA_KEY, defaultData)
@@ -36,7 +44,6 @@ try {
 let mainWindow
 let tray
 // default value will be set in Index.vue -> mounted
-let minimizeToTray = true
 let isQuite
 
 const singleInstanceLock = app.requestSingleInstanceLock()
@@ -109,7 +116,7 @@ function createWindow () {
   }
 
   mainWindow = new BrowserWindow({
-    icon: appIcon,
+    icon: appIcon.resize({ width: 32, height: 32 }),
     width: 600,
     height: 900,
     useContentSize: true,
@@ -124,7 +131,7 @@ function createWindow () {
   // Tray constructor requires image as a param, icon is going to be changed later
   tray = new Tray(nativeImage.createEmpty())
   tray.setToolTip(appName)
-  tray.setImage(appIcon.resize({ width: 16, height: 16 }))
+  tray.setImage(appIcon)
   // For win platform, open context with click on tray icon
   tray.on('click', () => {
     tray.popUpContextMenu()
@@ -158,7 +165,7 @@ function createWindow () {
   // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
     // close window on reload
-    isQuite = true
+    // isQuite = true
   } else {
     // we're on production; no access to devtools pls
     mainWindow.webContents.on('devtools-opened', () => {
@@ -171,7 +178,7 @@ function createWindow () {
   })
 
   mainWindow.on('close', (event) => {
-    if (minimizeToTray && !isQuite) {
+    if (storageData.settings.minimizeToTray && !isQuite && !mainWindow.isMinimized()) {
       event.preventDefault()
       mainWindow.minimize()
     } else {
@@ -258,29 +265,26 @@ function createWindow () {
     }
   })
 
-  ipcMain.on('updateMinimizeToTray', (event, arg) => {
-    minimizeToTray = !!arg.newVal
-  })
-
-  ipcMain.on('updateRunAtStartup', (event, arg) => {
-    app.setLoginItemSettings({
-      openAtLogin: arg.newVal,
-      name: appName
-    })
-  })
-
   ipcMain.on('installUpdate', () => {
     autoUpdater.quitAndInstall()
   })
 
   // Settings
+  ipcMain.on('settingsSetLanguage', (_ev, value) => {
+    storageData.settings.language = value
+    storage.set(USER_DATA_KEY, storageData)
+  })
   ipcMain.on('settingsSetAutoLaunch', (_ev, value) => {
     storageData.settings.autoLaunch = value
-    app.setLoginItemSettings({ openAtLogin: value })
+    app.setLoginItemSettings({ openAtLogin: value, name: appName })
     storage.set(USER_DATA_KEY, storageData)
   })
   ipcMain.on('settingsSetAutoUpdate', (_ev, value) => {
     storageData.settings.autoUpdate = value
+    storage.set(USER_DATA_KEY, storageData)
+  })
+  ipcMain.on('settingsSetMinimizeToTray', (event, value) => {
+    storageData.settings.minimizeToTray = value
     storage.set(USER_DATA_KEY, storageData)
   })
   ipcMain.on('settingsSetLogTimestamp', (_ev, value) => {

@@ -108,6 +108,10 @@ export default {
     autoUpdate: {
       title: 'Auto update',
       caption: 'Dont ask me if I want to update. Just do it and restart app!'
+    },
+    minimizeToTray: {
+      title: 'Minimize to tray',
+      caption: 'Minimize application to tray instead of closing'
     }
   }
 }
