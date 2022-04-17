@@ -1,11 +1,6 @@
 # uashield-ansible
 Uashield Ansible playbook installing and running uashield in a docker-compose
 
-## Як розгорнути на Azure / How to set up on Azure
-https://docs.google.com/document/d/11dV32WBAhKqH3fIYTczG0pTlX_3EdLkXoLAqY5z4UDo/edit?usp=sharing
-
-Note: If you using Azure then use `azureuser` default user name instead of `root` in commands below.
-
 ## EN
 ### 1. Install Ansible on your machine
 #### Mac OS
