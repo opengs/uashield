@@ -15,7 +15,7 @@
     "axios-https-proxy-fix": "^0.17.1",
     "socks-proxy-agent": "^6.2.0-beta.0",
     "universal-analytics": "^0.5.3",
-    "user-agents": "^1.0.965",
+    "user-agents": "^1.0.970",
     "uuid4": "^2.0.2"
   },
   "devDependencies": {

@@ -16,6 +16,7 @@ export interface SlowLorisTarget {
 export interface GetTarget {
   method: 'get'
   page: string
+  ip?: string
 }
 
 export interface PostTarget {

