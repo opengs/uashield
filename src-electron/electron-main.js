@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme, ipcMain } from 'electron'
+import { app, BrowserWindow, nativeTheme, ipcMain, Tray, Menu, nativeImage } from 'electron'
 import path from 'path'
 import os from 'os'
 
@@ -10,6 +10,8 @@ const { autoUpdater } = require('electron-updater')
 
 // needed in case process is undefined under Linux
 const platform = process.platform || os.platform()
+const appIcon = nativeImage.createFromPath(path.resolve(__dirname, 'icons/icon.png'))
+const appName = 'UA Cyber SHIELD'
 
 try {
   if (platform === 'win32' && nativeTheme.shouldUseDarkColors === true) {
@@ -18,6 +20,10 @@ try {
 } catch (_) { }
 
 let mainWindow
+let tray
+// default value will be set in Index.vue -> mounted
+let minimizeToTray
+let isQuite
 
 function sendStatusToWindow (text) {
   try {
@@ -31,7 +37,7 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    icon: path.resolve(__dirname, 'icons/icon.png'), // tray icon
+    icon: appIcon,
     width: 600,
     height: 900,
     useContentSize: true,
@@ -43,17 +49,63 @@ function createWindow () {
     }
   })
 
+  // Tray constructor requires image as a param, icon is going to be changed later
+  tray = new Tray(nativeImage.createEmpty())
+  tray.setToolTip(appName)
+  tray.setImage(appIcon.resize({ width: 16, height: 16 }))
+  // For win platform, open context with click on tray icon
+  tray.on('click', () => {
+    tray.popUpContextMenu()
+  })
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: `Show ${appName}`,
+      click: () => {
+        // restore from minimized state
+        mainWindow.restore()
+        // bring into focus
+        mainWindow.show()
+      }
+    },
+    { type: 'separator' },
+    {
+      label: 'Quite',
+      click: () => {
+        isQuite = true
+        mainWindow.close()
+      }
+    }
+  ])
+
+  tray.setContextMenu(contextMenu)
+
   mainWindow.setMenu(null)
   mainWindow.loadURL(process.env.APP_URL)
   if (process.env.DEBUGGING) {
   // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
+    // close window on reload
+    isQuite = true
   } else {
     // we're on production; no access to devtools pls
     mainWindow.webContents.on('devtools-opened', () => {
       mainWindow.webContents.closeDevTools()
     })
   }
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.send('systemRunAtStartup', app.getLoginItemSettings().openAtLogin)
+  })
+
+  mainWindow.on('close', (event) => {
+    if (minimizeToTray && !isQuite) {
+      event.preventDefault()
+      mainWindow.minimize()
+    } else {
+      app.quit()
+    }
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -72,16 +124,10 @@ function createWindow () {
   engine.setExecutorStartegy('automatic')
 
   const window = mainWindow
+
   engine.executionStartegy.on('atack', (data) => window.webContents.send('atack', data))
   engine.executionStartegy.on('error', (data) => window.webContents.send('error', data))
   engine.executionStartegy.on('automatic_executorsCountUpdate', (data) => window.webContents.send('executorsCountUpdate', data))
-
-  // const doser = new Doser(true, 32)
-  // const window = mainWindow
-  // doser.listen('atack', (data) => console.log(data.log))
-  // doser.listen('atack', (data) => window.webContents.send('atack', data))
-  // doser.listen('error', (data) => window.webContents.send('error', data))
-  // doser.start()
 
   engine.start()
 
@@ -106,6 +152,17 @@ function createWindow () {
 
   ipcMain.on('updateMaxDosersCount', (event, arg) => {
     engine.executionStartegy.setExecutorsCount(arg.newVal)
+  })
+
+  ipcMain.on('updateMinimizeToTray', (event, arg) => {
+    minimizeToTray = !!arg.newVal
+  })
+
+  ipcMain.on('updateRunAtStartup', (event, arg) => {
+    app.setLoginItemSettings({
+      openAtLogin: arg.newVal,
+      name: appName
+    })
   })
 
   ipcMain.on('installUpdate', () => {
@@ -144,7 +201,9 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow()
+})
 
 function checkUpdates () {
   try {
