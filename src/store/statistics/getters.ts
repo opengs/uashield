@@ -17,8 +17,8 @@ export interface StatisticsGetters {
 }
 
 const getters: GetterTree<StatisticsState, StateInterface> = {
-  rank () {
-    return 0
+  rank ({ ddos }) {
+    return Math.min(Math.floor(ddos.allTimeRequests / 1100000), 24)
   },
 
   ddosAllTimeRequests ({ ddos }) {

@@ -15,7 +15,7 @@ export default {
       },
       ddos: {
         title: 'DDoS',
-        caption: 'Denial of service atack'
+        caption: 'Denial of service attack'
       },
       bruteforce: {
         title: 'Brute Force',
@@ -36,7 +36,7 @@ export default {
       header: 'Your rank in is'
     },
     totalDDoSAtacks: {
-      header: 'Total DDoS atacks count'
+      header: 'Total DDoS attacks count'
     },
     currentWorkers: {
       header: 'Current threads'
@@ -89,6 +89,39 @@ export default {
       masDosersCount: {
         name: 'Number of threads',
         description: 'Defines the number of attack processes. The application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust the amount of the attack processes according to new settings.'
+      }
+    }
+  },
+  statistics: {
+    rank: {
+      title: 'Rank',
+      caption: 'Make more attacks to reveice highter rank',
+      level: {
+        0: 'PTN',
+        1: 'Chmonia',
+        2: 'Yanukovych',
+        3: 'Potato man',
+        4: 'Gordon in chocolate',
+        5: 'Yushchenko bees',
+        6: 'Volunteer',
+        7: 'Javelin',
+        8: 'Pickled cucumber jar',
+        9: 'S-300',
+        10: 'NLAW',
+        11: 'Bayraktar',
+        12: 'Ukrainian gopnik',
+        13: 'Teritorial defence',
+        14: 'Joe Biden',
+        15: 'Andrej Duda',
+        16: 'Emmanuel Macron',
+        17: 'Boris Johnson',
+        18: 'Gypsy with tractor',
+        19: 'Ghost of Kyiv',
+        20: 'Vitaliy Kim',
+        21: 'Stepan Bandera',
+        22: 'Oleksiy Arestovych',
+        23: 'Valerii Zaluzhnyi',
+        24: 'Volodymyr Zelenskyy'
       }
     }
   },
