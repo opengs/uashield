@@ -51,7 +51,7 @@
     </div>
 
     <div class="row q-col-gutter-sm q-ma-xs q-mr-sm">
-      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+      <!-- <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
         <q-card class="bg-grey-10">
           <q-card-section class="bg-grey-10 text-white">
             <div class="text-h6">{{ $t('dashboard.efficiency.header') }}</div>
@@ -60,8 +60,8 @@
             <Efficiency />
           </q-card-section>
         </q-card>
-      </div>
-      <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+      </div> -->
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <q-card class="bg-grey-10 fit">
           <q-card-section class="bg-grey-10 text-white">
             <div class="text-h6">{{ $t('dashboard.requestsPerMinute.header') }}</div>
@@ -78,14 +78,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import Efficiency from '../components/dashboard/Efficiency.vue'
+// import Efficiency from '../components/dashboard/Efficiency.vue'
 import RequestsPerMinute from '../components/dashboard/RequestsPerMinute.vue'
 
 export default defineComponent({
   name: 'Dashboard',
 
   components: {
-    Efficiency,
+    // Efficiency,
     RequestsPerMinute
   }
 })

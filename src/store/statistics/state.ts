@@ -2,7 +2,7 @@ export class ActionsPerMinuteLog {
   public log: Array<{ timestamp: number, count: number }> = []
 
   private MAX_LOG_SIZE = 60
-  private STATISTICS_DELAY = 10
+  private STATISTICS_DELAY = 60
   private lastEntry: { timestamp: number, count: number }
 
   constructor () {
