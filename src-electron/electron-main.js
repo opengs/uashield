@@ -165,7 +165,7 @@ function createWindow () {
   // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
     // close window on reload
-    // isQuite = true
+    isQuite = true
   } else {
     // we're on production; no access to devtools pls
     mainWindow.webContents.on('devtools-opened', () => {
