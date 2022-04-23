@@ -44,7 +44,7 @@ try {
 let mainWindow
 let tray
 // default value will be set in Index.vue -> mounted
-let isQuite
+let isQuit
 
 const singleInstanceLock = app.requestSingleInstanceLock()
 if (!singleInstanceLock) {
@@ -149,9 +149,9 @@ function createWindow () {
     },
     { type: 'separator' },
     {
-      label: 'Quite',
+      label: 'Quit',
       click: () => {
-        isQuite = true
+        isQuit = true
         mainWindow.close()
       }
     }
@@ -165,7 +165,7 @@ function createWindow () {
   // if on DEV or Production with debug enabled
     mainWindow.webContents.openDevTools()
     // close window on reload
-    isQuite = true
+    isQuit = true
   } else {
     // we're on production; no access to devtools pls
     mainWindow.webContents.on('devtools-opened', () => {
@@ -178,7 +178,7 @@ function createWindow () {
   })
 
   mainWindow.on('close', (event) => {
-    if (storageData.settings.minimizeToTray && !isQuite && !mainWindow.isMinimized()) {
+    if (storageData.settings.minimizeToTray && !isQuit && !mainWindow.isMinimized()) {
       event.preventDefault()
       mainWindow.minimize()
     } else {
