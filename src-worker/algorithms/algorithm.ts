@@ -17,7 +17,7 @@ export interface ExecutionResult {
   target: Target
 }
 
-export type AlgorithmType = 'get' | 'post' | 'udp_flood' | 'slowloris'
+export type AlgorithmType = 'get' | 'post' | 'udp_flood' | 'slowloris' | 'dns_flood'
 export type runningValidation = () => boolean
 
 export abstract class Algorithm {
@@ -27,7 +27,16 @@ export abstract class Algorithm {
     this.config = config
   }
 
+  /**
+   * Check if target data is valid for this algorithm
+   */
   abstract isValid (target: Target): boolean
+
+  /**
+   * Check if algorithm can be executed for current target with current settings
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  canExecute (target: Target): boolean { return true }
 
   /**
    * Run one iteration of the algorithm

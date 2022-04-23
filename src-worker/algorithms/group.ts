@@ -3,6 +3,7 @@ import { Get } from './get'
 import { Post } from './post'
 import { UDPFlood } from './udpFlood'
 import { SlowLoris } from './slowloris'
+import { DNSFlood } from './dnsFlood'
 
 import { ProxyPool } from '../external/proxyPool'
 
@@ -15,6 +16,7 @@ export class AlgorithmGroup {
     this.algorithmMap.set('post', new Post(config, proxyPool))
     this.algorithmMap.set('udp_flood', new UDPFlood(config))
     this.algorithmMap.set('slowloris', new SlowLoris(config))
+    this.algorithmMap.set('dns_flood', new DNSFlood(config))
   }
 
   getByType (algorithmType: AlgorithmType) : Algorithm {

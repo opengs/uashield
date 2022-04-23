@@ -5,6 +5,7 @@ export default {
       dashboard: 'Панель керування',
       ddos: 'DDoS',
       bruteforce: 'Brute force',
+      bomber: 'Бомбер',
       statistics: 'Статистика',
       settings: 'Налаштування'
     },
@@ -20,6 +21,10 @@ export default {
       bruteforce: {
         title: 'Brute Force',
         caption: 'Взлом паролів противника'
+      },
+      bomber: {
+        title: 'Бомбер',
+        caption: 'Бомбардування телефонів через CМС та звінки'
       },
       statistics: {
         title: 'Статистика',
@@ -99,6 +104,16 @@ export default {
       cancel: 'Відміна',
       confirm: 'Встановити оновлення'
     }
+  },
+  bomber: {
+    header: 'Телефонний бомбер',
+    description: 'Бомбер висилає велику кількість СМС та пробує зробити звінки на телефон жертви. Для цієї атаки обовязково потрібен включений VPN. Памятайте, що цей бомбер використовують одночасно тисячі осіб. Тому ефективнітсть може бути дуже малою',
+    running: {
+      title: 'Атака включена',
+      caption: 'Включити виключити бомбера'
+    },
+    successFullAttacks: 'Вдалих атак: ',
+    failedAttacks: 'Невдалих: '
   },
   statistics: {
     rank: {

@@ -1,4 +1,7 @@
-import agent from 'superagent'
+import agent, { SuperAgentRequest } from 'superagent'
+import { isWebUri } from 'valid-url'
+
+import { getRandomValue } from './utils/randomGenerators'
 
 import CacheableLookup, { CacheInstance } from 'cacheable-lookup'
 import QuickLRU from './utils/lru'
@@ -7,7 +10,7 @@ import { HttpProxyAgent } from 'http-proxy-agent'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import { SocksProxyAgent } from 'socks-proxy-agent'
 
-import { GetTarget } from '../external/targetsPool'
+import { GetTarget, PostTarget } from '../external/targetsPool'
 import { Proxy, ProxyPool } from '../external/proxyPool'
 import { Algorithm, Config, ExecutionResult } from './algorithm'
 
@@ -32,14 +35,11 @@ export abstract class SimpleHTTP extends Algorithm {
     })
   }
 
-  isValid (target: GetTarget): boolean {
-    if (typeof target.page !== 'string' || !target.page.startsWith('http')) {
-      return false
-    }
-    return true
+  isValid (target: GetTarget | PostTarget): boolean {
+    return isWebUri(target.page) !== undefined
   }
 
-  async execute (target: GetTarget, isRunning: () => boolean): Promise<ExecutionResult> {
+  async execute (target: GetTarget | PostTarget, isRunning: () => boolean): Promise<ExecutionResult> {
     // Setting up proxy config
     let packetsSend = 0, packetsSuccess = 0
 
@@ -66,7 +66,7 @@ export abstract class SimpleHTTP extends Algorithm {
 
     let success = true
     while (success && repeats > 0 && isRunning()) {
-      success = await this.makeRequest(target.page, proxyAgent)
+      success = await this.makeRequest(target, proxyAgent)
       packetsSend += 1
       repeats -= 1
       if (success) {
@@ -81,10 +81,11 @@ export abstract class SimpleHTTP extends Algorithm {
     return { packetsSend, packetsSuccess, target, packetsNeutral: 0 }
   }
 
-  protected async makeRequest (url: string, httpAgent: HttpProxyAgent | HttpsProxyAgent | SocksProxyAgent | null) {
+  protected async makeRequest (target: GetTarget | PostTarget, httpAgent: HttpProxyAgent | HttpsProxyAgent | SocksProxyAgent | null) {
     try {
       const headers = HttpHeadersUtils.generateRequestHeaders()
-      let request = agent(this.method, url)
+      const requestURL = this.makeRequestURL(target)
+      let request = agent(this.method, requestURL)
       if (httpAgent !== null) {
         request = request.agent(httpAgent)
       }
@@ -92,28 +93,35 @@ export abstract class SimpleHTTP extends Algorithm {
       request = request.set('Accept', headers.Accept)
       request = request.set('Accept-Language', headers['Accept-Language'])
       request = request.set('User-Agent', headers['User-Agent'])
+      request = this.beforeRequest(request, target)
 
       const response = await request.timeout(this.config.timeout)
 
       if (this.config.logRequests) {
+        const logURL = (typeof target.name === 'string') ? target.name : target.page
         if (this.config.logTimestamp) {
-          console.log(`${new Date().toISOString()} | ${url} | ${response.status}`)
+          console.log(`${new Date().toISOString()} | HTTP | ${logURL} | ${response.status}`)
         } else {
-          console.log(`${url} | ${response.status}`)
+          console.log(`HTTP | ${logURL} | ${response.status}`)
         }
       }
 
       return true
     } catch (e) {
       if (this.config.logRequests) {
+        const logURL = (typeof target.name === 'string') ? target.name : target.page
         if (this.config.logTimestamp) {
-          console.log(`${new Date().toISOString()} | ${url} | DOWN OR BLOCKED`)
+          console.log(`${new Date().toISOString()} | HTTP | ${logURL} | DOWN OR BLOCKED`)
         } else {
-          console.log(`${url} | DOWN OR BLOCKED`)
+          console.log(`HTTP | ${logURL} | DOWN OR BLOCKED`)
         }
       }
       return false
     }
+  }
+
+  protected beforeRequest (agent: SuperAgentRequest, target: GetTarget | PostTarget): SuperAgentRequest {
+    return agent
   }
 
   protected makeRequestAgent (page: string, proxy: Proxy) {
@@ -148,5 +156,19 @@ export abstract class SimpleHTTP extends Algorithm {
     } else {
       return new HttpProxyAgent(options)
     }
+  }
+
+  protected makeRequestURL (target: GetTarget | PostTarget): string {
+    let url = target.page
+
+    if (Array.isArray(target.randomGenerators)) {
+      for (const generator of target.randomGenerators) {
+        if (typeof generator.name === 'string') {
+          url = url.replace(`%%%${generator.name}%%%`, () => getRandomValue(generator))
+        }
+      }
+    }
+
+    return url
   }
 }

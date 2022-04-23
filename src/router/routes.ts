@@ -9,6 +9,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'dashboard', name: 'dashboard', component: () => import('pages/Dashboard.vue') },
       { path: 'ddos', name: 'ddos', component: () => import('pages/DDoS.vue') },
       { path: 'bruteforce', name: 'bruteforce', component: () => import('pages/BruteForce.vue') },
+      { path: 'bomber', name: 'bomber', component: () => import('pages/Bomber.vue') },
       { path: 'statistics', name: 'statistics', component: () => import('pages/Statistics.vue') },
       { path: 'settings', name: 'settings', component: () => import('pages/Settings.vue') }
     ]

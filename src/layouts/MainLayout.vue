@@ -62,6 +62,12 @@ const menuList = [
     caption: 'layout.menu.bruteforce.caption',
     icon: 'password'
   },
+  /* {
+    link: 'bomber',
+    title: 'layout.menu.bomber.title',
+    caption: 'layout.menu.bomber.caption',
+    icon: 'smartphone'
+  }, */
   {
     link: 'statistics',
     title: 'layout.menu.statistics.title',

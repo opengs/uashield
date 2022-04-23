@@ -24,9 +24,10 @@ const mutation: MutationTree<DDoSState> = {
     storage.withProxy = newValue
   },
 
-  HANDLE_ATACK (storage, data: { target: { page: string }, packetsSend: number, packetsSuccess: number, packetsNeutral: number }) {
+  HANDLE_ATACK (storage, data: { target: { page: string, name?: string, method: string }, packetsSend: number, packetsSuccess: number, packetsNeutral: number }) {
     if ((new Date()).getTime() - storage.lastAttackChange.getTime() > 1000) {
-      storage.currentAttack = data.target.page
+      const targetName = (data.target.name !== undefined) ? data.target.name : data.target.page
+      storage.currentAttack = `${data.target.method} | ${targetName}`
       storage.lastAttackChange = new Date()
     }
     storage.requestsInSession += data.packetsSend

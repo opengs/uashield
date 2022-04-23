@@ -67,6 +67,11 @@ export class Executor {
 
     const algorithm = this.algorithmGroup.getByType(target.method)
 
+    if (algorithm === undefined) {
+      this.targetsPool.deleteTarget(target)
+      return
+    }
+
     // delete the target from the targetsPool if it is not valid
     if (!algorithm.isValid(target)) {
       this.targetsPool.deleteTarget(target)

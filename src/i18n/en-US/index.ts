@@ -5,6 +5,7 @@ export default {
       dashboard: 'Dashboard',
       ddos: 'DDoS',
       bruteforce: 'Brute force',
+      bomber: 'Bomber',
       statistics: 'Statistics',
       settings: 'Settings'
     },
@@ -20,6 +21,10 @@ export default {
       bruteforce: {
         title: 'Brute Force',
         caption: 'Cracking enemy passwords'
+      },
+      bomber: {
+        title: 'Bomber',
+        caption: 'Bombarding with SMS and calls'
       },
       statistics: {
         title: 'Statistics',
@@ -91,6 +96,16 @@ export default {
         description: 'Defines the number of attack processes. The application relies on asynchronous operations (not parallel via threads), thanks to that CPU/RAM are not overloaded. Once adjusted, it will usually take around 10 seconds to adjust the amount of the attack processes according to new settings.'
       }
     }
+  },
+  bomber: {
+    header: 'Phone bomber',
+    description: 'Bomber sends SMS and makes phone calls to the target. You must have enabled VPN for this attack. Remember, that while everyone uses bomber, efficiency may be very low.',
+    running: {
+      title: 'Attack enabled',
+      caption: 'Start or stop attack'
+    },
+    successFullAttacks: 'Successfull attacks: ',
+    failedAttacks: 'Failed attacks: '
   },
   statistics: {
     rank: {

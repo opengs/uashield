@@ -9,7 +9,7 @@
             <q-item-label>{{ $t('statistics.rank.level.' + (i - 1) ) }}</q-item-label>
           </q-item-section>
           <q-item-section avatar>
-            {{ (i - 1) * 1100000 }}
+            {{ (i - 1) * 3000000 }}
           </q-item-section>
         </q-item>
       </q-card-section>

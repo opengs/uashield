@@ -1,29 +1,76 @@
 import { Axios, AxiosResponse, AxiosError } from 'axios'
 
-const targetMethods = ['get', 'post', 'udp_flood', 'slowloris']
+const targetMethods = ['get', 'post', 'udp_flood', 'slowloris', 'dns_flood']
+type TargetMethod = 'get' | 'post' | 'udp_flood' | 'slowloris' | 'dns_flood'
 
-export interface UDPFloodTarget {
+export interface StringRandomGenerator {
+  type: 'string'
+  name: string
+  length?: number
+  minLength?: number
+  maxLength?: number
+}
+
+export interface EnumRandomGenerator {
+  type: 'enum'
+  name: string
+  values: Array<string>
+}
+
+export interface IntegerRandomGenerator {
+  type: 'integer'
+  name: string
+  minValue?: number
+  maxValue?: number
+}
+
+export interface DateRandomGenerator {
+  type: 'date'
+  name: string
+  /**
+   * https://day.js.org/docs/en/display/format
+  */
+  format: string
+  minValue?: string
+  maxValue?: string
+}
+
+export interface TargetBase {
+  method: TargetMethod
+  name?: string
+  randomGenerators?: Array<StringRandomGenerator | IntegerRandomGenerator | DateRandomGenerator | EnumRandomGenerator>
+}
+
+export interface UDPFloodTarget extends TargetBase {
   method: 'udp_flood'
+  ip: string
+  port: number
+  domains?: Array<string>
+}
+
+export interface DNSFloodTarget extends TargetBase {
+  method: 'dns_flood'
   ip: string
   port: number
 }
 
-export interface SlowLorisTarget {
+export interface SlowLorisTarget extends TargetBase {
   method: 'slowloris'
   page: string
 }
 
-export interface GetTarget {
+export interface GetTarget extends TargetBase {
   method: 'get'
   page: string
 }
 
-export interface PostTarget {
+export interface PostTarget extends TargetBase {
   method: 'post'
   page: string
+  body?: string
 }
 
-export type Target = GetTarget | PostTarget | UDPFloodTarget | SlowLorisTarget
+export type Target = GetTarget | PostTarget | UDPFloodTarget | SlowLorisTarget | DNSFloodTarget
 
 const SOURCES_URL = 'https://raw.githubusercontent.com/opengs/uashieldtargets/master/target_sources.json'
 interface Source {
