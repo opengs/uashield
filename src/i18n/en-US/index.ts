@@ -110,7 +110,7 @@ export default {
   statistics: {
     rank: {
       title: 'Rank',
-      caption: 'Make more attacks to reveice highter rank',
+      caption: 'Make more attacks to reveice highter rank. Only successfull attacks matter',
       level: {
         0: 'PTN',
         1: 'Chmonia',

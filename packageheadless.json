@@ -21,7 +21,10 @@
     "user-agents": "^1.0.965",
     "uuid4": "^2.0.2",
     "yargs": "^17.4.0",
-    "cacheable-lookup": "^6.0.4"
+    "cacheable-lookup": "^6.0.4",
+    "dayjs": "^1.11.0",
+    "valid-url": "^1.0.9",
+    "is-valid-domain": "^0.1.6"
   },
   "devDependencies": {
     "@types/node": "^16.11.26",
