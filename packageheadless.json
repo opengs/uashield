@@ -24,7 +24,8 @@
     "cacheable-lookup": "^6.0.4",
     "dayjs": "^1.11.0",
     "valid-url": "^1.0.9",
-    "is-valid-domain": "^0.1.6"
+    "is-valid-domain": "^0.1.6",
+    "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
     "@types/node": "^16.11.26",

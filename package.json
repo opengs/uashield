@@ -1,6 +1,6 @@
 {
   "name": "shield",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Cyber security shield",
   "productName": "UA Cyber SHIELD",
   "author": "Mykola Zhyhallo <mzhyhall@gmail.com>",
@@ -35,6 +35,7 @@
     "is-valid-domain": "^0.1.6",
     "is-valid-http-url": "^1.0.3",
     "node-localstorage": "^2.2.1",
+    "node-machine-id": "^1.1.12",
     "path": "^0.12.7",
     "playwright-core": "^1.20.1",
     "quasar": "^2.0.0",
