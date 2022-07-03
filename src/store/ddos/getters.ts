@@ -16,6 +16,7 @@ export interface DDoSGetters {
   'ddos/realtimeSuccessAtackRate': number
   'ddos/allTimeSuccessAttackRate': number
   'ddos/requestsInSessionNotInStatistics': number
+  'ddos/successfullRequestsInSessionNotInStatistics': number
 
   'ddos/currentAttack': string
 }
@@ -54,6 +55,9 @@ const getters: GetterTree<DDoSState, StateInterface> = {
   },
   requestsInSessionNotInStatistics ({ requestsInSession, requestsAddedToStatistic }) {
     return requestsInSession - requestsAddedToStatistic
+  },
+  successfullRequestsInSessionNotInStatistics ({ successFullReqeustsInSession, successFullReqeustsAddedToStatistic }) {
+    return successFullReqeustsInSession - successFullReqeustsAddedToStatistic
   },
 
   currentAttack ({ currentAttack }) {

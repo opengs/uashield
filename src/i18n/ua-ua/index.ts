@@ -41,7 +41,7 @@ export default {
       header: 'Твоє звання'
     },
     totalDDoSAtacks: {
-      header: 'Загальна кількість DDoS атак'
+      header: 'Загальна кількість успішних DDoS атак'
     },
     currentWorkers: {
       header: 'Актуальна кількість DDoS потоків'

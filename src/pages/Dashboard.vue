@@ -23,7 +23,7 @@
             <div class="row">
               <div class="col-10">
                 <div class="text-h6">{{ $t('dashboard.totalDDoSAtacks.header') }}</div>
-                <div class="text-h5">{{ $store.getters['statistics/ddosAllTimeRequests'] + $store.getters['ddos/requestsInSessionNotInStatistics'] }}</div>
+                <div class="text-h5">{{ $store.getters['statistics/ddosAllTimeSuccessfullRequests'] + $store.getters['ddos/successfullRequestsInSessionNotInStatistics'] }} / {{ $store.getters['statistics/ddosAllTimeRequests'] + $store.getters['ddos/requestsInSessionNotInStatistics'] }}</div>
               </div>
               <div class="col-2">
                 <q-icon size="62px" name="trending_up"/>

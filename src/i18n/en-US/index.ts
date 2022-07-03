@@ -41,7 +41,7 @@ export default {
       header: 'Your rank in is'
     },
     totalDDoSAtacks: {
-      header: 'Total DDoS attacks count'
+      header: 'Total successfull DDoS attacks count'
     },
     currentWorkers: {
       header: 'Current threads'
