@@ -26,8 +26,8 @@ services:
     image: ghcr.io/opengs/uashield:latest
     restart: always
     command:
-      - \"128\"
-      - \"false\"" >> /home/docker-compose.yaml
+      - \"--workers=128\"
+      - \"--useProxy=false\"" >> /home/docker-compose.yaml
 
 sudo apt install -y docker-compose
 
