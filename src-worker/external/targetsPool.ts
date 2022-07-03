@@ -1,6 +1,6 @@
 import { Axios, AxiosResponse, AxiosError } from 'axios'
 
-const targetMethods = ['get', 'post', 'udp_flood', 'slowloris', 'dns_flood']
+// const targetMethods = ['get', 'post', 'udp_flood', 'slowloris', 'dns_flood']
 type TargetMethod = 'get' | 'post' | 'udp_flood' | 'slowloris' | 'dns_flood'
 
 export interface StringRandomGenerator {
@@ -75,7 +75,7 @@ export type Target = GetTarget | PostTarget | UDPFloodTarget | SlowLorisTarget |
 const SOURCES_URL = 'https://raw.githubusercontent.com/opengs/uashieldtargets/master/target_sources.json'
 interface Source {
   url: string
-  type?: "raw" | "base64"
+  type?: 'raw' | 'base64'
 }
 
 export class TargetsPool {
@@ -127,14 +127,14 @@ export class TargetsPool {
       try {
         const targets = await this.loadFromSource(source)
         if (!Array.isArray(targets)) {
-          throw new Error("Loaded targets are not array.")
+          throw new Error('Loaded targets are not array.')
         }
         targets.forEach((t) => {
           t.method = t.method || 'get'
         })
         loadedTargetsList.push(...targets)
       } catch (e) {
-        console.warn(`Failed to load targets from ${source.url}. Error: ${e}`)
+        console.warn(`Failed to load targets from ${source.url}. Error: ${String(e)}`)
       }
     }
 
@@ -152,26 +152,26 @@ export class TargetsPool {
    * @param source where to load
    */
   protected async loadFromSource (source: Source) : Promise<Target[]> {
-    let loadedRawData = ""
+    let loadedRawData = ''
     try {
-      const response: AxiosResponse<string> = await this.axiosClient.get(source.url, { timeout: 30000, responseType: 'text', transformResponse: (r) => r })
+      const response: AxiosResponse<string> = await this.axiosClient.get(source.url, { timeout: 30000, responseType: 'text', transformResponse: (r: string) => r })
       loadedRawData = response.data
     } catch (e) {
-      throw new Error(`Failed to load source due to error: ${e}`)
+      throw new Error(`Failed to load source due to error: ${String(e)}`)
     }
 
     if (source.type === 'base64') {
       try {
         loadedRawData = Buffer.from(loadedRawData, 'base64').toString('utf8')
       } catch (e) {
-        throw new Error(`Failed to decode base64 data. Error: ${e}`)
+        throw new Error(`Failed to decode base64 data. Error: ${String(e)}`)
       }
     }
 
     try {
       return JSON.parse(loadedRawData) as Target[]
     } catch (e) {
-      throw new Error(`Failed to load received data as JSON. Error: ${e}`)
+      throw new Error(`Failed to load received data as JSON. Error: ${String(e)}`)
     }
   }
 

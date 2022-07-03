@@ -120,7 +120,8 @@ export abstract class SimpleHTTP extends Algorithm {
     }
   }
 
-  protected beforeRequest (agent: SuperAgentRequest, target: GetTarget | PostTarget): SuperAgentRequest {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected beforeRequest (agent: SuperAgentRequest, _target: GetTarget | PostTarget): SuperAgentRequest {
     return agent
   }
 
