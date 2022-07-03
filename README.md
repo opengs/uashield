@@ -40,7 +40,7 @@
 ## Headless версія (Docker)
 
 1. Збірка образу: `docker build . -t uashield`
-2. Запуск: `docker run uashield --workers=500 --withProxy=true` - де **--workers=**`500` - кількість потоків, і **--withProxy=**`true` | `false` чи ви бажаєте використовувати проксі
+2. Запуск: `docker run uashield --workers=512 --withProxy=true` - де **--workers=**`512` - кількість потоків, і **--withProxy=**`true` | `false` чи ви бажаєте використовувати проксі
 
 Повна довідка про команди: `docker run uashield --help`
 
