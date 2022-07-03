@@ -42,7 +42,7 @@
 1. Збірка образу: `docker build . -t uashield`
 2. Запуск: `docker run uashield --workers=500 --withProxy=true` - де `workers` - кількість потоків, і --withProxy=`true` | `false` чи ви бажаєте використовувати проксі
 
-Повна довідка про команди: docker run uashield --help
+Повна довідка про команди: `docker run uashield --help`
 
 Або за допомогою вже [зібраного образу](https://github.com/opengs/uashield/pkgs/container/uashield):
 
