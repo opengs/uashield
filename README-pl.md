@@ -37,7 +37,7 @@ Zaatakowane cele są automatycznie zmieniane i pobierane z centrum kontroli / se
 1. Zbuduj obraz: `docker build . -t uashield`
 2. Uruchom: `docker run uashield --workers=512 --withProxy=true` - gdzie --workers=`512` - ilość wątków, a --withProxy=`true` | `false` oznacza czy chcesz używać proxy
 
-Pełna pomoc dotycząca poleceń - `docker run uashield --help`
+Pełna pomoc dotycząca poleceń: `docker run uashield --help`
 
 Lub użyj [gotowy-obraz](https://github.com/opengs/uashield/pkgs/container/uashield):
 
