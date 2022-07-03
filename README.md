@@ -40,12 +40,14 @@
 ## Headless версія (Docker)
 
 1. Збірка образу: `docker build . -t uashield`
-2. Запуск: `docker run uashield 500 true` - де `500` - кількість потоків, і `true` | `false` чи ви бажаєте використовувати проксі
+2. Запуск: `docker run uashield --workers=500 --withProxy=true` - де `workers` - кількість потоків, і --withProxy=`true` | `false` чи ви бажаєте використовувати проксі
+
+Повна довідка про команди: docker run uashield --help
 
 Або за допомогою вже [зібраного образу](https://github.com/opengs/uashield/pkgs/container/uashield):
 
 ```bash
-docker run -d ghcr.io/opengs/uashield:master 512 true
+docker run ghcr.io/opengs/uashield:master --workers=512 --withProxy=true
 ```
 
 ## Docker-compose версія
