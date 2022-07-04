@@ -35,7 +35,7 @@ Zaatakowane cele są automatycznie zmieniane i pobierane z centrum kontroli / se
 ## Wersja nienadzorowana (Docker)
 
 1. Zbuduj obraz: `docker build . -t uashield`
-2. Uruchom: `docker run uashield --workers=512 --withProxy=true` - gdzie --workers=`512` - ilość wątków, a --withProxy=`true` | `false` oznacza czy chcesz używać proxy
+2. Uruchom: `docker run uashield --workers=512 --withProxy=true` - gdzie **--workers=**`512` - ilość wątków, a **--withProxy=**`true` | `false` oznacza czy chcesz używać proxy
 
 Pełna pomoc dotycząca poleceń: `docker run uashield --help`
 
