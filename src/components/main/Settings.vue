@@ -5,7 +5,7 @@
     <div class="q-px-md q-mt-sm" v-text="$t('main.settings.language')" />
     <LanguageSelect class="q-px-md q-my-sm" />
 
-    <q-item dense class="q-px-md" v-for="item in getSettingsList()" :key="item.title" tag="label" v-ripple @click="item.model = !item.model">
+    <q-item dense class="q-px-md" v-for="item in getSettingsList()" :key="item.title" tag="label" v-ripple>
       <q-item-section>
         <q-item-label v-text="item.title" />
       </q-item-section>
@@ -16,7 +16,7 @@
               {{ item.description }}
             </q-tooltip>
           </q-icon>
-          <q-toggle size="32px" color="light-blue-13" :model-value="item.model" />
+          <q-toggle size="32px" color="light-blue-13" v-model="this[item.model]" />
         </div>
       </q-item-section>
     </q-item>
@@ -61,31 +61,31 @@ export default defineComponent({
         {
           title: this.$t('main.settings.autoLaunch.title'),
           description: this.$t('main.settings.autoLaunch.description'),
-          model: this.autolaunch
+          model: 'autolaunch'
         },
 
         {
           title: this.$t('main.settings.logRequests.title'),
           description: this.$t('main.settings.logRequests.description'),
-          model: this.logRequests
+          model: 'logRequests'
         },
 
         {
           title: this.$t('main.settings.logTimestamp.title'),
           description: this.$t('main.settings.logTimestamp.description'),
-          model: this.logTimestamp
+          model: 'logTimestamp'
         },
 
         {
           title: this.$t('main.settings.autoUpdate.title'),
           description: this.$t('main.settings.autoUpdate.description'),
-          model: this.autoUpdate
+          model: 'autoUpdate'
         },
 
         {
           title: this.$t('main.settings.minimizeToTray.title'),
           description: this.$t('main.settings.minimizeToTray.description'),
-          model: this.minimizeToTray
+          model: 'minimizeToTray'
         }
       ]
     }
