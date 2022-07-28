@@ -7,6 +7,7 @@ import { UserData } from '../../../src-lib/storage'
 
 const actions: ActionTree<SettingsState, StateInterface> = {
   loadFromUserData ({ commit }, data: UserData) {
+    commit('SET_IP', data.settings.ip)
     commit('SET_LANGUAGE', data.settings.language)
     commit('SET_AUTO_LAUNCH', data.settings.autoLaunch)
     commit('SET_AUTO_UPDATE', data.settings.autoUpdate)

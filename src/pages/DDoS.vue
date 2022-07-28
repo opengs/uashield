@@ -104,8 +104,8 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat :label="$t('ddos.update.cancel')" color="primary" v-close-popup />
-          <q-btn flat :label="$t('ddos.update.confirm')" color="primary" v-close-popup @click="confirmInstallUpdate"/>
+          <q-btn flat :label="$t('ddos.update.cancel')" color="blue" v-close-popup />
+          <q-btn flat :label="$t('ddos.update.confirm')" color="blue" v-close-popup @click="confirmInstallUpdate"/>
         </q-card-actions>
       </q-card>
     </q-dialog>

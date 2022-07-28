@@ -79,7 +79,7 @@
 import { defineComponent } from 'vue'
 
 // import Efficiency from '../components/dashboard/Efficiency.vue'
-import RequestsPerMinute from '../components/dashboard/RequestsPerMinute.vue'
+import RequestsPerMinute from '../components/main/RequestsPerMinute.vue'
 
 export default defineComponent({
   name: 'Dashboard',

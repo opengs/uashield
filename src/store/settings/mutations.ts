@@ -4,6 +4,9 @@ import { MutationTree } from 'vuex'
 import { SettingsState } from './state'
 
 const mutation: MutationTree<SettingsState> = {
+  SET_IP (storage, ip: string) {
+    storage.ip = ip
+  },
   SET_LANGUAGE (storage, language: string) {
     i18n.global.locale = language
     storage.language = language

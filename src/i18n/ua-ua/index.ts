@@ -2,6 +2,7 @@ export default {
   language: 'Мова',
   layout: {
     header: {
+      main: 'Головна',
       dashboard: 'Панель керування',
       ddos: 'DDoS',
       bruteforce: 'Brute force',
@@ -10,6 +11,10 @@ export default {
       settings: 'Налаштування'
     },
     menu: {
+      main: {
+        title: 'Головна',
+        caption: 'Загальний статус програми'
+      },
       dashboard: {
         title: 'Панель керування',
         caption: 'Загальний статус програми'

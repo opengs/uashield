@@ -3,6 +3,7 @@ import { hideBin } from 'yargs/helpers'
 
 export function parseArguments () {
   return yargs(hideBin(process.argv)).options({
+    ip: { type: 'string', default: undefined, description: 'Your ip' },
     startDDoS: { type: 'boolean', default: undefined, description: 'Immediatelly start DDoS (only for GUI version)' },
     logTimestamp: { type: 'boolean', default: undefined, description: 'Show timestamp in logs' },
     logRequests: { type: 'boolean', default: undefined, description: 'Log every request status' },
