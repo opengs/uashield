@@ -41,7 +41,7 @@ export default {
       header: 'Your rank in is'
     },
     totalDDoSAtacks: {
-      header: 'Total successfull DDoS attacks count'
+      header: 'Total successful DDoS attacks count'
     },
     currentWorkers: {
       header: 'Current threads'
@@ -89,7 +89,7 @@ export default {
       },
       automaticMode: {
         name: 'Automatic mode',
-        description: 'When enabled, program analizes efficiency and automatically selects level of parallelism'
+        description: 'When enabled, program analyzes efficiency and automatically selects level of parallelism'
       },
       masDosersCount: {
         name: 'Number of threads',
@@ -99,12 +99,12 @@ export default {
   },
   bomber: {
     header: 'Phone bomber',
-    description: 'Bomber sends SMS and makes phone calls to the target. You must have enabled VPN for this attack. Remember, that while everyone uses bomber, efficiency may be very low.',
+    description: 'Bomber sends SMS and makes phone calls to the target. You must enable VPN for this attack. Remember, that while everyone uses bomber, efficiency may be very low.',
     running: {
       title: 'Attack enabled',
       caption: 'Start or stop attack'
     },
-    successFullAttacks: 'Successfull attacks: ',
+    successFullAttacks: 'Successful attacks: ',
     failedAttacks: 'Failed attacks: '
   },
   statistics: {
@@ -155,7 +155,7 @@ export default {
     },
     autoUpdate: {
       title: 'Auto update',
-      caption: 'Dont ask me if I want to update. Just do it and restart app!'
+      caption: 'Don't ask me whether I want to update. Just do it and restart app!'
     },
     minimizeToTray: {
       title: 'Minimize to tray',
