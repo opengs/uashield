@@ -96,5 +96,4 @@ export default defineComponent({
 <style lang="sass" scoped>
 .full-card
   font-size: 13px
-  max-width: 266px
 </style>

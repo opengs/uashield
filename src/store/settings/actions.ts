@@ -4,6 +4,7 @@ import { StateInterface } from '../index'
 import { SettingsState } from './state'
 
 import { UserData } from '../../../src-lib/storage'
+import axios from 'axios'
 
 const actions: ActionTree<SettingsState, StateInterface> = {
   loadFromUserData ({ commit }, data: UserData) {
@@ -14,6 +15,22 @@ const actions: ActionTree<SettingsState, StateInterface> = {
     commit('SET_MINIMIZE_TO_TRAY', data.settings.minimizeToTray)
     commit('SET_LOG_TIMESTAMP', data.settings.log.timestamp)
     commit('SET_LOG_REQUESTS', data.settings.log.requests)
+  },
+
+  async fetchIpAddress ({ commit }) {
+    interface IpFetchResponse {
+      query: string
+      countryCode: string
+    }
+    try {
+      const dataResponse = await axios.get<IpFetchResponse>('http://ip-api.com/json')
+      commit('SET_IP', dataResponse.data.query)
+      commit('SET_COUNTRYCODE', dataResponse.data.countryCode)
+    } catch (e) {
+      console.log('Failed to load IP information. ' + String(e))
+      commit('SET_IP', 'undefined')
+      commit('SET_COUNTRYCODE', '')
+    }
   },
 
   setLanguage ({ commit }, value: string) {

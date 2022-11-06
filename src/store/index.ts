@@ -10,6 +10,10 @@ import ddos from './ddos'
 import { DDoSState } from './ddos/state'
 import { DDoSGetters } from './ddos/getters'
 
+import news from './news'
+import { NewsState } from './news/state'
+import { NewsGetters } from './news/getters'
+
 import statistics from './statistics'
 import { StatisticsState } from './statistics/state'
 import { StatisticsGetters } from './statistics/getters'
@@ -22,6 +26,7 @@ export interface StateInterface {
   ddos: DDoSState
   statistics: StatisticsState
   settings: SettingsState
+  news: NewsState
 }
 
 type Store = Omit<
@@ -31,7 +36,8 @@ type Store = Omit<
   getters:
   DDoSGetters &
   StatisticsGetters &
-  SettingsGetters
+  SettingsGetters &
+  NewsGetters
 }
 
 // provide typings for `this.$store`
@@ -49,7 +55,8 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       ddos,
       statistics,
-      settings
+      settings,
+      news
     },
 
     // enable strict mode (adds overhead!)

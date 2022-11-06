@@ -122,6 +122,9 @@ export default {
         }
       },
       currentThreads: 'Current threads'
+    },
+    news: {
+      news: "News"
     }
   },
   dashboard: {

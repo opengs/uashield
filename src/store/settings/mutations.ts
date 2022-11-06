@@ -7,6 +7,9 @@ const mutation: MutationTree<SettingsState> = {
   SET_IP (storage, ip: string) {
     storage.ip = ip
   },
+  SET_COUNTRYCODE (storage, countryCode: string) {
+    storage.countryCode = countryCode
+  },
   SET_LANGUAGE (storage, language: string) {
     i18n.global.locale = language
     storage.language = language

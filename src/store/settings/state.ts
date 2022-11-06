@@ -1,5 +1,9 @@
 export interface SettingsState {
   ip: string
+  countryCode: string
+  lat: number
+  lon: number
+
   language: string
   autoLaunch: boolean
   autoUpdate: boolean
@@ -11,6 +15,10 @@ export interface SettingsState {
 function state (): SettingsState {
   return {
     ip: '',
+    countryCode: '',
+    lat: 0,
+    lon: 0,
+
     language: 'en-US',
     autoLaunch: true,
     autoUpdate: true,

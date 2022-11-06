@@ -2,7 +2,9 @@
   <q-card style="border-radius: 10px" class="q-pa-md bg-primary full-card">
     <div class="row justify-between">
       <div v-text="$t('main.ddos.ip.name')" />
-      <div v-text="'soon' /*$store.state.settings.ip*/" />
+      <div v-text="$store.state.settings.ip + ' ' + $store.state.settings.countryCode" />
+      <q-btn icon="cached" size="xs" @click="$store.dispatch('settings/fetchIpAddress')"/>
+      <!-- <q-btn size="xs" rounded v-text="$store.state.settings.countryCode" href="https://google.com" /> -->
     </div>
 
     <div class="q-mt-sm row justify-between items-center">
@@ -88,6 +90,10 @@ export default defineComponent({
       get () { return this.$store.getters['ddos/maxWorkers'] },
       async set (val: boolean) { await this.$store.dispatch('ddos/updateMaxWorkers', Number(val)) }
     }
+  },
+
+  mounted () {
+    void this.$store.dispatch('settings/fetchIpAddress')
   }
 })
 </script>
@@ -95,7 +101,6 @@ export default defineComponent({
 <style lang="sass" scoped>
 .full-card
   font-size: 12px
-  max-width: 266px
 
 .switch
   position: relative

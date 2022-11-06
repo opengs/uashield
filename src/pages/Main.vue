@@ -1,22 +1,22 @@
 <template>
   <q-page class="main-page q-pa-sm bg-grey-10">
-    <div class="row q-gutter-sm">
-      <div>
-        <DDoS />
+    <div class="row">
+      <div class="q-pa-sm col-xs-12 col-sm-3 col-md-2">
+        <DDoS class="q-mt-sm"/>
         <Settings class="q-mt-sm" />
       </div>
-      <div class="col" style="min-width: 600px">
-        <Session class="col" />
+      <div class="q-pa-sm col-xs-12 col-sm-9 col-md-6">
+        <Session class="q-mt-sm"/>
       </div>
-      <div>
-        <Statistics />
+      <div class="q-pa-sm col-xs-12 col-sm-12 col-md-4">
+        <Statistics class="q-mt-sm"/>
+        <News class="q-mt-sm" />
       </div>
     </div>
 
-    <q-icon class="fixed-bottom-right q-mr-sm q-mb-sm" name="discord" size="40px">
-      <q-menu class="discord-menu">
-        {{ getLocalExternalIP }}
-        <div>https://discord.gg/7BfJ9JKQ98</div>
+    <q-icon class="fixed-bottom-right q-mr-sm q-mb-sm" name="telegram" size="40px">
+      <q-menu class="telegram-menu">
+        <div>https://t.me/uashield</div>
       </q-menu>
     </q-icon>
     <UpdateModal />
@@ -30,6 +30,7 @@ import DDoS from 'src/components/main/DDoS.vue'
 import Settings from 'src/components/main/Settings.vue'
 import Session from 'src/components/main/Session.vue'
 import Statistics from 'src/components/main/Statistics.vue'
+import News from 'src/components/main/News.vue'
 import UpdateModal from 'components/modals/UpdateModal.vue'
 
 export default defineComponent({
@@ -40,6 +41,7 @@ export default defineComponent({
     Settings,
     Session,
     Statistics,
+    News,
     UpdateModal
   }
 })
@@ -63,7 +65,7 @@ export default defineComponent({
   background: $light
   border: 1px solid $lighter
 
-.discord-menu
+.telegram-menu
   padding: 3px 6px
   overflow: hidden
   background: $light
