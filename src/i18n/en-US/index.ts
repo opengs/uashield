@@ -10,8 +10,8 @@ export default {
         description: 'Enable DDoS attack on critical enemy servers: government, banking systems, propaganda webpages, etc'
       },
       proxy: {
-        name: 'Use proxy',
-        description: 'Without this option, the program will use the actual IP address of your computer. This allows to make the attack much more efficient, but attacks will not be anonymous and your IP address will be visible to the enemy.'
+        name: 'Use proxy (low efficiency)',
+        description: 'Without this option, the program will use the actual IP address of your computer. This allows to make the attack much more efficient, but attacks will not be anonymous and your IP address will be visible to the enemy. Use VPN to hide your real address'
       },
       advanced: {
         automaticMode: {
