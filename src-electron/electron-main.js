@@ -17,6 +17,7 @@ const storage = new Store({
     '1.0.1': store => {
       const data = store.get(USER_DATA_KEY, defaultData)
       data.settings.minimizeToTray = true
+      // data.settings.ip = publicIpv4()
       store.set(USER_DATA_KEY, data)
     }
   }
@@ -57,6 +58,31 @@ if (!singleInstanceLock) {
       mainWindow.focus()
     }
   })
+}
+
+function getLocalExternalIP () { 
+  var ifaces = os.networkInterfaces();
+    let ipAdresse = {};
+    Object.keys(ifaces).forEach(function (ifname) {
+      let alias = 0;
+      ifaces[ifname].forEach(function (iface) {
+      if ('IPv4' !== iface.family || iface.internal !== false) {
+        // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+      return;
+    }
+
+    if (alias >= 1) {
+    // this single interface has multiple ipv4 addresses
+    console.log(ifname + ':' + alias, iface.address);
+    } else {
+      // this interface has only one ipv4 adress
+      console.log(ifname, iface.address);
+      ipAdresse = {IP: iface.address, MAC: iface.mac};
+      }
+      ++alias;
+    });
+  });
+  return ipAdresse;
 }
 
 function sendStatusToWindow (text) {
@@ -117,8 +143,8 @@ function createWindow () {
 
   mainWindow = new BrowserWindow({
     icon: appIcon.resize({ width: 32, height: 32 }),
-    width: 600,
-    height: 900,
+    width: 1150,
+    height: 650,
     useContentSize: true,
     webPreferences: {
       contextIsolation: false,

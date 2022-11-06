@@ -18,6 +18,7 @@ export interface UserData {
   },
 
   settings: {
+    ip: string
     language: string
     log: {
       timestamp: boolean
@@ -47,6 +48,7 @@ export const defaultData = {
   },
 
   settings: {
+    ip: '',
     language: 'en-US',
     log: {
       timestamp: true,

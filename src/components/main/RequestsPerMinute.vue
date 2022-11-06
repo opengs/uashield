@@ -1,6 +1,6 @@
 <template>
   <VueApexChart
-  class="text-black"
+    class="full-card"
     :options="chartOptions"
     :series="series"
   />
@@ -11,9 +11,6 @@ import dayjs from 'dayjs'
 
 import { defineComponent } from 'vue'
 import VueApexChart from 'vue3-apexcharts'
-/*
-
-*/
 
 export default defineComponent({
   name: 'Efficiency',
@@ -41,24 +38,29 @@ export default defineComponent({
         dataLabels: {
           enabled: false
         },
-        colors: ['#21BA45', '#F2C037', '#C10015'],
+        colors: ['#6023FF', '#fff', '#BC39FF'],
         plotOptions: {
           bar: {
-            horizontal: false
+            horizontal: false,
+            borderRadius: 4
           }
         },
         tooltip: {
-          x: {
-            formatter: function (val: Date) {
-              return dayjs(val).format('HH:mm')
-            }
+          style: {
+            color: '#ccc'
           }
         },
         xaxis: {
           categories: this.$store.getters['statistics/ddosRequestsPerMinute'].map((r) => new Date(r.timestamp * 10 * 1000)),
           labels: {
-            formatter: function () {
-              return ''
+            style: {
+              colors: '#7B849C',
+              fontSize: '10px'
+            },
+            formatter: function (val: Date) {
+              const date = dayjs(val).format('HH:mm:ss')
+              if (date.slice(-2) !== '00') return ''
+              return date.slice(0, 5)
             }
           },
           type: 'time'

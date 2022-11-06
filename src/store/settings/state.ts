@@ -1,4 +1,5 @@
 export interface SettingsState {
+  ip: string
   language: string
   autoLaunch: boolean
   autoUpdate: boolean
@@ -9,6 +10,7 @@ export interface SettingsState {
 
 function state (): SettingsState {
   return {
+    ip: '',
     language: 'en-US',
     autoLaunch: true,
     autoUpdate: true,

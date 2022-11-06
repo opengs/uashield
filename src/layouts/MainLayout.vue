@@ -38,23 +38,16 @@
 </template>
 
 <script lang="ts">
-
 import { defineComponent, ref } from 'vue'
 
 import MenuLink from 'components/layout/MenuLink.vue'
 
 const menuList = [
   {
-    link: 'dashboard',
-    title: 'layout.menu.dashboard.title',
-    caption: 'layout.menu.dashboard.caption',
+    link: 'main',
+    title: 'layout.menu.main.title',
+    caption: 'layout.menu.main.caption',
     icon: 'dashboard'
-  },
-  {
-    link: 'ddos',
-    title: 'layout.menu.ddos.title',
-    caption: 'layout.menu.ddos.caption',
-    icon: 'dns'
   },
   {
     link: 'bruteforce',
@@ -73,12 +66,6 @@ const menuList = [
     title: 'layout.menu.statistics.title',
     caption: 'layout.menu.statistics.caption',
     icon: 'leaderboard'
-  },
-  {
-    link: 'settings',
-    title: 'layout.menu.settings.title',
-    caption: 'layout.menu.settings.caption',
-    icon: 'settings'
   }
 ]
 
