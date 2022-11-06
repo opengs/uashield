@@ -129,7 +129,7 @@ export default {
       header: 'Your rank in is'
     },
     totalDDoSAtacks: {
-      header: 'Total successfull DDoS attacks count'
+      header: 'Total successful DDoS attacks count'
     },
     currentWorkers: {
       header: 'Current threads'
@@ -149,12 +149,12 @@ export default {
   },
   bomber: {
     header: 'Phone bomber',
-    description: 'Bomber sends SMS and makes phone calls to the target. You must have enabled VPN for this attack. Remember, that while everyone uses bomber, efficiency may be very low.',
+    description: 'Bomber sends SMS and makes phone calls to the target. You must enable VPN for this attack. Remember, that while everyone uses bomber, efficiency may be very low.',
     running: {
       title: 'Attack enabled',
       caption: 'Start or stop attack'
     },
-    successFullAttacks: 'Successfull attacks: ',
+    successFullAttacks: 'Successful attacks: ',
     failedAttacks: 'Failed attacks: '
   }
 }
