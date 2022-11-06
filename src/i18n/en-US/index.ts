@@ -1,31 +1,5 @@
 export default {
   language: 'Language',
-  layout: {
-    header: {
-      main: 'Main',
-      bruteforce: 'Brute force',
-      bomber: 'Bomber',
-      statistics: 'Statistics'
-    },
-    menu: {
-      main: {
-        title: 'Main',
-        caption: 'General view'
-      },
-      bruteforce: {
-        title: 'Brute Force',
-        caption: 'Cracking enemy passwords'
-      },
-      bomber: {
-        title: 'Bomber',
-        caption: 'Bombarding with SMS and calls'
-      },
-      statistics: {
-        title: 'Statistics',
-        caption: 'My statistics'
-      }
-    }
-  },
   main: {
     ddos: {
       ip: {
@@ -124,40 +98,7 @@ export default {
       currentThreads: 'Current threads'
     },
     news: {
-      news: "News"
+      news: 'News'
     }
-  },
-  dashboard: {
-    rank: {
-      header: 'Your rank in is'
-    },
-    totalDDoSAtacks: {
-      header: 'Total successful DDoS attacks count'
-    },
-    currentWorkers: {
-      header: 'Current threads'
-    },
-    efficiency: {
-      header: 'DDoS efficiency',
-      allTimeEfficiency: 'All time efficiency',
-      currentEfficiency: 'Current efficiency',
-      workers: 'Threads'
-    },
-    requestsPerMinute: {
-      header: 'Requests per minute',
-      failedRequests: 'Failed',
-      successfullRequest: 'Success',
-      neutralRequests: 'Neutral (unknown)'
-    }
-  },
-  bomber: {
-    header: 'Phone bomber',
-    description: 'Bomber sends SMS and makes phone calls to the target. You must enable VPN for this attack. Remember, that while everyone uses bomber, efficiency may be very low.',
-    running: {
-      title: 'Attack enabled',
-      caption: 'Start or stop attack'
-    },
-    successFullAttacks: 'Successful attacks: ',
-    failedAttacks: 'Failed attacks: '
   }
 }

@@ -3,7 +3,7 @@
     <div class="row justify-between">
       <div v-text="$t('main.ddos.ip.name')" />
       <div v-text="$store.state.settings.ip + ' ' + $store.state.settings.countryCode" />
-      <q-btn icon="cached" size="xs" @click="$store.dispatch('settings/fetchIpAddress')"/>
+      <q-btn icon="cached" size="xs" round @click="$store.dispatch('settings/fetchIpAddress')"/>
       <!-- <q-btn size="xs" rounded v-text="$store.state.settings.countryCode" href="https://google.com" /> -->
     </div>
 
