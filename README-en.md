@@ -35,7 +35,7 @@ Targets being attacked are changed automatically and are downloaded from the con
 ## Headless version (Docker)
 
 1. Build an image: `docker build . -t uashield`
-2. Run: `docker run uashield --workers=512 --withProxy=true` - where --workers=`512` - threads count, and --withProxy=`true` | `false` whether you want to use proxies
+2. Run: `docker run uashield --workers=512 --withProxy=true` - where **--workers=**`512` - threads count, and **--withProxy=**`true` | `false` whether you want to use proxies
 
 Complete command help: `docker run uashield --help`
 
