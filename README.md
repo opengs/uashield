@@ -1,3 +1,8 @@
+# Доступна нова версія застосунку | New version of tool is available.
+UACyberShield V2 доступна за посиланням https://github.com/opengs/itarmykit . Цей репозиторій буде зархівовано тоді коли буде випущена стабільна версія нового застосунку.
+
+UACyberShield V2 is available under https://github.com/opengs/itarmykit . This repository will be archived when the stable version of the new tool will be released.
+
 # UA Cyber SHIELD
 
 *CAUTION! We do not support unlawful attacks or malware campaigns that cause technical harm. We provide you with a tool which you can use, but we are not telling or advising you on what to do with it. YOU are responsible of what you choose to do with it !!!! We are just providing a tool JUST LIKE thousand others on Github. If we give you a hammer - YOU are responsible of what you choose to knock with it !*
