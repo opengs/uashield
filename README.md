@@ -1,7 +1,7 @@
-# Доступна нова версія застосунку | New version of tool is available.
-UACyberShield V2 доступна за посиланням https://github.com/opengs/itarmykit . Цей репозиторій буде зархівовано тоді коли буде випущена стабільна версія нового застосунку.
+# Кінець використання | The end
+UACyberShield не використовується вже протягом кількох років. Репозиторій архівується.
 
-UACyberShield V2 is available under https://github.com/opengs/itarmykit . This repository will be archived when the stable version of the new tool will be released.
+UACyberShield V2 is not used for several years. This repository will be archived.
 
 # UA Cyber SHIELD
 
