@@ -3,7 +3,7 @@ UACyberShield V2 is available under https://github.com/opengs/itarmykit . This r
 
 # UA Cyber SHIELD
 
-*CAUTION! We do not support unlawful attacks or malware campaigns that cause technical harm. We provide you with a tool which you can use, but we are not telling or advising you on what to do with it. YOU are responsible of what you choose to do with it !!!! We are just providing a tool JUST LIKE thousand others on Github. If we give you a hammer - YOU are responsible of what you choose to knock with it !*
+*CAUTION! We do not support unlawful attacks or malware campaigns that cause technical harm. We provide you with a tool which you can use, but we are not telling or advising you on what to do with it. YOU are responsible of what you choose to do with it !!!! We are just providing a tool JUST LIKE thousands of others on Github. If we give you a hammer - YOU are responsible of what you choose to knock with it !*
 
 *Дивись цю сторінку [українською](README.md)*
 
@@ -19,7 +19,7 @@ UACyberShield V2 is available under https://github.com/opengs/itarmykit . This r
 
 ## How it works
 
-Our volunteer defense center does all the hard work: monitoring targets, running technical infrastructure, coordinating attack targets, syncronizing it with client applications, etc.
+Our volunteer defense center does all the hard work: monitoring targets, running technical infrastructure, coordinating attack targets, synchronizing it with client applications, etc.
 When an attack is performed, the application gets the data it needs automatically.
 The only thing you need to do is to install and run it.
 Targets being attacked are changed automatically and are downloaded from the control center/server.
@@ -72,7 +72,7 @@ docker run ghcr.io/opengs/uashield:master --workers=512 --withProxy=true
 ## Donations
 Donations will be used exclusively to fund our operations:
 1. Expenses on constantly buying new proxy servers
-2. Occasionally buying servers for IT infastructure
+2. Occasionally buying servers for IT infrastructure
 
 When we win the war and there is peace in Ukraine, funds left will be transferred to charity funds to help casualties of the war.
 
